@@ -6,6 +6,6 @@ run apt-get -y install gcc
 run pip3 install -r requirements.txt
 copy . .
 
-env  FLASK_APP=main.py
+env FLASK_APP=main.py
 
 CMD [ "python3", "-m", "flask","run","--host=0.0.0.0" ]
