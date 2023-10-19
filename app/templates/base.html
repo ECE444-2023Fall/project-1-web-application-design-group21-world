@@ -1,5 +1,6 @@
-{% extends "bootstrap/base.html" %} {% block title %}Flasky{% endblock %} {%
+{% extends "bootstrap/base.html" %} {% block title %}HazelHub{% endblock %} {%
 block navbar %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 <div class="navbar navbar-inverse" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -14,11 +15,14 @@ block navbar %}
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">Flasky</a>
+      <a class="navbar-brand" href="/">HazelHub</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li><a href="/">Home</a></li>
+        <li><a href="/events">Events</a></li>
+        <li><a href="/discover">Discover</a></li>
+        <li><a href="/user/{% if name %}{{name}}{% else %}Test User{% endif %}">My Account</a></li>
       </ul>
     </div>
   </div>
