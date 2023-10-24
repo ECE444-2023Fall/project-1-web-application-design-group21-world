@@ -2,6 +2,7 @@
 from datetime import datetime
 from app import create_app, db
 # from app.models import User, Role
+from app.models import Organizer, OrganizerInterest
 from flask import Flask, redirect, render_template, session, url_for, flash, logging
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
@@ -18,6 +19,7 @@ class Form(FlaskForm):
     name = StringField('What is your name?',validators=[DataRequired()])
     # email = EmailField('What is your UofT email address?',validators=[DataRequired(),Email()])
     submit = SubmitField('Submit')
+
 
 @app.route("/",methods=['GET','POST'])
 def index():
@@ -54,21 +56,43 @@ def user_create():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for("user_detail", id=user.id))
-return render_template("user/create.html")
+    return render_template("user/create.html")
 
 @app.route("/user/<int:id>")
 def user_detail(id):
     user = db.get_or_404(User, id)
-return render_template("user/detail.html", user=user)
+    return render_template("user/detail.html", user=user)
 
-@app.route("/user/<int:id>/delete", methods=["GET", "POST"])
-def user_delete(id):
-	user = db.get_or_404(User, id)
-    if request.method == "POST":
-        db.session.delete(user)
-        db.session.commit()
-        return redirect(url_for("user_list"))
-return render_template("user/delete.html", user=user)
+@app.route("/organizer/create", methods=["POST"])
+def organizer_create():
+    organizer = Organizer(
+        organizer_name = request.form["organizer_name"]
+        organizer_email = request.form["organizer_email"]
+        description = request.form["description"]
+        contact_email = request.form["contact_email"]
+        website = request.form["website"]
+        instagram = request.form["instagram"]
+        linkedin = request.form["linkedin"]
+        campus = request.form["campus"]
+    )
+    db.session.add(organizer)
+    db.session.commit()
+    return render_template("organizer/create.html")
+
+
+@app.route("/organizer/<int:id>", methods=["GET"])
+def get_organizer(id):
+    pass
+
+
+# @app.route("/user/<int:id>/delete", methods=["GET", "POST"])
+# def user_delete(id):
+# 	user = db.get_or_404(User, id)
+#     if request.method == "POST":
+#         db.session.delete(user)
+#         db.session.commit()
+#         return redirect(url_for("user_list"))
+#     return render_template("user/delete.html", user=user)
 
 # if __name__ == '__main__':
 #     app.run()
