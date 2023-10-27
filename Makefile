@@ -1,4 +1,4 @@
-SOURCE= app tests 
+SOURCE= . app tests 
 MAX_LINE_LENGTH=100
 
 black:
