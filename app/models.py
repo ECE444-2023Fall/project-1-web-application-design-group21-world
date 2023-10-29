@@ -28,7 +28,7 @@ class OrganizerInterest(db.Model):
 
 class Organizer(db.Model):
     __tablename__ = "organizers"
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     organizer_name: Mapped[str] = mapped_column(String(30), nullable=False)
     organizer_email: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
     description: Mapped[str] = mapped_column(String(10000), nullable=False)
@@ -50,16 +50,16 @@ class EventInterest(db.Model):
 
 class Event(db.Model):
     __tablename__ = "events"
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     event_name = db.Column(db.String(100), nullable=False)
-    organization_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), nullable=False)
+    organization_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), nullable=True)
     description = db.Column(db.String(10000), nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    time = db.Column(db.Time, nullable=False)
-    location = db.Column(db.String(100), nullable=False)
+    date = db.Column(db.Date, nullable=True)
+    time = db.Column(db.Time, nullable=True)
+    location = db.Column(db.String(100), nullable=True)
     google_map_link = db.Column(db.String(200))  # Optional
     fee = db.Column(db.Float)  # Optional
-    has_rsvp = db.Column(db.Boolean, nullable=False)
-    external_registration_link = db.Column(db.String(200), nullable=False)
+    has_rsvp = db.Column(db.Boolean, nullable=True)
+    external_registration_link = db.Column(db.String(200), nullable=True)
 
     # interests = db.relationship("Interest", secondary="event_interests", back_populates="events")

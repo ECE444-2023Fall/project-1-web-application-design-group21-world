@@ -102,23 +102,46 @@ def user_detail(id):
 @app.route("/organizer/create", methods=["POST"])
 def organizer_create():
     organizer = Organizer(
-        organizer_name=request.form["organizer_name"],
-        organizer_email=request.form["organizer_email"],
-        description=request.form["description"],
-        contact_email=request.form["contact_email"],
-        website=request.form["website"],
-        instagram=request.form["instagram"],
-        linkedin=request.form["linkedin"],
-        campus=request.form["campus"],
+        organizer_name=request.args.get["organizer_name"],
+        organizer_email=request.args.get["organizer_email"],
+        description=request.args.get["description"],
+        contact_email=request.args.get["contact_email"],
     )
     db.session.add(organizer)
     db.session.commit()
-    return render_template("organizer/create.html")
+    return render_template("index.html")
+
+@app.route("/organizer")
+def organizer_list():
+    organizers = db.session.execute(db.select(Organizer).order_by(Organizer.organizer_name)).scalars()
+    return organizers
+
+@app.route("/event/create", methods=["POST"])
+def event_create():
+    event = Event(
+        event_name=request.args.get["event_name"],
+        description=request.args.get["description"],
+    )
+    db.session.add(event)
+    db.session.commit()
+    return render_template("index.html")
+
+@app.route("/event")
+def event_list():
+    events = db.session.execute(db.select(Event).order_by(Event.event_name)).scalars()
+    return events
 
 
 @app.route("/organizer/<int:id>", methods=["GET"])
 def get_organizer(id):
-    pass
+    organizer = db.session.execute(db.select(Organizer).filter(Organizer.id == id)).scalar()
+    return organizer
+
+
+@app.route("/event/<int:id>", methods=["GET"])
+def get_event(name):
+    event = db.session.execute(db.select(Event).filter(Event.event_name == name)).scalar()
+    return event
 
 
 # @app.route("/user/<int:id>/delete", methods=["GET", "POST"])
