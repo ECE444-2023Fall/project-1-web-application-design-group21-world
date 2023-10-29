@@ -20,10 +20,10 @@ class Interest(db.Model):
         return f"Interest: {self.name}"
 
 
-class OrganizerInterest(db.Model):
-    __tablename__ = "organizer_interests"
-    organizer_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), primary_key=True)
-    interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
+# class OrganizerInterest(db.Model):
+#     __tablename__ = "organizer_interests"
+#     organizer_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), primary_key=True)
+#     interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
 
 
 class Organizer(db.Model):
@@ -39,13 +39,13 @@ class Organizer(db.Model):
     campus: Mapped[str] = mapped_column(String(3), nullable=False)
 
     # Define a relationship with Interests, assuming you have a Many-to-Many relationship
-    interests = db.relationship("Interest", secondary="organizer_interests", backref="organizers")
+    #interests = db.relationship("Interest", secondary="organizer_interests", backref="organizers")
 
 
-class EventInterest(db.Model):
-    __tablename__ = "event_interests"
-    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), primary_key=True)
-    interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
+# class EventInterest(db.Model):
+#     __tablename__ = "event_interests"
+#     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), primary_key=True)
+#     interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
 
 
 class Event(db.Model):
