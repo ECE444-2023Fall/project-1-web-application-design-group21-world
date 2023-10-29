@@ -19,6 +19,20 @@ class Form(FlaskForm):
     # email = EmailField('What is your UofT email address?',validators=[DataRequired(),Email()])
     submit = SubmitField('Submit')
 
+class EventForm(FlaskForm):
+    event_name = StringField('Event Name', validators=[DataRequired()])
+    org_id = StringField('Enter your Organization ID', validators=[DataRequired()])
+    event_desc = StringField('Give a brief description about the Event')
+    date = StringField('Date of the event', validators=[DataRequired()])
+    time = StringField('What time is the event?', validators=[DataRequired()])
+    location = StringField('Where is the event taking place?', validators=[DataRequired()])
+    google_map_link = StringField('Enter Google Map link for location')
+    fee = StringField('Fee for registration')
+    rsvp = StringField('RSVP', validators=[DataRequired()])
+    external_reg_link = StringField('Enter an external link for registration if any')
+    submit = SubmitField('Submit')
+
+
 @app.route("/",methods=['GET','POST'])
 def index():
     form = Form()
@@ -72,3 +86,25 @@ return render_template("user/delete.html", user=user)
 
 # if __name__ == '__main__':
 #     app.run()
+
+@app.route('/', methods=['GET', 'POST'])
+def event():
+    form = EventForm()
+    # if form.validate_on_submit():
+    #     old_name = session.get('name')
+    #     if old_name is not None and old_name != form.name.data:
+    #         flash('Looks like you have changed your name!')
+    #     session['name'] = form.name.data
+        
+    #     old_email = session.get('email')
+    #     if old_email is not None and old_email != form.email.data:
+    #         flash('Looks like you have changed your email!')
+    #     session['email'] = form.email.data
+
+    #     return redirect(url_for('index'))
+    return render_template('index_event.html', form = form, name = session.get('name'), email = session.get('email'))
+
+@app.route('/user/event')
+def user(name):
+    return render_template('index_event.html',name = name, current_time=datetime.utcnow())    
+
