@@ -111,7 +111,7 @@ def organizer_create():
     db.session.commit()
     return render_template("index.html")
 
-@app.route("/organizer")
+@app.route("/organizer", methods=["GET"])
 def organizer_list():
     organizers = db.session.execute(db.select(Organizer).order_by(Organizer.organizer_name)).scalars()
     return organizers
@@ -126,7 +126,7 @@ def event_create():
     db.session.commit()
     return render_template("index.html")
 
-@app.route("/event")
+@app.route("/event", methods=["GET"])
 def event_list():
     events = db.session.execute(db.select(Event).order_by(Event.event_name)).scalars()
     return events
