@@ -127,4 +127,39 @@ def test_get_organizer(client):
         assert organizer['contact_email'] == 'test_organizer_contact_email'
 
 
+#Contributed by Breno Pinho
+def get_list_of_organizers(client):
+    """Test whether we can get list of organizers correctly"""
+    organizers_data = []
 
+    # Create data for 10 organizers and post them
+    for i in range(1, 11):
+        organizer_data = {
+            'organizer_name': f"test_organizer_{i}",
+            'organizer_email': f"test_organizer_{i}@utoronto.ca",
+            'description': f"test",
+            'contact_email': f"test_organizer_{i}@utoronto.ca"
+        }
+        organizers_data.append(organizer_data)
+
+    for organizer_data in organizers_data:
+        response = client.post('/organizer/create', json=organizer_data)
+
+        assert response.status_code == 200
+
+    # Retrieve the list of organizers from the API
+    getResponse = client.get('/organizer')
+    assert getResponse.status_code == 200
+    all_organizers = getResponse.json
+
+    # Validate if all created organizers are in the API response
+    for organizer_data in organizers_data:
+        assert any(organizer['organizer_name'] == organizer_data['organizer_name'] for organizer in all_organizers)
+
+
+    with app.app_context():
+        for organizer_data in organizers_data:
+            organizer = Organizer.query.filter_by(organizer_name=organizer_data['organizer_name']).first()
+            db.session.delete(organizer)
+        db.session.commit()
+        
