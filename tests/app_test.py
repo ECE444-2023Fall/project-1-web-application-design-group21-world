@@ -3,8 +3,13 @@ from pathlib import Path
 
 import pytest
 
-from app import app, db
+from app import create_app, db
 from app.models import *
+from flask_migrate import Migrate
+
+app = create_app()
+migrate = Migrate(app, db)
+
 
 TEST_DB = "test.db"
 
@@ -122,4 +127,4 @@ def test_get_organizer(client):
         assert organizer['contact_email'] == 'test_organizer_contact_email'
 
 
-        
+
