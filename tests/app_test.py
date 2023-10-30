@@ -84,3 +84,16 @@ def test_create_event(client):
         Event = Event.query.filter_by(event_name='Test Event').first()
         assert event is not None
         assert event.description == 'This is a test event.'
+
+#Contributed by Nisha Malik
+def test_event_search(client):
+    event_id = {
+        'event_id':1
+    }
+    response = client.get('events/search',json=Event)
+
+    with app.app_context():
+        event = events.query.get(event_id=1).first()
+        assert event is not None 
+        assert event_id == 1
+        
