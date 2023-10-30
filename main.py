@@ -137,8 +137,12 @@ def get_organizer(id):
     organizer = db.session.execute(db.select(Organizer).filter(Organizer.id == id)).scalar()
     return organizer
 
+@app.route("/organizer/<string:name>", methods=["GET"])
+def get_organizer(name):
+    organizer = db.session.execute(db.select(Organizer).filter(Organizer.id == id)).scalar()
+    return organizer
 
-@app.route("/event/<int:id>", methods=["GET"])
+@app.route("/event/<string:name>", methods=["GET"])
 def get_event(name):
     event = db.session.execute(db.select(Event).filter(Event.event_name == name)).scalar()
     return event
