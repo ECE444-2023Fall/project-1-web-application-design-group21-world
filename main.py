@@ -100,7 +100,7 @@ def user_detail(id):
 
 
 @app.route("/organizer/create", methods=["POST"])
-def organizer_create():
+def create_organizer():
     organizer = Organizer(
         organizer_name=request.args.get["organizer_name"],
         organizer_email=request.args.get["organizer_email"],
@@ -111,13 +111,8 @@ def organizer_create():
     db.session.commit()
     return render_template("index.html")
 
-@app.route("/organizer", methods=["GET"])
-def organizer_list():
-    organizers = db.session.execute(db.select(Organizer).order_by(Organizer.organizer_name)).scalars()
-    return organizers
-
 @app.route("/event/create", methods=["POST"])
-def event_create():
+def create_event():
     event = Event(
         event_name=request.args.get["event_name"],
         description=request.args.get["description"],
@@ -127,15 +122,14 @@ def event_create():
     return render_template("index.html")
 
 @app.route("/event", methods=["GET"])
-def event_list():
+def get_event_list():
     events = db.session.execute(db.select(Event).order_by(Event.event_name)).scalars()
     return events
 
-
-@app.route("/organizer/<int:id>", methods=["GET"])
-def get_organizer(id):
-    organizer = db.session.execute(db.select(Organizer).filter(Organizer.id == id)).scalar()
-    return organizer
+@app.route("/organizer", methods=["GET"])
+def get_organizer_list():
+    organizers = db.session.execute(db.select(Organizer).order_by(Organizer.organizer_name)).scalars()
+    return organizers
 
 @app.route("/organizer/<string:name>", methods=["GET"])
 def get_organizer(name):
