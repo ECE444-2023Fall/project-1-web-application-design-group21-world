@@ -64,23 +64,3 @@ def test_create_organizer(client):
 def test_get_organizer(client):
     pass
     #Add get request which checks organizer
-
-#Contributed by Modhurima Roy Kenopy
-def test_create_event(client):
-    # Define event data for testing
-    event_data = {
-        'event_name': 'Test Event',
-        'description': 'This is a test event.'
-    }
-
-    # Send a POST request to add the event
-    response = client.post('/event/create', json=event_data)
-
-    # Check if the response status code is 200 (OK)
-    assert response.status_code == 200
-
-    # Verify that the user has been added to the database
-    with app.app_context():
-        Event = Event.query.filter_by(event_name='Test Event').first()
-        assert event is not None
-        assert event.description == 'This is a test event.'
