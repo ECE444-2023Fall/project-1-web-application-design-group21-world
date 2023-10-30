@@ -102,7 +102,7 @@ def test_database(client):
     """Test whether database exists"""
     assert Path("organizer.db").is_file()
 
-def test_create_organizer(client):
+def test_get_organizer(client):
     """Test whether search gets correct organizer"""
     organizer_data = {
         'organizer_name':'test_organizer_02',
