@@ -81,7 +81,7 @@ def test_create_event(client):
 
     # Verify that the user has been added to the database
     with app.app_context():
-        Event = Event.query.filter_by(event_name='Test Event').first()
+        event = Event.query.filter_by(event_name='Test Event').first()
         assert event is not None
         assert event.description == 'This is a test event.'
 
