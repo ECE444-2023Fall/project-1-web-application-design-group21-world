@@ -98,7 +98,6 @@ def test_event_search(client):
         assert event_id == 1
         
 #Contributed by Ria Malhotra
-
 def test_database(client):
     """Test whether database exists"""
     assert Path("organizer.db").is_file()
