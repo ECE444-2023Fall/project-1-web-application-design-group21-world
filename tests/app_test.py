@@ -40,6 +40,7 @@ def test_add_user(client):
         assert user is not None
         assert user.email == 'testuser@example.com'
 
+#Contributed by Mohammed Ozair
 def test_create_organizer(client):
     # Define user data for testing
     organizer_data = {
@@ -64,3 +65,37 @@ def test_create_organizer(client):
 def test_get_organizer(client):
     pass
     #Add get request which checks organizer
+
+#Contributed by Modhurima Roy Kenopy
+def test_create_event(client):
+    # Define event data for testing
+    event_data = {
+        'event_name': 'Test Event',
+        'description': 'This is a test event.'
+    }
+
+    # Send a POST request to add the event
+    response = client.post('/event/create', json=event_data)
+
+    # Check if the response status code is 200 (OK)
+    assert response.status_code == 200
+
+    # Verify that the user has been added to the database
+    with app.app_context():
+        event = Event.query.filter_by(event_name='Test Event').first()
+        assert event is not None
+        assert event.description == 'This is a test event.'
+
+
+#Contributed by Nisha Malik
+def test_event_search(client):
+    event_id = {
+        'event_id':1
+    }
+    response = client.get('events/search',json=Event)
+
+    with app.app_context():
+        event = events.query.get(event_id=1).first()
+        assert event is not None 
+        assert event_id == 1
+        
