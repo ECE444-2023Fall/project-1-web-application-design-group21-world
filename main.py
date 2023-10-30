@@ -1,15 +1,15 @@
 from datetime import datetime
-from app import create_app, db
-from app.models import User, Interest, OrganizerInterest, Organizer, EventInterest, Event
-from app.models import Organizer, OrganizerInterest
-from flask import Flask, redirect, render_template, session, url_for, flash, logging
+
+from flask import Flask, flash, logging, redirect, render_template, request, session, url_for
 from flask_bootstrap import Bootstrap
+from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_wtf import FlaskForm
 from wtforms import EmailField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email
-from flask_migrate import Migrate
-from flask import request
+
+from app import create_app, db
+from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User
 
 app = create_app()
 migrate = Migrate(app, db)
