@@ -1,4 +1,5 @@
 from flask import url_for
+
 from app.models import User
 
 
@@ -13,7 +14,8 @@ def test_user_insert(new_user, client):
         user = User.query.filter_by(username=new_user.username).first()
         assert user is not None
         assert user.email == new_user.email
-        
+
+
 def test_get_users(client):
     response = client.get("/list")
     print(response.data)
