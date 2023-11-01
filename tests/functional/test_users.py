@@ -1,7 +1,7 @@
 from flask import url_for
 
 def test_user_insert(new_user, client):
-    """Ensure that users can be added to User table"""
+    """Ensure that users can be added to User table and displayed on /list"""
     test_user = dict(username=new_user.username, email=new_user.email)
 
     response = client.post(
