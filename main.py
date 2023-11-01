@@ -8,8 +8,8 @@ from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask_moment import Moment
 
-from app.main.forms import LoginForm
 from app import create_app, db
+from app.main.forms import LoginForm
 from app.models import (Event, EventInterest, Interest, Organizer,
                         OrganizerInterest, User)
 
