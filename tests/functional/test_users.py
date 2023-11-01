@@ -1,19 +1,18 @@
-def test_user_insert(test_client):
+from flask import url_for
+
+def test_user_insert(new_user, client):
     """Ensure that users can be added to User table"""
-    test_user = dict(username="testname", email="testemail@mail.utoronto.ca")
-    with app.app_context():
-        users = User.query.all()
-        assert len(users) == 0
+    test_user = dict(username=new_user.username, email=new_user.email)
 
     response = client.post(
-        "/users/create",
-        data=test_user,
+        "/create",
+        json=test_user, follow_redirects=True
     )
     assert response.status_code == 200
+    assert f"{new_user.username}, {new_user.email}".encode('utf-8') in response.data
 
-    with app.app_context():
-        users = User.query.all()
-        assert len(users) == 1
-        assert users[0].id == 1
-        assert users[0].username == test_user["username"]
-        assert users[0].email == test_user["email"]
+def test_get_users(client):
+    response = client.get("/list")
+    print(response.data)
+    assert response.status_code == 200
+    assert b"users are:" in response.data
