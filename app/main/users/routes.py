@@ -1,5 +1,4 @@
-from flask import (current_app, flash, redirect, render_template, request,
-                   session, url_for)
+from flask import current_app, flash, redirect, render_template, request, session, url_for
 
 from ... import db
 from ...models import User
@@ -27,6 +26,4 @@ def user_create():
 def user_list():
     users = User.query.all()
     if users is not None:
-        return render_template(
-            "user.html", name=session.get("first_name", "Stranger"), users=users
-        )
+        return render_template("user.html", name=session.get("first_name", "Stranger"), users=users)
