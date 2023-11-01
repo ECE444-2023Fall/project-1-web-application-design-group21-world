@@ -11,15 +11,11 @@ bootstrap = Bootstrap()
 db = SQLAlchemy()
 moment = Moment()
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 
-
-def create_app():
+def create_app(config_name):
     app = Flask(__name__)
-    # app.config.from_object(config[config_`name])
-    # config[config_name].init_app(app)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "data.sqlite")
-    app.config["SECRET_KEY"] = "shhhh ... "
+    app.config.from_object(config[config_name])
+    config[config_name].init_app(app)
     bootstrap.init_app(app)
     moment.init_app(app)
     db.init_app(app)
