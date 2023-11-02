@@ -1,5 +1,6 @@
 import os
 
+import sqlalchemy as sa
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
@@ -11,21 +12,30 @@ bootstrap = Bootstrap()
 db = SQLAlchemy()
 moment = Moment()
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 
-
-def create_app():
+def create_app(config_name):
     app = Flask(__name__)
-    # app.config.from_object(config[config_`name])
-    # config[config_name].init_app(app)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "data.sqlite")
-    app.config["SECRET_KEY"] = "shhhh ... "
+    app.config.from_object(config[config_name])
+    config[config_name].init_app(app)
+
+    db.init_app(app)
     bootstrap.init_app(app)
     moment.init_app(app)
-    db.init_app(app)
+
+    engine = sa.create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
+    inspector = sa.inspect(engine)
+    if not inspector.has_table("users"):
+        with app.app_context():
+            db.drop_all()
+            db.create_all()
+            app.logger.info("Initialized database")
+    else:
+        app.logger.info("Database already contains user table.")
 
     from .main import main as main_blueprint
+    from .main.users import users_blueprint
 
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(users_blueprint)
 
     return app
