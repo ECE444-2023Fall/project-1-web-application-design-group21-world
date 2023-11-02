@@ -61,19 +61,19 @@ def index():
 
 # @app.route("/organizer/create", methods=["POST"])
 # def organizer_create():
-#     organizer = Organizer(
-#         organizer_name=request.form["organizer_name"],
-#         organizer_email=request.form["organizer_email"],
-#         description=request.form["description"],
-#         contact_email=request.form["contact_email"],
-#         website=request.form["website"],
-#         instagram=request.form["instagram"],
-#         linkedin=request.form["linkedin"],
-#         campus=request.form["campus"],
-#     )
-#     db.session.add(organizer)
-#     db.session.commit()
-#     return render_template("organizer/create.html")
+#      organizer = Organizer(
+#          organizer_name=request.form["organizer_name"],
+#          organizer_email=request.form["organizer_email"],
+#          description=request.form["description"],
+#          contact_email=request.form["contact_email"],
+#          website=request.form["website"],
+#          instagram=request.form["instagram"],
+#          linkedin=request.form["linkedin"],
+#          campus=request.form["campus"],
+#      )
+#      db.session.add(organizer)
+#      db.session.commit()
+#      return render_template("organizer/create.html")
 
 
 # @app.route("/organizer/<int:id>", methods=["GET"])
