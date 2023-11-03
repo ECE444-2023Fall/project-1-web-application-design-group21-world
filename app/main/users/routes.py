@@ -11,7 +11,7 @@ def user_create():
     if request.method == "POST":
         print("REQUEST INFO", request.json)
         user = User(
-            username=request.json["username"],
+            name=request.json["name"],
             email=request.json["email"],
         )
         db.session.add(user)
