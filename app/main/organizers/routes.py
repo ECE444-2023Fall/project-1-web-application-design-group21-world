@@ -11,8 +11,8 @@ def organizer_create():
         print("REQUEST INFO", request.json)
         print("Hello Are you Amon!!")
         organizer = Organizer(
-          organizer_name=request.json["organizer_name"],
-          organizer_email=request.json["organizer_email"],
+            organizer_name=request.json["organizer_name"],
+            organizer_email=request.json["organizer_email"],
         )
         db.session.add(organizer)
         db.session.commit()

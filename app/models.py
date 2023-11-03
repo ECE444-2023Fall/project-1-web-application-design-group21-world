@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import db
 
+
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +16,7 @@ class User(UserMixin, db.Model):
         return "<User %r" % self.name
 
     # interest = db.relationship("Interest", db.ForeignKey('interests.id'), )
+
 
 class Interest(db.Model):
     __tablename__ = "interests"
@@ -42,11 +44,12 @@ class Organizer(db.Model):
     instagram: Mapped[str] = mapped_column(String(30), nullable=True)
     linkedin: Mapped[str] = mapped_column(String(30), nullable=True)
     campus: Mapped[str] = mapped_column(String(3), nullable=True)
+
     def __repr__(self):
-            return "<Organizer %r" % self.organizer_email
+        return "<Organizer %r" % self.organizer_email
 
     # Define a relationship with Interests, assuming you have a Many-to-Many relationship
-    #interests = db.relationship("Interest", secondary="organizer_interests", backref="organizers")
+    # interests = db.relationship("Interest", secondary="organizer_interests", backref="organizers")
 
 
 class EventInterest(db.Model):

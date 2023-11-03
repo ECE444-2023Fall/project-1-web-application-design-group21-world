@@ -3,11 +3,12 @@ import os
 from datetime import datetime
 
 from flask import Flask, flash, logging, redirect, render_template, request, session, url_for
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
+from flask_login import (LoginManager, UserMixin, current_user, login_required, login_user,
+                         logout_user)
 from flask_migrate import Migrate
 from flask_moment import Moment
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
 from app.main.forms import LoginForm, SignupForm
@@ -17,12 +18,14 @@ app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
 
 login_manager = LoginManager()
-login_manager.login_view = 'login'
+login_manager.login_view = "login"
 login_manager.init_app(app)
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 @app.shell_context_processor
 def make_shell_context():
@@ -36,7 +39,8 @@ def make_shell_context():
         Event=Event,
     )
 
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route("/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
 
@@ -45,16 +49,18 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect('myAccount')
+                return redirect("myAccount")
 
         flash("Invalid email or password")
 
-    return render_template('login.html', form=form)
+    return render_template("login.html", form=form)
+
 
 @app.route("/myAccount", methods=["GET", "POST"])
 @login_required
 def myAccount():
     return render_template("myAccount.html", name=current_user.name)
+
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -82,11 +88,12 @@ def signup():
 
     return render_template("index.html", form=form)
 
-@app.route('/logout')
+
+@app.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for("login"))
 
 
 # @app.route("/user/<int:id>")
