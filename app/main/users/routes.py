@@ -13,6 +13,7 @@ def user_create():
         user = User(
             name=request.json["name"],
             email=request.json["email"],
+            password=request.json["password"],
         )
         db.session.add(user)
         db.session.commit()
