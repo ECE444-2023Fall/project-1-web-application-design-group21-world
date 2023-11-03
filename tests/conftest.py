@@ -10,7 +10,9 @@ from app.models import User
 @pytest.fixture
 def client():
     app = create_app("testing")
-    # print("DATABASE URI PYTEST",app.config["SQLALCHEMY_DATABASE_URI"])
+
+
+
 
     with app.app_context():
         db.create_all()
