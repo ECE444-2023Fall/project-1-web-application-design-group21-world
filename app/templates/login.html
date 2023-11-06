@@ -1,7 +1,20 @@
-{% extends 'base.html' %} {% import "bootstrap/wtf.html" as wtf %} {% block
-page_content%}
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
 <div class="page-header">
-  <h1>Hello, {% if name %}{{name}}{% else %}Stranger{% endif %}!</h1>
+  <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
   <a href="{{ url_for('signup') }}">Don't have an account? Sign up here</a>
 </div>
-{{ wtf.quick_form(form) }} {%endblock%} {% block title %}Flasky{% endblock %}
+<form method="POST" action="{{ url_for('signup') }}">
+  <div class="form-group">
+    <label for="role">Select your role:</label>
+    <select id="role" name="role" class="form-control">
+      <option value="user">User</option>
+      <option value="organizer">Organizer</option>
+    </select>
+  </div>
+  {{ wtf.quick_form(form) }}
+  <button type="submit" class="btn btn-primary">Sign Up</button>
+</form>
+{% endblock %}
+{% block title %}Flasky{% endblock %}
