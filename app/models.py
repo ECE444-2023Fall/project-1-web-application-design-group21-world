@@ -39,11 +39,10 @@ class Organizer(db.Model):
     organizer_name: Mapped[str] = mapped_column(String(30), nullable=False)
     organizer_email: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
     description: Mapped[str] = mapped_column(String(10000), nullable=True)
-    contact_email: Mapped[str] = mapped_column(String(30), nullable=True)
+    campus: Mapped[str] = mapped_column(String(3), nullable=True)
     website: Mapped[str] = mapped_column(String(30), nullable=True)
     instagram: Mapped[str] = mapped_column(String(30), nullable=True)
     linkedin: Mapped[str] = mapped_column(String(30), nullable=True)
-    campus: Mapped[str] = mapped_column(String(3), nullable=True)
 
     def __repr__(self):
         return "<Organizer %r" % self.organizer_email

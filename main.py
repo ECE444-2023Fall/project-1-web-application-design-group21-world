@@ -12,7 +12,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
 from app.main.forms import LoginForm, SignupForm
+from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User
+
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
@@ -94,6 +96,64 @@ def signup():
 def logout():
     logout_user()
     return redirect(url_for("login"))
+
+@app.route("/organizer/dashboard", methods=["GET"])
+def dashboard():
+    return render_template("organizer_dashboard.html")
+
+
+@app.route("/organizer/signup", methods=["GET", "POST"])
+def organizerSignup():
+    form = OrganizerSignupForm()
+    if form.validate_on_submit():
+        organizer = Organizer.query.filter_by(name=form.name.data).first()
+        email = Organizer.query.filter_by(email=form.email.data).first()
+        hashed_password = generate_password_hash(form.password.data)
+        if organizer is None and email is None:
+            if "utoronto" in form.email.data.split("@")[1]:
+                organizer = Organizer(organizer_name=form.name.data, organizer_email=form.email.data, password=hashed_password)
+                db.session.add(organizer)
+                db.session.commit()
+                session["organizer_name"] = form.name.data
+                session["organizer_email"] = form.email.data
+                session["organizer_campus"] = form.campus.data
+                return redirect(url_for("organizers.dashboard"))  # Redirect to the organizer's dashboard
+            else:
+                flash("You may only register with your UofT email")
+        else:
+            flash("Account with this email address already exists!")
+    return render_template("index.html", form=form)
+
+
+@app.cli.command("init_interests")
+def init_interests():
+    # List of interests to initialize
+    interests_data = [
+        "Academic",
+        "Arts",
+        "Athletics",
+        "Recreation",
+        "Community Service",
+        "Culture & Identities",
+        "Environment & Sustainability",
+        "Global Interest",
+        "Hobby & Leisure",
+        "Leadership",
+        "Media",
+        "Politics",
+        "Social",
+        "Social Justice and Advocacy",
+        "Spirituality & Faith Communities",
+        "Student Governments, Councils & Unions",
+        "Work & Career Development"
+    ]
+
+    with db.app.app_context():
+        for interest_name in interests_data:
+            interest = Interest(name=interest_name)
+            db.session.add(interest)
+
+        db.session.commit()
 
 
 # @app.route("/user/<int:id>")
