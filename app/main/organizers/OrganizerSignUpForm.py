@@ -10,10 +10,8 @@ class OrganizerSignupForm(FlaskForm):
         validators=[
             DataRequired(),
             validators.Length(min=8, max=80),
-            validators.EqualTo("confirm", message="Passwords must match"),
         ],
     )
-    confirm_password = PasswordField("Repeat password")
     organization_campus = SelectField(
         "Campus",
         choices=[("UTSG"), ("UTSC"), ("UTM")],

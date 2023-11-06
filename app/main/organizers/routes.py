@@ -22,3 +22,9 @@ def organizer_create():
         return redirect(url_for("organizers.dashboard"))
 
     return render_template("index.html")
+
+@organizers_blueprint.route("/organizer/list", methods=["GET"])
+def organizer_list():
+    organizers = Organizer.query.all()
+    if organizers is not None:
+        return render_template("organizerDashboard.html", name=session.get("organization_name", "Stranger"), organizers=organizers)

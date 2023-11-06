@@ -106,18 +106,18 @@ def dashboard():
 def organizerSignup():
     form = OrganizerSignupForm()
     if form.validate_on_submit():
-        organizer = Organizer.query.filter_by(name=form.name.data).first()
-        email = Organizer.query.filter_by(email=form.email.data).first()
+        organizer = Organizer.query.filter_by(organizer_name=form.organization_name.data).first()
+        email = Organizer.query.filter_by(organizer_email=form.organization_email.data).first()
         hashed_password = generate_password_hash(form.password.data)
         if organizer is None and email is None:
-            if "utoronto" in form.email.data.split("@")[1]:
-                organizer = Organizer(organizer_name=form.name.data, organizer_email=form.email.data, password=hashed_password)
+            if "utoronto" in form.organization_email.data.split("@")[1]:
+                organizer = Organizer(organizer_name=form.organization_name.data, organizer_email=form.organization_email.data)
                 db.session.add(organizer)
                 db.session.commit()
-                session["organizer_name"] = form.name.data
-                session["organizer_email"] = form.email.data
-                session["organizer_campus"] = form.campus.data
-                return redirect(url_for("organizers.dashboard"))  # Redirect to the organizer's dashboard
+                session["organizer_name"] = form.organization_name.data
+                session["organizer_email"] = form.organization_email.data
+                session["campus"] = form.organization_campus.data
+                return redirect(url_for("organizers.organizer_list"))  # Redirect to the organizer's dashboard
             else:
                 flash("You may only register with your UofT email")
         else:

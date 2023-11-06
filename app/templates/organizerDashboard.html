@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Organizer Dashboard</title>
-</head>
-<body>
-    <h1>Hello Organizer</h1>
-    <!-- You can add more content to the dashboard page as needed -->
-</body>
-</html>
+{% extends "base.html" %} {% block title %}Flasky{% endblock %} {% block
+    page_content %}
+    <div class="page-header">
+      <h1>Hello, {{ name }}!</h1>
+      New organizers are: {% for organizer in organizers %}
+      <p>{{organizer.organizer_name}}, {{organizer.organizer_email}}, {{organizer.description}}, {{organizer.campus}}</p>
+      {% endfor %}
+    </div>
+    {% endblock %}
