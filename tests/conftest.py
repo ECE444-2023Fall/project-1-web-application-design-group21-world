@@ -25,8 +25,11 @@ def client():
 def new_user():
     num = random.randint(0, 9999)
 
-    user = User(username=f"utorid{num}", email=f"test.{num}@mail.utoronto.ca")
+    user = User(
+        name=f"utorid{num}", email=f"test.{num}@mail.utoronto.ca", password=f"insecure{num}"
+    )
 
-    print(user.username)
+    print(user.name)
     print(user.email)
+    print(user.password)
     return user
