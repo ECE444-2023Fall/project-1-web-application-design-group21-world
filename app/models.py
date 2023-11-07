@@ -1,6 +1,6 @@
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from datetime import datetime
 from . import db
 
 
@@ -23,13 +23,15 @@ class Interest(db.Model):
 
     def __repr__(self):
         return f"Interest: {self.name}"
+    #initialize table
+    #standard, list of dits, debug 
+    #select from events table 
 
 
-# class OrganizerInterest(db.Model):
-#     __tablename__ = "organizer_interests"
-#     organizer_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), primary_key=True)
-#     interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
-
+class OrganizerInterest(db.Model):
+     __tablename__ = "organizer_interests"
+     organizer_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), primary_key=True)
+     interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
 
 class Organizer(db.Model):
     __tablename__ = "organizers"
@@ -54,19 +56,17 @@ class EventInterest(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), primary_key=True)
     interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
 
-
 class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
-    event_name = db.Column(db.String(100), nullable=False)
+    event_name: Mapped[str] = mapped_column(String(100), nullable=False)
     organization_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), nullable=True)
-    description = db.Column(db.String(10000), nullable=False)
-    date = db.Column(db.Date, nullable=True)
-    time = db.Column(db.Time, nullable=True)
-    location = db.Column(db.String(100), nullable=True)
-    google_map_link = db.Column(db.String(200))  # Optional
-    fee = db.Column(db.Float)  # Optional
-    has_rsvp = db.Column(db.Boolean, nullable=True)
-    external_registration_link = db.Column(db.String(200), nullable=True)
-
-    # interests = db.relationship("Interest", secondary="event_interests", back_populates="events")
+    description: Mapped[str] = mapped_column(String(10000), nullable=True)
+    date: Mapped[str] = mapped_column(String(100), nullable=False)
+    time: Mapped[str] = mapped_column(String(100), nullable=False)
+    location: Mapped[str] = mapped_column(String(100), nullable=False)
+    google_map_link: Mapped[str] = mapped_column (String(100), nullable=False)
+    fee: Mapped[int] = mapped_column(Integer, nullable=True)
+    #interest_area: Mapped[str] = mapped_column(String, nullable=False)
+    has_rsvp: Mapped[str] = mapped_column(String(100), nullable=False)
+    external_registration_link: Mapped[str] = mapped_column(String(200), nullable=True)
