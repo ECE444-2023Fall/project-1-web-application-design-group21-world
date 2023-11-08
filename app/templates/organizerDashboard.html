@@ -3,7 +3,7 @@
     <div class="page-header">
       <h1>Hello, {{ name }}!</h1>
       New organizers are: {% for organizer in organizers %}
-      <p>{{organizer.organizer_name}}, {{organizer.organizer_email}}, {{organizer.description}}, {{organizer.campus}}</p>
+      <p>{{organizer.organizer_name}}, {{organizer.organizer_email}}</p>
       {% endfor %}
     </div>
     {% endblock %}

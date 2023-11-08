@@ -3,18 +3,20 @@
 {% block page_content %}
 <div class="page-header">
   <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
-  <a href="{{ url_for('signup') }}">Don't have an account? Sign up here</a>
+  <p>Don't have an account yet? Sign up as:</p>
+  <a href="{{ url_for('userSignup') }}" class="btn btn-success">Sign Up as User</a>
+  <a href="{{ url_for('organizerSignup') }}" class="btn btn-success">Sign Up as Organizer</a>
 </div>
-<form method="POST" action="{{ url_for('signup') }}">
+<form method="POST" action="{{ url_for('login') }}">
   <div class="form-group">
     <label for="role">Select your role:</label>
-    <select id="role" name="role" class="form-control">
+    <select id="role" name="role" class="form-control" required>
       <option value="user">User</option>
       <option value="organizer">Organizer</option>
     </select>
   </div>
   {{ wtf.quick_form(form) }}
-  <button type="submit" class="btn btn-primary">Sign Up</button>
+  <button type="submit" class="btn btn-primary">Log In</button>
 </form>
 {% endblock %}
 {% block title %}Flasky{% endblock %}
