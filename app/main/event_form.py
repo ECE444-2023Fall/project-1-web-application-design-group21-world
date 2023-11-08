@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, StringField, SubmitField
+from wtforms import FileField, StringField, SubmitField
+from flask_wtf.file import FileAllowed
 from wtforms.validators import DataRequired, Email
 
 
@@ -9,6 +10,7 @@ class EventForm(FlaskForm):
     description = StringField("Event Description", validators=[DataRequired()])
     date = StringField("Date of Event", validators=[DataRequired()])
     time = StringField("Time of Event", validators=[DataRequired()])
+    image = FileField("Upload Event Image", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'])])
     location = StringField("Location of Event", validators=[DataRequired()])
     google_map_link = StringField("Map of Event", validators=[DataRequired()])
     fee = StringField("Fee for Event")

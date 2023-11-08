@@ -16,6 +16,7 @@ from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User
 from flask import request, redirect
 from app.main.event_form import EventForm
+import uuid
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
@@ -112,7 +113,7 @@ def login():
 
 
 
-@app.route("/signup", methods=["GET", "POST"])
+@app.route("/user/signup", methods=["GET", "POST"])
 def userSignup():
     form = UserSignUpForm()
     if form.validate_on_submit():
@@ -166,10 +167,20 @@ def organizerSignup():
         hashed_password = generate_password_hash(form.password.data)
         if organizer is None and email is None:
             if "utoronto" in form.organization_email.data.split("@")[1]:
+                image = form.image.data
+                if image:
+                    random_uuid = uuid.uuid4()
+                    uuid_string = str(random_uuid)
+                    image_path = 'app/resources/' + "event_" + uuid_string + ".jpg"
+                    # You can process and save the image here, e.g., save it to a folder or a database.
+                    image.save(image_path)
+                else:
+                    image_path = None
                 organizer = Organizer(organizer_name=form.organization_name.data, 
                                       organizer_email=form.organization_email.data,
                                       password = hashed_password,
                                       description = form.organization_description.data,
+                                      image_link = image_path,
                                       campus = form.organization_campus.data,
                                       website = form.organization_website_link.data,
                                       instagram = form.organization_instagram_link.data,
@@ -196,14 +207,23 @@ def organizer_create_event():
     if form.validate_on_submit():
         organization_id = organizer.id
         event_name = Event.query.filter_by(event_name=form.event_name.data).first()
-
         if event_name is None:
+            image = form.image.data
+            if image:
+                random_uuid = uuid.uuid4()
+                uuid_string = str(random_uuid)
+                image_path = 'app/resources/' + "event_" + uuid_string + ".jpg"
+                # You can process and save the image here, e.g., save it to a folder or a database.
+                image.save(image_path)
+            else:
+                image_path = None
             event_entry = Event(
                 event_name=form.event_name.data,
                 organization_id=organization_id,
                 description=form.description.data,
                 date=form.date.data,
                 time=form.time.data,
+                image_link = image_path,
                 location=form.location.data,
                 google_map_link=form.google_map_link.data,
                 fee=form.fee.data,

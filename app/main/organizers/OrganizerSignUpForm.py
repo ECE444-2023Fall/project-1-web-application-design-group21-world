@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, validators
+from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, FileField, validators
+from flask_wtf.file import FileAllowed
 from wtforms.validators import DataRequired, Email, Length
 
 class OrganizerSignupForm(FlaskForm):
@@ -17,6 +18,7 @@ class OrganizerSignupForm(FlaskForm):
         choices=[("UTSG"), ("UTSC"), ("UTM")],
         validators=[DataRequired()],
     )
+    image = FileField("Upload Organizer Image", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'])])
     organization_description = StringField("Organization Description", validators=[Length(max=500)])
     organization_website_link = StringField("Website Link")
     organization_instagram_link = StringField("Instagram Link")
