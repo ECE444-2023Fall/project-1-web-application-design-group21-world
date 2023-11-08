@@ -11,7 +11,7 @@ from flask_moment import Moment
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
-from app.main.forms import LoginForm, UserSignUpForm
+from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
 from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
@@ -95,7 +95,7 @@ def signup():
                 session["major"] = form.major.data
                 session["campus"] = form.campus.data
                 session["yearOfStudy"] = form.year_of_study.data
-                return redirect(url_for("users.user_list"))
+                return redirect("/signup/interests")
             else:
                 flash("You may only register with your UofT email")
         else:
@@ -103,6 +103,13 @@ def signup():
 
     return render_template("index.html", form=form)
 
+@app.route("/signup/interests", methods=["GET", "POST"])
+def signupInterests():
+    form = userSignupInterestForm()
+    if form.validate_on_submit():
+        #interest = User.query.filter_by(interests=form.email.data).first()
+        return redirect("/user/myAccount")
+    return render_template("interests.html", form=form)
 
 @app.route("/logout")
 @login_required
