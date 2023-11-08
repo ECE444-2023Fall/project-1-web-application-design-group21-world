@@ -1,13 +1,9 @@
-{% extends "base.html" %}
-
-{% block title %}Flasky{% endblock %}
-
-{% block page_content %}
-<div class="page-header"> 
-    <h1>Hello, {{ name }}!</h1>
-    New users are:
-    {% for user in users %}
-    <p>{{user.username}}, {{user.email}}</p>
-    {% endfor %}
+{% extends "base.html" %} {% block title %}Flasky{% endblock %} {% block
+page_content %}
+<div class="page-header">
+  <h1>Hello, {{ name }}!</h1>
+  New users are: {% for user in users %}
+  <p>{{user.name}}, {{user.email}}</p>
+  {% endfor %}
 </div>
 {% endblock %}

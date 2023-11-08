@@ -1,0 +1,11 @@
+{% extends 'base.html' %} {% import "bootstrap/wtf.html" as wtf %} {% block
+page_content%}
+<div class="page-header">
+  <a href="{{ url_for('logout') }}">Logout</a>
+  <h1>Hello, {% if name %}{{name}}{% else %}Stranger{% endif %}!</h1>
+  <p>Email: {{email}}</p>
+  <p>Faculty: {{faculty}}</p>
+  <p>Campus: {{campus}}</p>
+  <p>Year of Study: {{yearOfStudy}}</p>
+</div>
+{% endblock %}
