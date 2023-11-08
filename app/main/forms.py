@@ -1,12 +1,4 @@
 from flask_wtf import FlaskForm
-from wtforms import (
-    EmailField,
-    PasswordField,
-    SelectField,
-    StringField,
-    SubmitField,
-    validators,
-)
 from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, validators, SelectMultipleField
 from wtforms.validators import DataRequired, Email
 
@@ -60,5 +52,13 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Submit")
 
 class userSignupInterestForm(FlaskForm):
-    interests = SelectMultipleField("Select Your Interests", validators=[DataRequired()], coerce=int)
-    submit = SubmitField("Submit")   
+    userInterests = SelectMultipleField(
+        "Interests",
+        choices=[("Academics"), ("Arts"), ("Athletics"), ("Recreation"), ("Community Service"), ("Culture & Identities"),
+                 ("Environment & Sustainability"), ("Global Interest"), ("Hobby & Leisure"), ("Leadership"), ("Media"), 
+                 ("Politics"), ("Social"), ("Social Justics and Advocacy"), ("Spirituality & Faith Communities"), 
+                 ("Student Governments, Councils & Unions"), ("Work & Career Development")], 
+        validators=[DataRequired()],         
+    )
+    Submit = SubmitField("Submit")
+                                    

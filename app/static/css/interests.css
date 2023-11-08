@@ -25,7 +25,10 @@
   .feature-card1-text {
     align-self: center;
     margin-bottom: var(--dl-space-space-twounits);
+<<<<<<< HEAD
     padding: 10px;
+=======
+>>>>>>> e2ab3d6 (Add Interests Page for User Signup)
   }
   .feature-card1-image {
     width: var(--dl-size-size-medium);
@@ -33,9 +36,14 @@
     object-fit: cover;
   }
   
+<<<<<<< HEAD
   .feature-card1-feature-card.selected {
   background-color: rgba(230, 209, 171, 0.72);
   }
+=======
+  
+  
+>>>>>>> e2ab3d6 (Add Interests Page for User Signup)
   
   .interests-container {
     width: 100%;
@@ -59,10 +67,17 @@
     flex: 0 0 auto;
     width: 100%;
     display: grid;
+<<<<<<< HEAD
     grid-gap: 35px; /* Adjust this value to add spacing between cards */
     align-items: flex-start;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+=======
+    grid-gap: var(--dl-space-space-twounits);
+    align-items: flex-start;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+>>>>>>> e2ab3d6 (Add Interests Page for User Signup)
   .interests-button {
     color: var(--dl-color-hazelhub-dblack);
     width: var(--dl-size-size-maxwidth);
@@ -104,11 +119,14 @@
     .interests-container1 {
       grid-gap: var(--dl-space-space-halfunit);
     }
+<<<<<<< HEAD
 
 
     .hidden-checkbox {
       visibility: hidden;
   }
   
+=======
+>>>>>>> e2ab3d6 (Add Interests Page for User Signup)
   }
   

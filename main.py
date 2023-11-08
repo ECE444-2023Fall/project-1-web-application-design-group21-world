@@ -194,6 +194,7 @@ def userSignup():
                 session["campus"] = form.campus.data
                 session["year_of_study"] = form.year_of_study.data
                 return redirect("/signup/interests")
+                return redirect("/signup/interests")
             else:
                 flash("You may only register with your UofT email")
         else:

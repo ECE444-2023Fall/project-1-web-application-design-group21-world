@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %} 
 {% block page_content %}
 <form method="POST" action="/user/myAccount" id="interests-form">
@@ -32,3 +33,97 @@
     });
 </script>
 {% endblock %}
+=======
+{% extends 'base.html' %} {% block
+    page_content%}
+    <div>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/interests.css') }}" />
+        <div class="interests-container">
+          <div class="interests-features">
+            <div class="interests-container1">
+              <div class="feature-card1-feature-card feature-card1-root-class-name">
+                <h3 class="feature-card1-text"><span>Academics</span></h3>
+                <img src="{{url_for('static', filename='assets/college project-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name16">
+                <h3 class="feature-card1-text"><span>Arts</span></h3>
+                <img src="{{url_for('static', filename='assets/Making art-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name15">
+                <h3 class="feature-card1-text"><span>Athletics</span></h3>
+                <img src="{{url_for('static', filename='assets/Track and field-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name14">
+                <h3 class="feature-card1-text"><span>Recreation</span></h3>
+                <img src="{{url_for('static', filename='assets/Game day-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name13">
+                <h3 class="feature-card1-text"><span>Community Service</span></h3>
+                <img src="{{url_for('static', filename='assets/gutter cleaning-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name12">
+                <h3 class="feature-card1-text"><span>Culture & Identities</span></h3>
+                <img src="{{url_for('static', filename='assets/People celebrating Diwali-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name11">
+                <h3 class="feature-card1-text">
+                  <span>Environment & Sustainability</span>
+                </h3>
+                <img src="{{url_for('static', filename='assets/Environmental audit-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name10">
+                <h3 class="feature-card1-text"><span>Global Interest</span></h3>
+                <img src="{{url_for('static', filename='assets/Globalization-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name9">
+                <h3 class="feature-card1-text"><span>Hobby & Leisure</span></h3>
+                <img src="{{url_for('static', filename='assets/Hiking-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name1">
+                <h3 class="feature-card1-text"><span>Leadership</span></h3>
+                <img src="{{url_for('static', filename='assets/follow the leader-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name2">
+                <h3 class="feature-card1-text"><span>Politics</span></h3>
+                <img src="{{url_for('static', filename='assets/Political Candidate-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name3">
+                <h3 class="feature-card1-text"><span>Social</span></h3>
+                <img src="{{url_for('static', filename='assets/friendship-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name7">
+                <h3 class="feature-card1-text">
+                  <span>Social Justices & Advocacy</span>
+                </h3>
+                <img src="{{url_for('static', filename='assets/Justice-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name6">
+                <h3 class="feature-card1-text">
+                  <span>Spirituality & Faith Communities</span>
+                </h3>
+                <img src="{{url_for('static', filename='assets/Buddha hand-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name5">
+                <h3 class="feature-card1-text">
+                  <span>Student Governments, Councils & Unions</span>
+                </h3>
+                <img src="{{url_for('static', filename='assets/Universal declaration of human rights-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name8">
+                <h3 class="feature-card1-text">
+                  <span>Work & Career Development</span>
+                </h3>
+                <img src="{{url_for('static', filename='assets/Career progress-cuate.svg')}}" align="middle" />
+              </div>
+              <div class="feature-card1-feature-card feature-card1-root-class-name4">
+                <h3 class="feature-card1-text"><span>Media</span></h3>
+                <img src="{{url_for('static', filename='assets/Playing Music-cuate.svg')}}" align="middle" />
+              </div>
+            </div>
+            <button type="button" class="interests-button button">Submit</button>
+          </div>
+        </div>
+      </div>
+      
+    {% endblock %}
+>>>>>>> e2ab3d6 (Add Interests Page for User Signup)
