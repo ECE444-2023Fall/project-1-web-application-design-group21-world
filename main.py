@@ -15,6 +15,7 @@ from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User
 from flask import request, redirect
+from app.main.event_form import EventForm
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
@@ -22,6 +23,26 @@ migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+
+interests_data = [
+        "Academic",
+        "Arts",
+        "Athletics",
+        "Recreation",
+        "Community Service",
+        "Culture & Identities",
+        "Environment & Sustainability",
+        "Global Interest",
+        "Hobby & Leisure",
+        "Leadership",
+        "Media",
+        "Politics",
+        "Social",
+        "Social Justice and Advocacy",
+        "Spirituality & Faith Communities",
+        "Student Governments, Councils & Unions",
+        "Work & Career Development"
+    ]
 
 
 @login_manager.user_loader
@@ -166,73 +187,51 @@ def organizerSignup():
     return render_template("index.html", form=form)
 
 
-@app.cli.command("init_interests")
-def init_interests():
-    # List of interests to initialize
-    interests_data = [
-        "Academic",
-        "Arts",
-        "Athletics",
-        "Recreation",
-        "Community Service",
-        "Culture & Identities",
-        "Environment & Sustainability",
-        "Global Interest",
-        "Hobby & Leisure",
-        "Leadership",
-        "Media",
-        "Politics",
-        "Social",
-        "Social Justice and Advocacy",
-        "Spirituality & Faith Communities",
-        "Student Governments, Councils & Unions",
-        "Work & Career Development"
-    ]
+@app.route("/organizer/create/event", methods=["GET", "POST"])
+@login_required
+def organizer_create_event():
+    form = EventForm()
+    organizer = Organizer.query.filter_by(organizer_email=current_user.organizer_email).first()
 
-    with db.app.app_context():
-        for interest_name in interests_data:
-            interest = Interest(name=interest_name)
-            db.session.add(interest)
+    if form.validate_on_submit():
+        organization_id = organizer.id
+        event_name = Event.query.filter_by(event_name=form.event_name.data).first()
 
-        db.session.commit()
+        if event_name is None:
+            event_entry = Event(
+                event_name=form.event_name.data,
+                organization_id=organization_id,
+                description=form.description.data,
+                date=form.date.data,
+                time=form.time.data,
+                location=form.location.data,
+                google_map_link=form.google_map_link.data,
+                fee=form.fee.data,
+                has_rsvp=form.has_rsvp.data,
+                external_registration_link=form.external_registration_link.data,
+            )
 
+            db.session.add(event_entry)
+            db.session.commit()
 
-# @app.route("/user/<int:id>")
-# def user_detail(id):
-#     user = db.get_or_404(User, id)
-#     return render_template("user/detail.html", user=user)
+            session["event_name"] = form.event_name.data
+            session["organization_id"] = organization_id
+            session["description"] = form.description.data
+            session["date"] = form.date.data
+            session["time"] = form.time.data
+            session["location"] = form.location.data
+            session["google_map_link"] = form.google_map_link.data
+            session["fee"] = form.fee.data
+            session["has_rsvp"] = form.has_rsvp.data
+            session["external_registration_link"] = form.external_registration_link.data
 
+            return redirect("/organizer/myAccount")  # Redirect to the organizer's account after successful form submission
 
-# @app.route("/organizer/create", methods=["POST"])
-# def organizer_create():
-#      organizer = Organizer(
-#          organizer_name=request.form["organizer_name"],
-#          organizer_email=request.form["organizer_email"],
-#          description=request.form["description"],
-#          contact_email=request.form["contact_email"],
-#          website=request.form["website"],
-#          instagram=request.form["instagram"],
-#          linkedin=request.form["linkedin"],
-#          campus=request.form["campus"],
-#      )
-#      db.session.add(organizer)
-#      db.session.commit()
-#      return render_template("organizer/create.html")
+    return render_template("index.html", form=form)
 
 
-# @app.route("/organizer/<int:id>", methods=["GET"])
-# def get_organizer(id):
-#     pass
 
 
-# @app.route("/user/<int:id>/delete", methods=["GET", "POST"])
-# def user_delete(id):
-# 	user = db.get_or_404(User, id)
-#     if request.method == "POST":
-#         db.session.delete(user)
-#         db.session.commit()
-#         return redirect(url_for("user_list"))
-#     return render_template("user/delete.html", user=user)
 
 if __name__ == "__main__":
     app.run()

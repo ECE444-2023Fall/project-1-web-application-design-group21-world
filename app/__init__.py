@@ -31,6 +31,7 @@ def create_app(config_name):
             app.logger.info("Initialized database")
     else:   
         app.logger.info("Database already contains user table.")
+    
 
     from .main import main as main_blueprint
     from .main.organizers import organizers_blueprint

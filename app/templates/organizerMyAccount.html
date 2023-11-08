@@ -1,7 +1,9 @@
-{% extends 'base.html' %} {% import "bootstrap/wtf.html" as wtf %} {% block
-    page_content%}
-    <div class="page-header">
-      <a href="{{ url_for('logout') }}">Logout</a>
-      <h1>Hello, {% if name %}{{name}}{% else %}Stranger{% endif %}!</h1>
-    </div>
-    {% endblock %}
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
+<div class="page-header">
+  <a href="{{ url_for('logout') }}">Logout</a>
+  <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+  <a href="{{ url_for('organizer_create_event') }}" class="btn btn-primary">Create Event</a>
+</div>
+{% endblock %}

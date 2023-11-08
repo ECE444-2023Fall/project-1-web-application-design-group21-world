@@ -29,9 +29,6 @@ class Interest(db.Model):
 
     def __repr__(self):
         return f"Interest: {self.name}"
-    #initialize table
-    #standard, list of dits, debug 
-    #select from events table 
 
 
 class OrganizerInterest(db.Model):
