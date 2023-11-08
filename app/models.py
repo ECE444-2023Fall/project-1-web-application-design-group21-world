@@ -8,9 +8,13 @@ from . import db
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(10), unique=True, nullable=False)
+    name = db.Column(db.String(10), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    faculty = db.Column(db.String(255))
+    major = db.Column(db.String(255))
+    campus = db.Column(db.String(255))
+    yearOfStudy = db.Column(db.String(255))
 
     def __repr__(self):
         return "<User %r" % self.name
