@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
 from app.main.event_form import EventForm
-from app.main.forms import LoginForm, UserSignUpForm
+from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
 from app.main.organizers.organizer_form import OrganizerSignupForm
 from app.models import (
     Event,
