@@ -37,17 +37,17 @@ class OrganizerInterest(db.Model):
     interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
 
 
-class Organizer(db.Model):
+class Organizer(UserMixin,db.Model):
     __tablename__ = "organizers"
     id = db.Column(db.Integer, primary_key=True)
     organizer_name: Mapped[str] = mapped_column(String(30), nullable=False)
     organizer_email: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     description: Mapped[str] = mapped_column(String(10000), nullable=True)
-    contact_email: Mapped[str] = mapped_column(String(30), nullable=True)
+    campus: Mapped[str] = mapped_column(String(5), nullable=True)
     website: Mapped[str] = mapped_column(String(30), nullable=True)
     instagram: Mapped[str] = mapped_column(String(30), nullable=True)
     linkedin: Mapped[str] = mapped_column(String(30), nullable=True)
-    campus: Mapped[str] = mapped_column(String(3), nullable=True)
 
     def __repr__(self):
         return "<Organizer %r" % self.organizer_email
