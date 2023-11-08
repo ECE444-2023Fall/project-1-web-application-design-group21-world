@@ -26,7 +26,15 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    # Assuming User and Organizer are separate models
+    # Check if the user ID corresponds to a User
+    user = User.query.get(int(user_id))
+    organizer = Organizer.query.get(int(user_id))
+    if user:
+        return user
+    elif organizer:
+        return organizer
+    return None 
 
 
 @app.shell_context_processor
@@ -41,21 +49,16 @@ def make_shell_context():
         Event=Event,
     )
 
-@app.route("/userMyAccount", methods=["GET", "POST"])
+@app.route("/user/myAccount", methods=["GET", "POST"])
 @login_required
 def userMyAccount():
-    return render_template("userMyAccount.html", name = current_user.name,
-        email=current_user.email,
-        faculty=current_user.faculty,
-        major=current_user.major,
-        campus=current_user.campus,
-        yearOfStudy=current_user.yearOfStudy,
-    )
+    return render_template("userMyAccount.html", name=current_user.name, email=current_user.email, faculty=current_user.faculty, major=current_user.major, campus=current_user.campus, yearOfStudy=current_user.yearOfStudy)
 
-@app.route("/organizerMyAccount", methods=["GET", "POST"])
+
+@app.route("/organizer/myAccount", methods=["GET", "POST"])
 @login_required
 def organizerMyAccount():
-    return render_template("organizerMyAccount.html", name=session["organizer_name"])
+    return render_template("organizerMyAccount.html", name=current_user.organizer_name)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -71,17 +74,15 @@ def login():
             user = User.query.filter_by(email=email).first()
             if user and check_password_hash(user.password, password):
                 print(f"User object: {user}")
-                current_user = user
                 login_user(user)
-                return redirect("userMyAccount")  # Redirect to user's account
+                return redirect("/user/myAccount")  # Redirect to user's account
         elif role == 'organizer':
             organizer = Organizer.query.filter_by(organizer_email=email).first()
             print(f"Organizer object: {organizer}")
             if organizer and check_password_hash(organizer.password, password):
-                session["organizer_name"] = organizer.organizer_name
-                current_user = organizer
-                login_user(organizer)
-                return redirect("organizerMyAccount")  # Redirect to organizer's account
+                logout_user()
+                print(login_user(organizer))
+                return redirect("/organizer/myAccount")  # Redirect to organizer's account
 
         flash("Invalid email or password")
 
@@ -91,7 +92,7 @@ def login():
 
 
 @app.route("/signup", methods=["GET", "POST"])
-def signup():
+def userSignup():
     form = UserSignUpForm()
     if form.validate_on_submit():
         email = User.query.filter_by(email=form.email.data).first()
@@ -144,7 +145,14 @@ def organizerSignup():
         hashed_password = generate_password_hash(form.password.data)
         if organizer is None and email is None:
             if "utoronto" in form.organization_email.data.split("@")[1]:
-                organizer = Organizer(organizer_name=form.organization_name.data, organizer_email=form.organization_email.data, password = hashed_password)
+                organizer = Organizer(organizer_name=form.organization_name.data, 
+                                      organizer_email=form.organization_email.data,
+                                      password = hashed_password,
+                                      description = form.organization_description.data,
+                                      campus = form.organization_campus.data,
+                                      website = form.organization_website_link.data,
+                                      instagram = form.organization_instagram_link.data,
+                                      linkedin = form.organization_linkedin_link.data)
                 db.session.add(organizer)
                 db.session.commit()
                 session["organizer_name"] = form.organization_name.data
@@ -227,4 +235,4 @@ def init_interests():
 #     return render_template("user/delete.html", user=user)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
