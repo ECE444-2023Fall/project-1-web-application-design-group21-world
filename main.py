@@ -1,9 +1,20 @@
 import os
 import uuid
 
-from flask import flash, redirect, render_template, request, session, url_for
+from flask import (
+    Flask,
+    flash,
+    logging,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
+from flask_bootstrap import Bootstrap
 from flask_login import (
     LoginManager,
+    UserMixin,
     current_user,
     login_required,
     login_user,
@@ -15,6 +26,19 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import create_app, db
 from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
 from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserInterest
+from app.main.forms import LoginForm, UserSignUpForm
+from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
+from app.models import (
+    Event,
+    EventInterest,
+    Interest,
+    Organizer,
+    OrganizerInterest,
+    User,
+)
+from flask import request, redirect
+from app.main.event_form import EventForm
+import uuid
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
@@ -22,6 +46,26 @@ migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+
+interests_data = [
+    "Academic",
+    "Arts",
+    "Athletics",
+    "Recreation",
+    "Community Service",
+    "Culture & Identities",
+    "Environment & Sustainability",
+    "Global Interest",
+    "Hobby & Leisure",
+    "Leadership",
+    "Media",
+    "Politics",
+    "Social",
+    "Social Justice and Advocacy",
+    "Spirituality & Faith Communities",
+    "Student Governments, Councils & Unions",
+    "Work & Career Development",
+]
 
 
 @login_manager.user_loader
@@ -34,6 +78,7 @@ def load_user(user_id):
         return user
     elif organizer:
         return organizer
+    return None
     return None
 
 
@@ -73,6 +118,9 @@ def organizerMyAccount():
     return render_template(
         "organizerMyAccount.html", name=current_user.organizer_name
     )
+    return render_template(
+        "organizerMyAccount.html", name=current_user.organizer_name
+    )
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -83,7 +131,9 @@ def login():
         email = form.email.data
         password = form.password.data
         role = request.form.get("role")  # Get the selected role from the form
+        role = request.form.get("role")  # Get the selected role from the form
 
+        if role == "user":
         if role == "user":
             user = User.query.filter_by(email=email).first()
             if user and check_password_hash(user.password, password):
@@ -96,10 +146,20 @@ def login():
             organizer = Organizer.query.filter_by(
                 organizer_email=email
             ).first()
+                return redirect(
+                    "/user/myAccount"
+                )  # Redirect to user's account
+        elif role == "organizer":
+            organizer = Organizer.query.filter_by(
+                organizer_email=email
+            ).first()
             print(f"Organizer object: {organizer}")
             if organizer and check_password_hash(organizer.password, password):
                 logout_user()
                 print(login_user(organizer))
+                return redirect(
+                    "/organizer/myAccount"
+                )  # Redirect to organizer's account
                 return redirect(
                     "/organizer/myAccount"
                 )  # Redirect to organizer's account
@@ -191,6 +251,7 @@ def logout():
     return redirect(url_for("login"))
 
 
+
 @app.route("/organizer/dashboard", methods=["GET"])
 def dashboard():
     return render_template("organizer_dashboard.html")
@@ -200,6 +261,12 @@ def dashboard():
 def organizerSignup():
     form = OrganizerSignupForm()
     if form.validate_on_submit():
+        organizer = Organizer.query.filter_by(
+            organizer_name=form.organization_name.data
+        ).first()
+        email = Organizer.query.filter_by(
+            organizer_email=form.organization_email.data
+        ).first()
         organizer = Organizer.query.filter_by(
             organizer_name=form.organization_name.data
         ).first()
@@ -232,11 +299,25 @@ def organizerSignup():
                     instagram=form.organization_instagram_link.data,
                     linkedin=form.organization_linkedin_link.data,
                 )
+                organizer = Organizer(
+                    organizer_name=form.organization_name.data,
+                    organizer_email=form.organization_email.data,
+                    password=hashed_password,
+                    description=form.organization_description.data,
+                    image_link=image_path,
+                    campus=form.organization_campus.data,
+                    website=form.organization_website_link.data,
+                    instagram=form.organization_instagram_link.data,
+                    linkedin=form.organization_linkedin_link.data,
+                )
                 db.session.add(organizer)
                 db.session.commit()
                 session["organizer_name"] = form.organization_name.data
                 session["organizer_email"] = form.organization_email.data
                 session["campus"] = form.organization_campus.data
+                return redirect(
+                    url_for("organizers.organizer_list")
+                )  # Redirect to the organizer's dashboard
                 return redirect(
                     url_for("organizers.organizer_list")
                 )  # Redirect to the organizer's dashboard
@@ -254,9 +335,12 @@ def organizer_create_event():
     organizer = Organizer.query.filter_by(
         organizer_email=current_user.organizer_email
     ).first()
+    organizer = Organizer.query.filter_by(
+        organizer_email=current_user.organizer_email
+    ).first()
 
     if form.validate_on_submit():
-        organizer_id = organizer.id
+        organization_id = organizer.id
         event_name = Event.query.filter_by(
             event_name=form.event_name.data
         ).first()
@@ -276,6 +360,7 @@ def organizer_create_event():
                 description=form.description.data,
                 date=form.date.data,
                 time=form.time.data,
+                image_link=image_path,
                 image_link=image_path,
                 location=form.location.data,
                 google_map_link=form.google_map_link.data,
