@@ -29,15 +29,17 @@ def create_app(config_name):
             db.drop_all()
             db.create_all()
             app.logger.info("Initialized database")
-    else:
+    else:   
         app.logger.info("Database already contains user table.")
-
+    
     from .main import main as main_blueprint
     from .main.organizers import organizers_blueprint
+    from .main.events import events_blueprint
     from .main.users import users_blueprint
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(users_blueprint)
     app.register_blueprint(organizers_blueprint)
+    app.register_blueprint(events_blueprint)
 
     return app

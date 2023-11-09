@@ -1,10 +1,8 @@
 # create_db.py
-from app.models import User
+from app.models import User, Interest
 from main import app, db
 
-with app.app_context():
-    # create the database and the db table
-    db.create_all()
 
-    # commit the changes
+with app.app_context():
+    db.drop_all()
     db.session.commit()
