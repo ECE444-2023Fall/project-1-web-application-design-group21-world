@@ -21,6 +21,7 @@ class OrganizerSignupForm(FlaskForm):
             validators.EqualTo("confirm", message="Passwords must match"),
         ],
     )
+    confirm = PasswordField("Repeat passoword")
     organization_campus = SelectField(
         "Campus",
         choices=[("UTSG"), ("UTSC"), ("UTM")],
