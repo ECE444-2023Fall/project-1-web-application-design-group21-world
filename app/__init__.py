@@ -1,7 +1,6 @@
-import os
 
 import sqlalchemy as sa
-from flask import Flask, render_template
+from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
@@ -33,8 +32,8 @@ def create_app(config_name):
         app.logger.info("Database already contains user table.")
 
     from .main import main as main_blueprint
-    from .main.organizers import organizers_blueprint
     from .main.events import events_blueprint
+    from .main.organizers import organizers_blueprint
     from .main.users import users_blueprint
 
     app.register_blueprint(main_blueprint)

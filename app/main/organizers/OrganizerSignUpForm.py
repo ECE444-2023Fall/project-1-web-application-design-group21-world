@@ -1,15 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import (
-    EmailField,
-    PasswordField,
-    SelectField,
-    StringField,
-    SubmitField,
-    FileField,
-    validators,
-)
 from flask_wtf.file import FileAllowed
-from wtforms.validators import DataRequired, Email, Length, URL
+from wtforms import (EmailField, FileField, PasswordField, SelectField,
+                     StringField, SubmitField, validators)
+from wtforms.validators import URL, DataRequired, Email, Length
 
 
 class OrganizerSignupForm(FlaskForm):
@@ -25,6 +18,7 @@ class OrganizerSignupForm(FlaskForm):
         validators=[
             DataRequired(),
             validators.Length(min=8, max=80),
+            validators.EqualTo("confirm", message="Passwords must match"),
         ],
     )
     organization_campus = SelectField(

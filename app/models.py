@@ -1,7 +1,7 @@
-from flask_login import LoginManager, UserMixin
+from flask_login import UserMixin
 from sqlalchemy import Integer, String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import datetime
+from sqlalchemy.orm import Mapped, mapped_column
+
 from . import db
 
 
@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     faculty = db.Column(db.String(255))
     major = db.Column(db.String(255))
     campus = db.Column(db.String(255))
-    yearOfStudy = db.Column(db.String(255))
+    year_of_study = db.Column(db.String(255))
 
     def __repr__(self):
         return "<User %r" % self.name
@@ -77,7 +77,7 @@ class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     event_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    organization_id = db.Column(
+    organizer_id = db.Column(
         db.Integer, db.ForeignKey("organizers.id"), nullable=True
     )
     description: Mapped[str] = mapped_column(String(10000), nullable=True)

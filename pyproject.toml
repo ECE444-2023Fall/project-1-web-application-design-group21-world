@@ -1,0 +1,15 @@
+[tool.black]
+line-length = 79
+include = '\.pyi$?'
+exclude = '''
+/(
+  \.toml
+  |\.sh
+  |\.git
+  |\.ini
+  |Dockerfile
+  |Jenkinfile
+  |venv
+  |__pycache__
+)/
+'''

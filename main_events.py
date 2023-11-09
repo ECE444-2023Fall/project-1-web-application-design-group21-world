@@ -1,31 +1,12 @@
-import json
 import os
-from datetime import datetime
 
-from flask import (
-    Flask,
-    flash,
-    logging,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
-from flask_bootstrap import Bootstrap
+from flask import flash, render_template, session
 from flask_migrate import Migrate
-from flask_moment import Moment
 
 from app import create_app, db
 from app.main.event_form import EventForm
-from app.models import (
-    Event,
-    EventInterest,
-    Interest,
-    Organizer,
-    OrganizerInterest,
-    User,
-)
+from app.models import (Event, EventInterest, Interest, Organizer,
+                        OrganizerInterest, User)
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)

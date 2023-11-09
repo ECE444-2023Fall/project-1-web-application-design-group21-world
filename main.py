@@ -1,44 +1,18 @@
-import json
 import os
-from datetime import datetime
+import uuid
 
-from flask import (
-    Flask,
-    flash,
-    logging,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
-from flask_bootstrap import Bootstrap
-from flask_login import (
-    LoginManager,
-    UserMixin,
-    current_user,
-    login_required,
-    login_user,
-    logout_user,
-)
+from flask import flash, redirect, render_template, request, session, url_for
+from flask_login import (LoginManager, current_user, login_required,
+                         login_user, logout_user)
 from flask_migrate import Migrate
-from flask_moment import Moment
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
+from app.main.event_form import EventForm
 from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
-from app.models import (
-    Event,
-    EventInterest,
-    Interest,
-    Organizer,
-    OrganizerInterest,
-    User,
-)
-from flask import request, redirect
-from app.main.event_form import EventForm
-import uuid
+from app.models import (Event, EventInterest, Interest, Organizer,
+                        OrganizerInterest, User)
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
@@ -213,8 +187,9 @@ def organizerSignup():
                 if image:
                     random_uuid = uuid.uuid4()
                     uuid_string = str(random_uuid)
-                    image_path = (
-                        "app/resources/" + "event_" + uuid_string + ".jpg"
+                    image_path = os.path.join(
+                        app.config["UPLOAD_FOLDER"],
+                        "event_" + uuid_string + ".jpg",
                     )
                     # You can process and save the image here, e.g., save it to a folder or a database.
                     image.save(image_path)

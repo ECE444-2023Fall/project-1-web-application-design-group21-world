@@ -19,13 +19,17 @@ def events_create():
             google_map_link=request.json["google_map_link"],
             fee=request.json["fee"],
             has_rsvp=request.json["has_rsvp"],
-            external_registration_link=request.json["external_registration_link"],
+            external_registration_link=request.json[
+                "external_registration_link"
+            ],
         )
         db.session.add(event)
         db.session.commit()
         # print("URL FOUND", url_for("event.event_list"))
         # return redirect(url_for("event.event_list"))
-        return render_template("events_new.html", name=event.event_name, event=event)
+        return render_template(
+            "events_new.html", name=event.event_name, event=event
+        )
     return render_template("index_event.html")
 
 

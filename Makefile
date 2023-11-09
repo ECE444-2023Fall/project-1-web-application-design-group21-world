@@ -1,5 +1,5 @@
 SOURCE= *.py app tests 
-MAX_LINE_LENGTH=100
+MAX_LINE_LENGTH=79
 
 black:
 	black -l $(MAX_LINE_LENGTH) $(SOURCE)
