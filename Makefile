@@ -6,9 +6,9 @@ black:
 	black -l $(MAX_LINE_LENGTH) $(SOURCE) --force-exclude $(EXCLUDE)
 
 isort:
-	isort -l $(MAX_LINE_LENGTH) $(SOURCE)
+	isort -l $(MAX_LINE_LENGTH) --profile black $(SOURCE)
 
 autoflake:
-	autoflake $(SOURCE) -r --remove-all-unused-imports --in-place
+	autoflake -r --remove-all-unused-imports --in-place --remove-unused-variables $(SOURCE)
 
-quality: black isort autoflake
+quality: black autoflake isort

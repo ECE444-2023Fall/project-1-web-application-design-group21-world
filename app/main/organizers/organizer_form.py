@@ -1,7 +1,14 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import (EmailField, FileField, PasswordField, SelectField,
-                     StringField, SubmitField, validators)
+from wtforms import (
+    EmailField,
+    FileField,
+    PasswordField,
+    SelectField,
+    StringField,
+    SubmitField,
+    validators,
+)
 from wtforms.validators import URL, DataRequired, Email, Length
 
 
