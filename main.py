@@ -230,7 +230,7 @@ def organizer_create_event():
     ).first()
 
     if form.validate_on_submit():
-        organization_id = organizer.id
+        organizer_id = organizer.id
         event_name = Event.query.filter_by(
             event_name=form.event_name.data
         ).first()
@@ -246,7 +246,7 @@ def organizer_create_event():
                 image_path = None
             event_entry = Event(
                 event_name=form.event_name.data,
-                organization_id=organization_id,
+                organizer_id=organizer_id,
                 description=form.description.data,
                 date=form.date.data,
                 time=form.time.data,
@@ -262,7 +262,7 @@ def organizer_create_event():
             db.session.commit()
 
             session["event_name"] = form.event_name.data
-            session["organization_id"] = organization_id
+            session["organizer_id"] = organizer_id
             session["description"] = form.description.data
             session["date"] = form.date.data
             session["time"] = form.time.data
@@ -279,6 +279,26 @@ def organizer_create_event():
             )  # Redirect to the organizer's account after successful form submission
 
     return render_template("index.html", form=form)
+
+
+@app.route("/events/list", methods=["GET", "POST"])
+def events_list():
+    events_list = Event.query.all()
+    if events_list is not None:
+        return render_template(
+            "events_list.html",
+            events_list=events_list,
+        )
+
+
+@app.route("/events/<event_id>", methods=["GET"])
+def events_details(event_id):
+    event = Event.query.get(int(event_id))
+    if event is not None:
+        return render_template(
+            "event.html",
+            event=event,
+        )
 
 
 if __name__ == "__main__":

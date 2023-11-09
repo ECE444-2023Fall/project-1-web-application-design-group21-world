@@ -6,4 +6,3 @@ users_blueprint = Blueprint(
     static_folder="../../static",
     template_folder="../../templates",
 )
-

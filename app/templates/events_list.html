@@ -8,16 +8,14 @@
 </div>
 
 <div class="main">
-  <h1>Events</h1>
   <ul class="cards">
   {% for event in events_list %}
     <li class="cards_item">
       <div class="card">
         <div class="card_image"><img src="https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg?cs=srgb&dl=pexels-wolfgang-2747449.jpg&fm=jpg"></div>
         <div class="card_content">
-          <h2 class="card_title">{{event.name}}</h2>
-          <p class="card_text">{{event.description}}</p>
-          <button class="btn card_btn">Read More</button>
+          <h2 class="card_text">{{event.name}}</h2>
+          <a href="/events/{{event.id}}" class="btn btn-primary">Read More</a>
         </div>
       </div>
     </li>

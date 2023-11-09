@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Event Details{% endblock %}
+
+{% block page_content %}
+<div class="page-header"> 
+    <h1>{{event.event_name}}</h1>
+</div>
+
+<div class="main">
+  <b>Date: </b>{{event.date}}<b>Time: </b>{{event.time}}
+  <b>Location: </b> {{event.location}}
+  <b>Description: </b> {{event.description}}
+  <b>Registration Fee: </b> {{event.fee}}  
+</div>
+{% endblock %}
