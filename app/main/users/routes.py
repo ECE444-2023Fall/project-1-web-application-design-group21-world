@@ -1,4 +1,12 @@
-from flask import redirect, render_template, request, session, url_for
+from flask import (
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 
 from ... import db
 from ...models import User

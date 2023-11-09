@@ -1,7 +1,24 @@
-from flask import redirect, render_template, request, session, url_for
+from flask import (
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 
 from ... import db
 from ...models import Organizer
+from werkzeug.security import check_password_hash, generate_password_hash
+from flask_login import (
+    LoginManager,
+    UserMixin,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 from . import organizers_blueprint
 
 
@@ -21,10 +38,17 @@ def organizer_create():
     return render_template("index.html")
 
 
+
 @organizers_blueprint.route("/organizer/list", methods=["GET"])
 def organizer_list():
     organizers = Organizer.query.all()
     if organizers is not None:
+        return render_template(
+            "organizerDashboard.html",
+            name=session.get("organization_name", "Stranger"),
+            organizers=organizers,
+        )
+
         return render_template(
             "organizerDashboard.html",
             name=session.get("organization_name", "Stranger"),
