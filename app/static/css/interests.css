@@ -25,6 +25,7 @@
   .feature-card1-text {
     align-self: center;
     margin-bottom: var(--dl-space-space-twounits);
+    padding: 10px;
   }
   .feature-card1-image {
     width: var(--dl-size-size-medium);
@@ -32,8 +33,9 @@
     object-fit: cover;
   }
   
-  
-  
+  .feature-card1-feature-card.selected {
+  background-color: rgba(230, 209, 171, 0.72);
+  }
   
   .interests-container {
     width: 100%;
@@ -57,10 +59,10 @@
     flex: 0 0 auto;
     width: 100%;
     display: grid;
-    grid-gap: var(--dl-space-space-twounits);
+    grid-gap: 35px; /* Adjust this value to add spacing between cards */
     align-items: flex-start;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
+}
   .interests-button {
     color: var(--dl-color-hazelhub-dblack);
     width: var(--dl-size-size-maxwidth);
@@ -102,5 +104,11 @@
     .interests-container1 {
       grid-gap: var(--dl-space-space-halfunit);
     }
+
+
+    .hidden-checkbox {
+      visibility: hidden;
+  }
+  
   }
   
