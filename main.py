@@ -1,44 +1,18 @@
 import os
 import uuid
 
-from flask import (
-    Flask,
-    flash,
-    logging,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
-from flask_bootstrap import Bootstrap
-from flask_login import (
-    LoginManager,
-    UserMixin,
-    current_user,
-    login_required,
-    login_user,
-    logout_user,
-)
+from flask import flash, redirect, render_template, request, session, url_for
+from flask_login import (LoginManager, current_user, login_required,
+                         login_user, logout_user)
 from flask_migrate import Migrate
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
-from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
-from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserInterest
+from app.main.event_form import EventForm
 from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
-from app.models import (
-    Event,
-    EventInterest,
-    Interest,
-    Organizer,
-    OrganizerInterest,
-    User,
-)
-from flask import request, redirect
-from app.main.event_form import EventForm
-import uuid
+from app.models import (Event, EventInterest, Interest, Organizer,
+                        OrganizerInterest, User)
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
