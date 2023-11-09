@@ -314,7 +314,7 @@ def organizer_create_event():
     ).first()
 
     if form.validate_on_submit():
-        organization_id = organizer.id
+        organizer_id = organizer.id
         event_name = Event.query.filter_by(
             event_name=form.event_name.data
         ).first()
@@ -392,6 +392,26 @@ def user_events():
     events_list = current_user.events
     # app.logger.info(f"Events list: {len(events_list)}")
 
+    if events_list is not None:
+        return render_template(
+            "events_list.html",
+            events_list=events_list,
+        )
+
+
+@app.route("/events/<event_id>", methods=["GET"])
+def events_details(event_id):
+    event = Event.query.get(int(event_id))
+    if event is not None:
+        return render_template(
+            "event.html",
+            event=event,
+        )
+
+
+@app.route("/events/list", methods=["GET", "POST"])
+def events_list():
+    events_list = Event.query.all()
     if events_list is not None:
         return render_template(
             "events_list.html",

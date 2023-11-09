@@ -1,12 +1,12 @@
-import os
+# import os
 
-from flask import flash, render_template, session
-from flask_migrate import Migrate
+# from flask import flash, render_template, session
+# from flask_migrate import Migrate
 
-from app import create_app, db
-from app.main.event_form import EventForm
-from app.models import (Event, EventInterest, Interest, Organizer,
-                        OrganizerInterest, User)
+# from app import create_app, db
+# from app.main.event_form import EventForm
+# from app.models import (Event, EventInterest, Interest, Organizer,
+#                         OrganizerInterest, User)
 
 # app = create_app(os.getenv("FLASK_CONFIG") or "default")
 # migrate = Migrate(app, db)

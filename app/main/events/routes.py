@@ -1,4 +1,4 @@
-from flask import render_template, request, session
+from flask import render_template, request
 
 from ... import db
 from ...models import Event
@@ -32,15 +32,13 @@ def events_create():
         return render_template(
             "events_new.html", name=event.event_name, event=event
         )
-    return render_template("index_event.html")
 
 
-@events_blueprint.route("/events/list", methods=["GET"])
-def events_list():
-    events_list = Event.query.all()
-    if events_list is not None:
-        return render_template(
-            "events.html",
-            name=session.get("first_name", "Stranger"),
-            events_list=events_list,
-        )
+# @events_blueprint.route("/events/list", methods=["GET"])
+# def events_list():
+#     events_list = Event.query.all()
+#     if events_list is not None:
+#         return render_template(
+#             "events_list.html",
+#             events_list=events_list,
+#         )
