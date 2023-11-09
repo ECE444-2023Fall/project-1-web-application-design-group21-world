@@ -18,7 +18,7 @@ from app.models import (
     Organizer,
     OrganizerEvents,
     OrganizerInterests,
-    User,
+    User, UserInterest,
     UserEvents,
     UserInterests,
 )
