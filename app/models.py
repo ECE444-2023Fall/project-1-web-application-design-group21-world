@@ -21,6 +21,13 @@ class User(UserMixin, db.Model):
 
     # interest = db.relationship("Interest", db.ForeignKey('interests.id'), )
 
+class UserOrganizations(db.Model):
+    __tablename__ = "user_organizations"
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    organizer_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), primary_key=True)
+    
+
+
 
 class Interest(db.Model):
     __tablename__ = "interests"

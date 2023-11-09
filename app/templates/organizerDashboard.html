@@ -1,9 +1,18 @@
-{% extends "base.html" %} {% block title %}Flasky{% endblock %} {% block
-    page_content %}
+{% extends "base.html" %}
+{% block title %}Flasky{% endblock %}
+{% block page_content %}
     <div class="page-header">
-      <h1>Hello, {{ name }}!</h1>
-      New organizers are: {% for organizer in organizers %}
-      <p>{{organizer.organizer_name}}, {{organizer.organizer_email}}</p>
-      {% endfor %}
+        <h1>Hello, {{ name }}!</h1>
+        New organizers are:
+        {% for organizer in organizers %}
+            <div>
+                <p>{{ organizer.organizer_name }}, {{ organizer.organizer_email }}</p>
+                <form method="POST" action="follow">
+                    <input type="hidden" name="user_id" value="{{ user_id }}">
+                    <input type="hidden" name="organizer_id" value="{{ organizer.id }}">
+                    <button type="submit">Follow</button>
+                </form>
+            </div>
+        {% endfor %}
     </div>
-    {% endblock %}
+{% endblock %}

@@ -13,7 +13,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import create_app, db
 from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
-from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User
+from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserOrganizations
 from flask import request, redirect
 from app.main.event_form import EventForm
 import uuid
@@ -82,6 +82,13 @@ def userMyAccount():
 def organizerMyAccount():
     return render_template("organizerMyAccount.html", name=current_user.organizer_name)
 
+
+@app.route("/user/organizer/list", methods=["GET"])
+@login_required
+def user_organizer_list():
+    organizers = Organizer.query.all()
+    if organizers is not None:
+        return render_template("organizerDashboard.html", name=session.get("current_user.name", "Stranger"), organizers=organizers, user_id = current_user.id)
 
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -171,7 +178,7 @@ def organizerSignup():
                 if image:
                     random_uuid = uuid.uuid4()
                     uuid_string = str(random_uuid)
-                    image_path = 'app/resources/' + "event_" + uuid_string + ".jpg"
+                    image_path = 'app/resources/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
                     # You can process and save the image here, e.g., save it to a folder or a database.
                     image.save(image_path)
                 else:
@@ -190,7 +197,9 @@ def organizerSignup():
                 session["organizer_name"] = form.organization_name.data
                 session["organizer_email"] = form.organization_email.data
                 session["campus"] = form.organization_campus.data
-                return redirect(url_for("organizers.organizer_list"))  # Redirect to the organizer's dashboard
+                logout_user()
+                login_user(organizer)
+                return redirect("/organizer/myAccount")   # Redirect to the organizer's dashboard
             else:
                 flash("You may only register with your UofT email")
         else:
@@ -249,7 +258,22 @@ def organizer_create_event():
 
     return render_template("index.html", form=form)
 
+@app.route("/user/organizer/follow", methods=["POST"])
+def follow_organizer():
+    user_id = request.form.get("user_id")
+    organizer_id = request.form.get("organizer_id")
+    followed_organization = UserOrganizations.query.filter_by(user_id = user_id, organizer_id = organizer_id).first()
+    if followed_organization is None:
+        user_followed_organizations = UserOrganizations(user_id = user_id, organizer_id = organizer_id)
+        db.session.add(user_followed_organizations)
+        db.session.commit()
+    else:
+        db.session.delete(followed_organization)
+        db.session.commit()
+    # Add logic to follow the organizer based on user_id and organizer_id
+    # For example, you might update a database table to reflect the user's follow status
 
+    return redirect(("/user/organizer/list"))
 
 
 
