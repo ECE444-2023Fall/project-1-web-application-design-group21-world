@@ -10,7 +10,10 @@ class EventForm(FlaskForm):
     description = StringField("Event Description", validators=[DataRequired()])
     date = StringField("Date of Event", validators=[DataRequired()])
     time = StringField("Time of Event", validators=[DataRequired()])
-    image = FileField("Upload Event Image", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'])])
+    image = FileField(
+        "Upload Event Image",
+        validators=[FileAllowed(["jpg", "png", "jpeg", "gif"])],
+    )
     location = StringField("Location of Event", validators=[DataRequired()])
     google_map_link = StringField("Map of Event", validators=[DataRequired()])
     fee = StringField("Fee for Event")

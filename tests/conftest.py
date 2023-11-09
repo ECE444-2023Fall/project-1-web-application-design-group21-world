@@ -26,7 +26,9 @@ def new_user():
     num = random.randint(0, 9999)
 
     user = User(
-        name=f"utorid{num}", email=f"test.{num}@mail.utoronto.ca", password=f"insecure{num}"
+        name=f"utorid{num}",
+        email=f"test.{num}@mail.utoronto.ca",
+        password=f"insecure{num}",
     )
 
     print(user.name)

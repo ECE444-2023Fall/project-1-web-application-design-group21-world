@@ -2,14 +2,30 @@ import json
 import os
 from datetime import datetime
 
-from flask import Flask, flash, logging, redirect, render_template, request, session, url_for
+from flask import (
+    Flask,
+    flash,
+    logging,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask_moment import Moment
 
 from app import create_app, db
 from app.main.event_form import EventForm
-from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User
+from app.models import (
+    Event,
+    EventInterest,
+    Interest,
+    Organizer,
+    OrganizerInterest,
+    User,
+)
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
@@ -27,22 +43,27 @@ def make_shell_context():
         Event=Event,
     )
 
+
 @app.route("/", methods=["GET", "POST"])
 def event_index():
     form = EventForm()
     if form.validate_on_submit():
-        event_name = Event.query.filter_by(event_name=form.event_name.data).first()
+        event_name = Event.query.filter_by(
+            event_name=form.event_name.data
+        ).first()
         if event_name is None:
-            event_entry = Event(event_name=form.event_name.data, 
-                               organization_id=form.org_id.data, 
-                               description=form.description.data, 
-                               date=form.date.data,
-                               time=form.time.data,
-                               location=form.location.data,
-                               google_map_link=form.google_map_link.data,
-                               fee=form.fee.data,
-                               has_rsvp=form.has_rsvp.data,
-                               external_registration_link=form.external_registration_link.data)
+            event_entry = Event(
+                event_name=form.event_name.data,
+                organization_id=form.org_id.data,
+                description=form.description.data,
+                date=form.date.data,
+                time=form.time.data,
+                location=form.location.data,
+                google_map_link=form.google_map_link.data,
+                fee=form.fee.data,
+                has_rsvp=form.has_rsvp.data,
+                external_registration_link=form.external_registration_link.data,
+            )
             db.session.add(event_entry)
             db.session.commit()
             session["event_name"] = form.event_name.data
@@ -54,10 +75,12 @@ def event_index():
             session["google_map_link"] = form.google_map_link.data
             session["fee"] = form.fee.data
             session["has_rsvp"] = form.has_rsvp.data
-            session["external_registration_link"] = form.external_registration_link.data
-        #email = Event.query.filter_by(email=form.email.data).first()
+            session[
+                "external_registration_link"
+            ] = form.external_registration_link.data
+        # email = Event.query.filter_by(email=form.email.data).first()
 
-        #if event_name is None and email is None:
+        # if event_name is None and email is None:
         #    if "utoronto" in form.email.data.split("@")[1]:
         #        event_name = Event(event_name=form.username.data, email=form.email.data)
         #        db.session.add(event_name)
@@ -67,7 +90,7 @@ def event_index():
         #        return redirect(url_for("event.event_list"))
         #    else:
         #        flash("You may only register with your UofT email")
-        #else:
+        # else:
         #    flash("Account with this username/email add
         # ress already exists!")
         else:
@@ -82,7 +105,7 @@ def event_index():
 #     return render_template("user/detail.html", user=user)
 
 
-#@app.route("/organizer/create", methods=["POST"])
+# @app.route("/organizer/create", methods=["POST"])
 # def organizer_create():
 #      organizer = Organizer(
 #          organizer_name=request.form["organizer_name"],
@@ -113,5 +136,5 @@ def event_index():
 #         return redirect(url_for("user_list"))
 #     return render_template("user/delete.html", user=user)
 
-#if __name__ == "__main__":
+# if __name__ == "__main__":
 #    app.run()
