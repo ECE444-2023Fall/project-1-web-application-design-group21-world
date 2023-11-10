@@ -11,9 +11,10 @@ from flask_moment import Moment
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
+from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
+from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserInterest
 from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
-from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User
 from flask import request, redirect
 from app.main.event_form import EventForm
 import uuid
@@ -138,7 +139,7 @@ def userSignup():
                 session["major"] = form.major.data
                 session["campus"] = form.campus.data
                 session["yearOfStudy"] = form.year_of_study.data
-                return redirect(url_for("users.user_list"))
+                return redirect("/signup/interests")
             else:
                 flash("You may only register with your UofT email")
         else:
@@ -146,6 +147,47 @@ def userSignup():
 
     return render_template("index.html", form=form)
 
+# Define the interests as a dictionary
+interests_dict = {
+    1: "Academics",
+    2: "Arts",
+    3: "Athletics",
+    4: "Recreation",
+    5: "Community Service",
+    6: "Culture & Identities",
+    7: "Environment & Sustainability",
+    8: "Global Interest",
+    9: "Hobby & Leisure",
+    10: "Leadership",
+    11: "Media",
+    12: "Politics",
+    13: "Social",
+    14: "Social Justices and Advocacy",
+    15: "Spirituality & Faith Communities",
+    16: "Student Governments, Councils & Unions",
+    17: "Work & Career Development"
+}
+
+# Assuming 'interests_dict' is defined as shown above
+
+@app.route("/signup/interests", methods=["GET", "POST"])
+def signupInterests():
+    # Check if the form has been submitted
+    if request.method == 'POST':
+        # Get the selected interest IDs from the form
+        print(request.form.get("selected_interests"))
+        selected_interest_ids = request.form.get("selected_interests")
+        # Do something with the selected interest IDs
+        user = User.query.filter_by(email=session["email"]).first()
+        for interest_id in selected_interest_ids:
+             userInterest = UserInterest(user_id = user.id, interest_id = interest_id)
+             db.session.add(userInterest)
+             db.session.commit()
+
+        return redirect("/user/myAccount")
+
+    # Render the template with the interests
+    return render_template("interests.html", interests_dict=interests_dict)
 
 @app.route("/logout")
 @login_required
