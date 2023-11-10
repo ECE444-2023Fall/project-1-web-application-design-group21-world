@@ -127,6 +127,7 @@ def userSignup():
                 )
                 db.session.add(user)
                 db.session.commit()
+                login_user(user, fresh=True) 
                 return redirect("/signup/interests")
             else:
                 flash("You may only register with your UofT email")
@@ -199,6 +200,7 @@ def organizerSignup():
                                       linkedin = form.organization_linkedin_link.data)
                 db.session.add(organizer)
                 db.session.commit()
+                login_user(organizer, fresh=True)
                 return redirect("/organizer/myAccount")  # Redirect to the organizer's dashboard
             else:
                 flash("You may only register with your UofT email")
