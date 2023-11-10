@@ -1,30 +1,31 @@
 {% extends "bootstrap/base.html" %} {% block title %}HazelHub{% endblock %} {%
 block navbar %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-<div class="navbar navbar-inverse" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button
-        type="button"
-        class="navbar-toggle"
-        data-toggle="collapse"
-        data-target=".navbar-collapse"
-      >
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">HazelHub</a>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="/">Home</a></li>
-        <li><a href="/events">Events</a></li>
-        <li><a href="/discover">Discover</a></li>
-        <li><a href="/user/myAccount">My Account</a></li>
-      </ul>
-    </div>
+<div class="tob-bar-container tob-bar-root-class-name">
+  <div class="tob-bar-top-bar">
+    <img alt="image" src="static/assets/hazelhublogo.svg" class="tob-bar-image" />
+    <span class="tob-bar-text"><span>HazelHub</span></span>
+    <nav class="tob-bar-links">
+      <a href="/discover" class="tob-bar-navlink">
+        <span>Discover  </span>
+      </a>
+      <a href="/events" class="tob-bar-navlink1">
+        <span>My Events  </span>
+      </a>
+      <a href="/organizer/dashboard" class="tob-bar-navlink2">
+        <span>My Organizations</span>
+      </a>
+
+      {% if current_user.name %}
+      <a href="/user/myAccount" class="tob-bar-navlink3">
+        <span>My Account</span>
+      </a>
+      {% else %}
+      <a href="/organizer/myAccount" class="tob-bar-navlink3">
+        <span>My Account</span>
+      </a>
+      {% endif %}
+    </nav>
   </div>
 </div>
 {% endblock %} {% block content %}

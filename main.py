@@ -155,7 +155,11 @@ def logout():
 
 @app.route("/organizer/dashboard", methods=["GET"])
 def dashboard():
-    return render_template("organizer_dashboard.html")
+    return render_template("organizerDashboard.html")
+
+@app.route("/organizer/details", methods=["GET"])
+def organizer_details():
+    return render_template("organizer-details.html")
 
 
 @app.route("/organizer/signup", methods=["GET", "POST"])
@@ -190,7 +194,7 @@ def organizerSignup():
                 session["organizer_name"] = form.organization_name.data
                 session["organizer_email"] = form.organization_email.data
                 session["campus"] = form.organization_campus.data
-                return redirect(url_for("organizers.organizer_list"))  # Redirect to the organizer's dashboard
+                return redirect("/organizer/dashboard")  # Redirect to the organizer's dashboard
             else:
                 flash("You may only register with your UofT email")
         else:

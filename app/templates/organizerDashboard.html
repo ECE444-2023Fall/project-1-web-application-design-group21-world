@@ -1,7 +1,11 @@
 {% extends "base.html" %} {% block title %}Flasky{% endblock %} {% block
     page_content %}
     <div class="page-header">
-      <h1>Hello, {{ name }}!</h1>
+      <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+      {% if current_user.organizer_name %}
+      <p><a href=/organizer/myAccount> Go to my organization page</a></p>
+      {% endif %}
+      <p><a href=/organizer/details> Organization Details</a></p>
       New organizers are: {% for organizer in organizers %}
       <p>{{organizer.organizer_name}}, {{organizer.organizer_email}}</p>
       {% endfor %}
