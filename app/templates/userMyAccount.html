@@ -7,5 +7,11 @@ page_content%}
   <p>Faculty: {{faculty}}</p>
   <p>Campus: {{campus}}</p>
   <p>Year of Study: {{yearOfStudy}}</p>
+  <p>Interests:</p>
+  <ul>
+    {% for interest in interests %}
+    <li>{{ interest.name }}</li>
+    {% endfor %}
+  </ul>
 </div>
 {% endblock %}
