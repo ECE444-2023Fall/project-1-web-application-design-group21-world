@@ -1,0 +1,119 @@
+{% extends "base.html" %} {% block title %}Flasky{% endblock %} 
+{% block page_content %}
+<div>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/my-events.css') }}" />
+  <div class="my-events-container">
+    <h1 class="my-events-text3">My Events</h1>
+    <div
+      class="event-row-container-container event-row-container-root-class-name"
+    >
+      <span class="event-row-container-text">
+        <span>Registered Events</span>
+      </span>
+      <div
+        class="event-row-component-container event-row-component-root-class-name"
+      >
+        <a href="{{ url_for('eventDetails' )}}" class="event-row-component-navlink">
+          <img
+            alt="image_alt3"
+            src="image_src3"
+            class="event-row-component-image"
+          />
+        </a>
+        <div class="event-row-component-container1">
+          <a href="{{ url_for('eventDetails' )}}" class="event-row-component-navlink1">
+            <span>EVENT_NAME</span>
+          </a>
+          <span class="event-row-component-text">
+            <span>EVENT_LOCATION_DATE_TIME</span>
+          </span>
+        </div>
+        <svg viewBox="0 0 1024 1024" class="event-row-component-icon">
+          <path d="M384 690l452-452 60 60-512 512-238-238 60-60z"></path>
+        </svg>
+      </div>
+      <div
+        class="event-row-component-container event-row-component-root-class-name1"
+      >
+        <a href="{{ url_for('eventDetails' )}}" class="event-row-component-navlink">
+          <img
+            alt="image_alt3"
+            src="image_src3"
+            class="event-row-component-image"
+          />
+        </a>
+        <div class="event-row-component-container1">
+          <a href="{{ url_for('eventDetails' )}}" class="event-row-component-navlink1">
+            <span>EVENT_NAME</span>
+          </a>
+          <span class="event-row-component-text">
+            <span>EVENT_LOCATION_DATE_TIME</span>
+          </span>
+        </div>
+        <svg viewBox="0 0 1024 1024" class="event-row-component-icon">
+          <path d="M384 690l452-452 60 60-512 512-238-238 60-60z"></path>
+        </svg>
+      </div>
+    </div>
+    <div
+      class="event-row-container1-container event-row-container1-root-class-name"
+    >
+      <span class="event-row-container1-text"><span>Saved Events</span></span>
+      <div
+        class="event-row-component1-container event-row-component1-root-class-name"
+      >
+        <a href="{{ url_for('eventDetails' )}}" class="event-row-component1-navlink">
+          <img
+            alt="image_alt4"
+            src="image_src4"
+            class="event-row-component1-image"
+          />
+        </a>
+        <div class="event-row-component1-container1">
+          <a href="{{ url_for('eventDetails' )}}" class="event-row-component1-navlink1">
+            <span>EVENT_NAME</span>
+          </a>
+          <span class="event-row-component1-text">
+            <span>EVENT_LOCATION_DATE_TIME</span>
+          </span>
+        </div>
+        <svg
+          viewBox="0 0 731.4285714285713 1024"
+          class="event-row-component1-icon"
+        >
+          <path
+            d="M665.143 73.143c8.571 0 17.143 1.714 25.143 5.143 25.143 9.714 41.143 33.143 41.143 58.857v736.571c0 25.714-16 49.143-41.143 58.857-8 3.429-16.571 4.571-25.143 4.571-17.714 0-34.286-6.286-47.429-18.286l-252-242.286-252 242.286c-13.143 12-29.714 18.857-47.429 18.857-8.571 0-17.143-1.714-25.143-5.143-25.143-9.714-41.143-33.143-41.143-58.857v-736.571c0-25.714 16-49.143 41.143-58.857 8-3.429 16.571-5.143 25.143-5.143h598.857z"
+          ></path>
+        </svg>
+      </div>
+      <div
+        class="event-row-component1-container event-row-component1-root-class-name1"
+      >
+        <a href="{{ url_for('eventDetails' )}}" class="event-row-component1-navlink">
+          <img
+            alt="image_alt4"
+            src="image_src4"
+            class="event-row-component1-image"
+          />
+        </a>
+        <div class="event-row-component1-container1">
+          <a href="{{ url_for('eventDetails' )}}" class="event-row-component1-navlink1">
+            <span>EVENT_NAME</span>
+          </a>
+          <span class="event-row-component1-text">
+            <span>EVENT_LOCATION_DATE_TIME</span>
+          </span>
+        </div>
+        <svg
+          viewBox="0 0 731.4285714285713 1024"
+          class="event-row-component1-icon"
+        >
+          <path
+            d="M665.143 73.143c8.571 0 17.143 1.714 25.143 5.143 25.143 9.714 41.143 33.143 41.143 58.857v736.571c0 25.714-16 49.143-41.143 58.857-8 3.429-16.571 4.571-25.143 4.571-17.714 0-34.286-6.286-47.429-18.286l-252-242.286-252 242.286c-13.143 12-29.714 18.857-47.429 18.857-8.571 0-17.143-1.714-25.143-5.143-25.143-9.714-41.143-33.143-41.143-58.857v-736.571c0-25.714 16-49.143 41.143-58.857 8-3.429 16.571-5.143 25.143-5.143h598.857z"
+          ></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
