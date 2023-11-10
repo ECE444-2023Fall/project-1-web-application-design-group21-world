@@ -1,9 +1,16 @@
-from flask_login import LoginManager, UserMixin
-from sqlalchemy import Integer, String
+from __future__ import annotations
+from typing import List
+from flask_login import UserMixin
+from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import datetime
 from . import db
 
+UserInterests = Table(
+    "users_interests",
+    db.metadata,
+    Column("user_id", ForeignKey("users.id")),
+    Column("interest_id", ForeignKey("interests.id")),
+)
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -16,34 +23,28 @@ class User(UserMixin, db.Model):
     major = db.Column(db.String(255))
     campus = db.Column(db.String(255))
     yearOfStudy = db.Column(db.String(255))
+    interests: Mapped[List[Interest]] = relationship(
+        secondary=UserInterests, back_populates="users"
+    )
+
+    def add_interest(self, interest):
+        if interest not in self.interests:
+            self.interests.append(interest)
 
     def __repr__(self):
         return "<User %r" % self.name
-
-    # interest = db.relationship("Interest", db.ForeignKey('interests.id'), )
-
-class UserEvents(db.Model):
-    __tablename__ = "user_events"
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
-    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), primary_key=True)
-
-    def __repr__(self):
-        return "<UserEvents %r" % self.name
 
 class Interest(db.Model):
     __tablename__ = "interests"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
+    users: Mapped[List[User]] = relationship(
+        secondary=UserInterests, back_populates="interests"
+    )
 
     def __repr__(self):
         return f"Interest: {self.name}"
     
-class UserInterest(db.Model):
-    __tablename__ = "user_interests"
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
-    interest_id = db.Column(db.Integer, primary_key=True)
-
-
 class OrganizerInterest(db.Model):
     __tablename__ = "organizer_interests"
     organizer_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), primary_key=True)
