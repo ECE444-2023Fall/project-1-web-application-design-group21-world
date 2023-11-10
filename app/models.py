@@ -110,11 +110,6 @@ class Interest(db.Model):
 
     def __repr__(self):
         return f"Interest: {self.name}"
-    
-class UserInterest(db.Model):
-    __tablename__ = "user_interests"
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
-    interest_id = db.Column(db.Integer, primary_key=True)
 
 
 class Organizer(UserMixin, db.Model):

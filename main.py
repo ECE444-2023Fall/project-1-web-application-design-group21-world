@@ -10,16 +10,18 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import create_app, db
 from app.main.event_form import EventForm
 from app.main.forms import LoginForm, UserSignUpForm
-from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
-from app.models import (Event, EventInterest, Interest, Organizer,
-                        OrganizerInterest, User)
-
-app = create_app(os.getenv("FLASK_CONFIG") or "default")
-migrate = Migrate(app, db)
-
-login_manager = LoginManager()
-login_manager.login_view = "login"
-login_manager.init_app(app)
+from app.main.organizers.organizer_form import OrganizerSignupForm
+from app.models import (
+    Event,
+    EventInterests,
+    Interest,
+    Organizer,
+    OrganizerEvents,
+    OrganizerInterests,
+    User,
+    UserEvents,
+    UserInterests,
+)
 
 interests_data = [
     "Academic",
@@ -40,6 +42,13 @@ interests_data = [
     "Student Governments, Councils & Unions",
     "Work & Career Development",
 ]
+
+app = create_app(os.getenv("FLASK_CONFIG") or "default")
+migrate = Migrate(app, db)
+
+login_manager = LoginManager()
+login_manager.login_view = "login"
+login_manager.init_app(app)
 
 
 @login_manager.user_loader
@@ -412,6 +421,18 @@ def events_details(event_id):
 @app.route("/events/list", methods=["GET", "POST"])
 def events_list():
     events_list = Event.query.all()
+    if events_list is not None:
+        return render_template(
+            "events_list.html",
+            events_list=events_list,
+        )
+
+
+@app.route("/user/events", methods=["GET", "POST"])
+@login_required
+def user_events():
+    User.query.get(current_user.id)
+    events_list = Event.query.filter_by()
     if events_list is not None:
         return render_template(
             "events_list.html",
