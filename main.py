@@ -26,26 +26,6 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
-interests_data = [
-        "Academic",
-        "Arts",
-        "Athletics",
-        "Recreation",
-        "Community Service",
-        "Culture & Identities",
-        "Environment & Sustainability",
-        "Global Interest",
-        "Hobby & Leisure",
-        "Leadership",
-        "Media",
-        "Politics",
-        "Social",
-        "Social Justice and Advocacy",
-        "Spirituality & Faith Communities",
-        "Student Governments, Councils & Unions",
-        "Work & Career Development"
-    ]
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -195,14 +175,16 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
-@app.route("/organizer/dashboard", methods=["GET"])
-def dashboard():
-    return render_template("organizerDashboard.html")
+@app.route("/organizer/list", methods=["GET"])
+def user_organizer_list():
+    organizers = Organizer.query.all()
+    if organizers is not None:
+        return render_template("organizerDashboard.html",  organizers=organizers)
 
-@app.route("/organizer/details", methods=["GET"])
-def organizer_details():
-    return render_template("organizer-details.html")
-
+@app.route("/organizer/details/<int:organizer_id>", methods=["GET"])
+def organizer_details(organizer_id):
+    organizer = Organizer.query.filter_by(id = organizer_id).first()
+    return render_template("organizer-details.html", organization=organizer)
 
 @app.route("/organizer/signup", methods=["GET", "POST"])
 def organizerSignup():

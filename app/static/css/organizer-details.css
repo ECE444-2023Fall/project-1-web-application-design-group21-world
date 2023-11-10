@@ -184,7 +184,8 @@
     left: 104px;
     bottom: 46px;
     height: var(--dl-size-size-xxlarge);
-    position: absolute;
+    position: relative;
+    margin-bottom: 200px;
   }
   
   .organization-desc-container {
@@ -230,5 +231,6 @@
     align-items: center;
     flex-direction: column;
     justify-content: flex-start;
+    padding-bottom: 50px;
   }
   
