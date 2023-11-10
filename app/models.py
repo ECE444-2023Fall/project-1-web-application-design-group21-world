@@ -34,6 +34,14 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return "<User %r" % self.name
 
+class UserEvents(db.Model):
+    __tablename__ = "user_events"
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), primary_key=True)
+
+    def __repr__(self):
+        return "<UserEvents %r" % self.name
+
 class Interest(db.Model):
     __tablename__ = "interests"
     id = db.Column(db.Integer, primary_key=True)
