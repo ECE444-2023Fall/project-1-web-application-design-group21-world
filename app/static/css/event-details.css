@@ -177,6 +177,14 @@
   position: absolute;
 }
 
+.interest-text {
+  color: var(--dl-color-hazelhub-dblack);
+  font-size: 24px;
+  font-style: normal;
+  font-family: "DM Sans";
+  font-weight: 400;
+}
+
 .event-description-container {
   width: 874px;
   height: 552px;
