@@ -1,7 +1,26 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, validators, SelectMultipleField
-from wtforms.validators import DataRequired, Email
+from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, validators, SelectMultipleField, widgets
+from wtforms.validators import DataRequired, Email, Optional
 
+interests_dict = {
+    1: "Academics",
+    2: "Arts",
+    3: "Athletics",
+    4: "Recreation",
+    5: "Community Service",
+    6: "Culture & Identities",
+    7: "Environment & Sustainability",
+    8: "Global Interest",
+    9: "Hobby & Leisure",
+    10: "Leadership",
+    11: "Media",
+    12: "Politics",
+    13: "Social",
+    14: "Social Justices and Advocacy",
+    15: "Spirituality & Faith Communities",
+    16: "Student Governments, Councils & Unions",
+    17: "Work & Career Development"
+}
 
 class UserSignUpForm(FlaskForm):
     name = StringField("What is your full name?", validators=[DataRequired()])
@@ -39,6 +58,10 @@ class LoginForm(FlaskForm):
     password = PasswordField("Enter your password", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
 class userSignupInterestForm(FlaskForm):
-    interests = SelectMultipleField("Select Your Interests", validators=[DataRequired()], coerce=int)
+    interests = MultiCheckboxField("Select Your Interests", choices=list(interests_dict.items()), validators=[Optional()], coerce=int)
     submit = SubmitField("Submit")   
