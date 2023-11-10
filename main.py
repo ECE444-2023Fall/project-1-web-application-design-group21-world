@@ -12,7 +12,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
 from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
-from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserInterest, UserEvents
+from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserEvents
 from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from flask import request, redirect
@@ -77,8 +77,7 @@ def make_shell_context():
 @app.route("/user/myAccount", methods=["GET", "POST"])
 @login_required
 def userMyAccount():
-    print(current_user.role)
-    return render_template("userMyAccount.html", name=current_user.name, email=current_user.email, faculty=current_user.faculty, major=current_user.major, campus=current_user.campus, yearOfStudy=current_user.yearOfStudy)
+    return render_template("userMyAccount.html", name=current_user.name, email=current_user.email, faculty=current_user.faculty, major=current_user.major, campus=current_user.campus, yearOfStudy=current_user.yearOfStudy, interests=current_user.interests)
 
 
 @app.route("/organizer/myAccount", methods=["GET", "POST"])
@@ -152,24 +151,17 @@ def userSignup():
 
     return render_template("index.html", form=form)
 
-
 @app.route("/signup/interests", methods=["GET", "POST"])
 def signupInterests():
-    # Check if the form has been submitted
-    if request.method == 'POST':
-        # Get the selected interest IDs from the form
-        print(request.form.get("selected_interests"))
-        selected_interest_ids = request.form.get("selected_interests")
-        # Do something with the selected interest IDs
-        user = User.query.filter_by(email=session["email"]).first()
-        for interest_id in selected_interest_ids:
-             userInterest = UserInterest(user_id = user.id, interest_id = interest_id)
-             db.session.add(userInterest)
-             db.session.commit()
+    form = userSignupInterestForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        for id in form.interests.data:
+            user = User.query.filter_by(email=current_user.email).first()
+            interest = Interest.query.filter_by(id=id).first()
+            user.add_interest(interest)
+            db.session.commit()
         return redirect("/user/myAccount")
-
-    # Render the template with the interests
-    return render_template("interests.html", interests_dict=interests_dict)
+    return render_template("interests.html", form=form)
 
 @app.route("/logout")
 @login_required
