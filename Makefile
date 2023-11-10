@@ -9,6 +9,6 @@ isort:
 	isort -l $(MAX_LINE_LENGTH) --profile black $(SOURCE)
 
 autoflake:
-	autoflake -r --remove-all-unused-imports --in-place --remove-unused-variables $(SOURCE)
+	autoflake $(SOURCE) -r --remove-all-unused-imports --in-place --remove-unused-variables 
 
 quality: black autoflake isort

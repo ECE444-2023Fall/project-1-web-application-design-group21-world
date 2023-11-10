@@ -18,19 +18,15 @@ from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.organizer_form import OrganizerSignupForm
 from app.models import (
     Event,
-    EventInterest,
+    EventInterests,
     Interest,
     Organizer,
-    OrganizerInterest,
+    OrganizerEvents,
+    OrganizerInterests,
     User,
+    UserEvents,
+    UserInterests,
 )
-
-app = create_app(os.getenv("FLASK_CONFIG") or "default")
-migrate = Migrate(app, db)
-
-login_manager = LoginManager()
-login_manager.login_view = "login"
-login_manager.init_app(app)
 
 interests_data = [
     "Academic",
@@ -52,6 +48,13 @@ interests_data = [
     "Work & Career Development",
 ]
 
+app = create_app(os.getenv("FLASK_CONFIG") or "default")
+migrate = Migrate(app, db)
+
+login_manager = LoginManager()
+login_manager.login_view = "login"
+login_manager.init_app(app)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -71,11 +74,14 @@ def make_shell_context():
     return dict(
         db=db,
         User=User,
-        Interest=Interest,
-        OrganizerInterest=OrganizerInterest,
         Organizer=Organizer,
-        EventInterest=EventInterest,
+        Interest=Interest,
         Event=Event,
+        UserInterests=UserInterests,
+        UserEvents=UserEvents,
+        OrganizerInterests=OrganizerInterests,
+        OrganizerEvents=OrganizerEvents,
+        EventInterests=EventInterests,
     )
 
 
@@ -295,6 +301,18 @@ def organizer_create_event():
 @app.route("/events/list", methods=["GET", "POST"])
 def events_list():
     events_list = Event.query.all()
+    if events_list is not None:
+        return render_template(
+            "events_list.html",
+            events_list=events_list,
+        )
+
+
+@app.route("/user/events", methods=["GET", "POST"])
+@login_required
+def user_events():
+    User.query.get(current_user.id)
+    events_list = Event.query.filter_by()
     if events_list is not None:
         return render_template(
             "events_list.html",
