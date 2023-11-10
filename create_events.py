@@ -1,11 +1,11 @@
-from flask import url_for
-
-from app.models import Organizer,Event
-import string
 import random
-from main import app
-from flask import render_template, request, session
+import string
+
 from app import db
+from app.models import Event
+from main import app
+
+
 def create_events(num_events=10):
     with app.app_context():
         for i in range(num_events):
@@ -24,9 +24,11 @@ def create_events(num_events=10):
             db.session.add(event)
         db.session.commit()
 
-def generate_random_strings(length = 10):
+
+def generate_random_strings(length=10):
     letters = string.ascii_letters
-    return ''.join(random.choice(letters) for i in range(length))
-    
-if __name__ == '__main__':
+    return "".join(random.choice(letters) for i in range(length))
+
+
+if __name__ == "__main__":
     create_events()

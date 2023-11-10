@@ -311,8 +311,10 @@ def events_list():
 @app.route("/user/events", methods=["GET", "POST"])
 @login_required
 def user_events():
-    User.query.get(current_user.id)
-    events_list = Event.query.filter_by()
+    # app.logger.info(f"Current User ID: {current_user.id}")
+    events_list = current_user.events
+    # app.logger.info(f"Events list: {len(events_list)}")
+
     if events_list is not None:
         return render_template(
             "events_list.html",
