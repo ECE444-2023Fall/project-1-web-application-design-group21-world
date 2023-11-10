@@ -249,6 +249,15 @@ def organizer_create_event():
 
     return render_template("index.html", form=form)
 
+@app.route("/eventDetails", methods=["GET", "POST"])
+@login_required
+def eventDetails():
+    return render_template("event-details.html")
+    
+@app.route("/myEvents", methods=["GET", "POST"])
+@login_required
+def myEvents():
+    return render_template("my-events.html")
 
 
 
