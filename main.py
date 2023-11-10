@@ -296,22 +296,24 @@ def myEvents():
 
 
 
-# @app.route("/register_for_event/<int:event_id>", methods=["POST"])
-# @login_required
-# def register_for_event(event_id):
-#     # Add logic to register the user for the event in your database
-#     # Example: Add an entry to the user_event table with user id and event id
-#     if current_user.name:
-#     # Assuming you have a UserEvent model and a current_user variable
-#     new_registration = UserEvents(user_id=current_user.id, event_id=event_id)
-#     db.session.add(new_registration)
-#     db.session.commit()
+@app.route("/register_for_event/<int:event_id>", methods=["POST"])
+@login_required
+def register_for_event(event_id):
+     # Add logic to register the user for the event in your database
+     # Example: Add an entry to the user_event table with user id and event id
+     print("Hello Hello")
+     if current_user.is_authenticated:
+            if current_user.role == "user":
+                # Assuming you have a UserEvent model and a current_user variable
+                new_registration = UserEvents(user_id=current_user.id, event_id=event_id)
+                db.session.add(new_registration)
+                db.session.commit()
 
-#     # Add a flash message
-#     flash("You have successfully registered for the event!", "success")
+                # Add a flash message
+                flash("You have successfully registered for the event!", "success")
 
-#     # Return a success response
-#     return jsonify({"message": "Registration successful"})
+     # Return a success response
+     return redirect("user/myAccount")
 
 
 
