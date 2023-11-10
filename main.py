@@ -18,6 +18,7 @@ from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from flask import request, redirect
 from app.main.event_form import EventForm
 import uuid
+from sqlalchemy import text
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
@@ -291,8 +292,19 @@ def event_details(event_id):
         return render_template("event_not_found.html")
     
 @app.route("/myEvents", methods=["GET", "POST"])
+@login_required
 def myEvents():
-    return render_template("my-events.html")
+    # Get the event IDs belonging to the current user
+
+
+    user_event_ids = UserEvents.query.filter_by(user_id=current_user.id).values(text('event_id'))
+
+    user_event_ids = [event_id[0] for event_id in user_event_ids]
+
+    # Get the corresponding events from the Events table
+    user_events = Event.query.filter(Event.id.in_(user_event_ids)).all()
+
+    return render_template("my-events.html", user_events=user_events)
 
 
 
@@ -301,7 +313,6 @@ def myEvents():
 def register_for_event(event_id):
      # Add logic to register the user for the event in your database
      # Example: Add an entry to the user_event table with user id and event id
-     print("Hello Hello")
      if current_user.is_authenticated:
             if current_user.role == "user":
                 # Assuming you have a UserEvent model and a current_user variable
