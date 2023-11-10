@@ -56,17 +56,16 @@ class Organizer(UserMixin,db.Model):
     # Define a relationship with Interests, assuming you have a Many-to-Many relationship
     # interests = db.relationship("Interest", secondary="organizer_interests", backref="organizers")
 
-
 class EventInterest(db.Model):
     __tablename__ = "event_interests"
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), primary_key=True)
-    interest_id = db.Column(db.Integer, db.ForeignKey("interests.id"), primary_key=True)
+    interest_id = db.Column(db.Integer, nullable=False)
 
 class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     event_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    organization_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), nullable=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), nullable=False)
     description: Mapped[str] = mapped_column(String(10000), nullable=True)
     image_link: Mapped[str] = mapped_column(String(1000), nullable=True)
     date: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -74,6 +73,6 @@ class Event(db.Model):
     location: Mapped[str] = mapped_column(String(100), nullable=False)
     google_map_link: Mapped[str] = mapped_column (String(100), nullable=False)
     fee: Mapped[int] = mapped_column(Integer, nullable=True)
-    #interest_area: Mapped[str] = mapped_column(String, nullable=False)
     has_rsvp: Mapped[str] = mapped_column(String(100), nullable=False)
     external_registration_link: Mapped[str] = mapped_column(String(200), nullable=True)
+    #selected_interests: Mapped[str] = mapped_column(String(100), nullable=True)

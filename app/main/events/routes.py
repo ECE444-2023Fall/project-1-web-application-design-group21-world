@@ -18,7 +18,8 @@ def events_create():
             google_map_link=request.json["google_map_link"],
             fee=request.json["fee"],
             has_rsvp=request.json["has_rsvp"],
-            external_registration_link=request.json["external_registration_link"]
+            external_registration_link=request.json["external_registration_link"],
+            #selected_interests = request.json["selected_interests"]
         )
         db.session.add(event)
         db.session.commit()

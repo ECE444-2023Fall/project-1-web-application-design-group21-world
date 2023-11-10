@@ -229,6 +229,7 @@ def organizer_create_event():
                 fee=form.fee.data,
                 has_rsvp=form.has_rsvp.data,
                 external_registration_link=form.external_registration_link.data,
+                #selected_interests = form.selected_interests.data
             )
 
             db.session.add(event_entry)
@@ -244,13 +245,49 @@ def organizer_create_event():
             session["fee"] = form.fee.data
             session["has_rsvp"] = form.has_rsvp.data
             session["external_registration_link"] = form.external_registration_link.data
+            #session["selected_interests"] = form.selected_interests.data
 
-            return redirect("/organizer/myAccount")  # Redirect to the organizer's account after successful form submission
+            return redirect("/organizer/create/event/interests") 
+            #return redirect("/organizer/myAccount")  # Redirect to the organizer's account after successful form submission
 
     return render_template("index.html", form=form)
 
 
+interests_dict = {
+    1: "Academics",
+    2: "Arts",
+    3: "Athletics",
+    4: "Recreation",
+    5: "Community Service",
+    6: "Culture & Identities",
+    7: "Environment & Sustainability",
+    8: "Global Interest",
+    9: "Hobby & Leisure",
+    10: "Leadership",
+    11: "Media",
+    12: "Politics",
+    13: "Social",
+    14: "Social Justices and Advocacy",
+    15: "Spirituality & Faith Communities",
+    16: "Student Governments, Councils & Unions",
+    17: "Work & Career Development"
+}
 
+
+@app.route("/organizer/create/event/interests", methods=["GET", "POST"])
+def eventInterests():
+    if request.method == 'POST':
+       selected_interests = request.form.get("interest_id")
+       for i in selected_interests:
+        int_entry = EventInterest(
+            event_id = Event.query.filter_by(name=session["event_name"].first()),
+            int_id = i)
+        db.session.add(int_entry)
+        db.session.commit()
+        
+        return redirect("/organizer/myAccount")
+    # Render the template with the interests
+    return render_template("interests.html", interests_dict=interests_dict)
 
 
 if __name__ == "__main__":
