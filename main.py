@@ -53,13 +53,13 @@ interests_dict = {
 def load_user(user_id):
     # Assuming User and Organizer are separate models
     # Check if the user ID corresponds to a User
-    user = User.query.get(int(user_id))
-    organizer = Organizer.query.get(int(user_id))
-    if user:
-        return user
-    elif organizer:
+    user = User.query.get(user_id)
+    print(user)
+    if not user:
+        organizer = Organizer.query.get(user_id)
+        print(organizer)
         return organizer
-    return None 
+    return user
 
 
 @app.shell_context_processor
@@ -96,21 +96,30 @@ def login():
         email = form.email.data
         password = form.password.data
         role = request.form.get('role')  # Get the selected role from the form
+
+        # Logout the user before attempting to log in again
         if current_user.is_authenticated:
             logout_user()
+
         print(current_user)
+
         if role == 'user':
             user = User.query.filter_by(email=email).first()
             if user and check_password_hash(user.password, password):
                 print(f"User object: {user}")
-                login_user(user)
-                return redirect("/user/myAccount")  # Redirect to user's account
+                login_user(user, fresh=True) 
+                # Redirect to user's account
+                return redirect("/user/myAccount")
+
         elif role == 'organizer':
             organizer = Organizer.query.filter_by(organizer_email=email).first()
             print(f"Organizer object: {organizer}")
+
             if organizer and check_password_hash(organizer.password, password):
-                login_user(organizer)
-                return redirect("/organizer/myAccount")  # Redirect to organizer's account
+                # Create a new session after logging out the user
+                login_user(organizer, fresh=True) 
+                # Redirect to organizer's account
+                return redirect("/organizer/myAccount")
 
         flash("Invalid email or password")
 
@@ -127,7 +136,10 @@ def userSignup():
         hashed_password = generate_password_hash(form.password.data)
         if email is None:
             if "utoronto" in form.email.data.split("@")[1]:
+                random_uuid = uuid.uuid4()
+                uuid_string = str(random_uuid)
                 user = User(
+                    id = uuid_string,
                     name=form.name.data,
                     email=form.email.data,
                     password=hashed_password,
@@ -138,12 +150,6 @@ def userSignup():
                 )
                 db.session.add(user)
                 db.session.commit()
-                session["name"] = form.name.data
-                session["email"] = form.email.data
-                session["faculty"] = form.faculty.data
-                session["major"] = form.major.data
-                session["campus"] = form.campus.data
-                session["yearOfStudy"] = form.year_of_study.data
                 return redirect("/signup/interests")
             else:
                 flash("You may only register with your UofT email")
@@ -166,6 +172,7 @@ def signupInterests():
              userInterest = UserInterest(user_id = user.id, interest_id = interest_id)
              db.session.add(userInterest)
              db.session.commit()
+        session["user_role"] = "user"
         return redirect("/user/myAccount")
 
     # Render the template with the interests
@@ -183,7 +190,7 @@ def user_organizer_list():
     if organizers is not None:
         return render_template("organizerDashboard.html",  organizers=organizers)
 
-@app.route("/organizer/details/<int:organizer_id>", methods=["GET"])
+@app.route("/organizer/details/<string:organizer_id>", methods=["GET"])
 def organizer_details(organizer_id):
     organizer = Organizer.query.filter_by(id = organizer_id).first()
     organizer_events = Event.query.filter_by(organization_id = organizer_id).all()
@@ -202,12 +209,15 @@ def organizerSignup():
                 if image:
                     random_uuid = uuid.uuid4()
                     uuid_string = str(random_uuid)
-                    image_path = 'app/resources/' + "event_" + uuid_string + ".jpg"
+                    image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + ".jpg"
                     # You can process and save the image here, e.g., save it to a folder or a database.
                     image.save(image_path)
                 else:
                     image_path = None
-                organizer = Organizer(organizer_name=form.organization_name.data, 
+                random_uuid = uuid.uuid4()
+                uuid_string = str(random_uuid)
+                organizer = Organizer(id = uuid_string,
+                                      organizer_name=form.organization_name.data, 
                                       organizer_email=form.organization_email.data,
                                       password = hashed_password,
                                       description = form.organization_description.data,
@@ -218,9 +228,6 @@ def organizerSignup():
                                       linkedin = form.organization_linkedin_link.data)
                 db.session.add(organizer)
                 db.session.commit()
-                session["organizer_name"] = form.organization_name.data
-                session["organizer_email"] = form.organization_email.data
-                session["campus"] = form.organization_campus.data
                 return redirect("/organizer/myAccount")  # Redirect to the organizer's dashboard
             else:
                 flash("You may only register with your UofT email")
@@ -243,7 +250,7 @@ def organizer_create_event():
             if image:
                 random_uuid = uuid.uuid4()
                 uuid_string = str(random_uuid)
-                image_path = 'app/resources/' + "event_" + uuid_string + ".jpg"
+                image_path = 'app/static/assets/events/' + "event_" + uuid_string + ".jpg"
                 # You can process and save the image here, e.g., save it to a folder or a database.
                 image.save(image_path)
             else:
@@ -264,18 +271,6 @@ def organizer_create_event():
 
             db.session.add(event_entry)
             db.session.commit()
-
-            session["event_name"] = form.event_name.data
-            session["organization_id"] = organization_id
-            session["description"] = form.description.data
-            session["date"] = form.date.data
-            session["time"] = form.time.data
-            session["location"] = form.location.data
-            session["google_map_link"] = form.google_map_link.data
-            session["fee"] = form.fee.data
-            session["has_rsvp"] = form.has_rsvp.data
-            session["external_registration_link"] = form.external_registration_link.data
-
             return redirect("/organizer/myAccount")  # Redirect to the organizer's account after successful form submission
 
     return render_template("index.html", form=form)
