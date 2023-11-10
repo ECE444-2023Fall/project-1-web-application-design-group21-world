@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 
-from flask import Flask, flash, logging, redirect, render_template, request, session, url_for
+from flask import flash, redirect, render_template, request, session, url_for
 from flask_bootstrap import Bootstrap
 from flask_login import (LoginManager, UserMixin, current_user, login_required, login_user,
                          logout_user)
@@ -12,12 +12,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
 from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
-from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserInterest
+from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserInterest, UserEvents
 from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from flask import request, redirect
 from app.main.event_form import EventForm
 import uuid
+from sqlalchemy import text
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
@@ -26,25 +27,26 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
-interests_data = [
-        "Academic",
-        "Arts",
-        "Athletics",
-        "Recreation",
-        "Community Service",
-        "Culture & Identities",
-        "Environment & Sustainability",
-        "Global Interest",
-        "Hobby & Leisure",
-        "Leadership",
-        "Media",
-        "Politics",
-        "Social",
-        "Social Justice and Advocacy",
-        "Spirituality & Faith Communities",
-        "Student Governments, Councils & Unions",
-        "Work & Career Development"
-    ]
+# Define the interests as a dictionary
+interests_dict = {
+    1: "Academics",
+    2: "Arts",
+    3: "Athletics",
+    4: "Recreation",
+    5: "Community Service",
+    6: "Culture & Identities",
+    7: "Environment & Sustainability",
+    8: "Global Interest",
+    9: "Hobby & Leisure",
+    10: "Leadership",
+    11: "Media",
+    12: "Politics",
+    13: "Social",
+    14: "Social Justices and Advocacy",
+    15: "Spirituality & Faith Communities",
+    16: "Student Governments, Councils & Unions",
+    17: "Work & Career Development"
+}
 
 
 @login_manager.user_loader
@@ -75,12 +77,14 @@ def make_shell_context():
 @app.route("/user/myAccount", methods=["GET", "POST"])
 @login_required
 def userMyAccount():
+    print(current_user.role)
     return render_template("userMyAccount.html", name=current_user.name, email=current_user.email, faculty=current_user.faculty, major=current_user.major, campus=current_user.campus, yearOfStudy=current_user.yearOfStudy)
 
 
 @app.route("/organizer/myAccount", methods=["GET", "POST"])
 @login_required
 def organizerMyAccount():
+    print(current_user.role)
     return render_template("organizerMyAccount.html", name=current_user.organizer_name)
 
 
@@ -92,7 +96,9 @@ def login():
         email = form.email.data
         password = form.password.data
         role = request.form.get('role')  # Get the selected role from the form
-
+        if current_user.is_authenticated:
+            logout_user()
+        print(current_user)
         if role == 'user':
             user = User.query.filter_by(email=email).first()
             if user and check_password_hash(user.password, password):
@@ -103,8 +109,7 @@ def login():
             organizer = Organizer.query.filter_by(organizer_email=email).first()
             print(f"Organizer object: {organizer}")
             if organizer and check_password_hash(organizer.password, password):
-                logout_user()
-                print(login_user(organizer))
+                login_user(organizer)
                 return redirect("/organizer/myAccount")  # Redirect to organizer's account
 
         flash("Invalid email or password")
@@ -147,28 +152,6 @@ def userSignup():
 
     return render_template("index.html", form=form)
 
-# Define the interests as a dictionary
-interests_dict = {
-    1: "Academics",
-    2: "Arts",
-    3: "Athletics",
-    4: "Recreation",
-    5: "Community Service",
-    6: "Culture & Identities",
-    7: "Environment & Sustainability",
-    8: "Global Interest",
-    9: "Hobby & Leisure",
-    10: "Leadership",
-    11: "Media",
-    12: "Politics",
-    13: "Social",
-    14: "Social Justices and Advocacy",
-    15: "Spirituality & Faith Communities",
-    16: "Student Governments, Councils & Unions",
-    17: "Work & Career Development"
-}
-
-# Assuming 'interests_dict' is defined as shown above
 
 @app.route("/signup/interests", methods=["GET", "POST"])
 def signupInterests():
@@ -183,7 +166,6 @@ def signupInterests():
              userInterest = UserInterest(user_id = user.id, interest_id = interest_id)
              db.session.add(userInterest)
              db.session.commit()
-
         return redirect("/user/myAccount")
 
     # Render the template with the interests
@@ -195,10 +177,17 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
-@app.route("/organizer/dashboard", methods=["GET"])
-def dashboard():
-    return render_template("organizer_dashboard.html")
+@app.route("/organizer/list", methods=["GET"])
+def user_organizer_list():
+    organizers = Organizer.query.all()
+    if organizers is not None:
+        return render_template("organizerDashboard.html",  organizers=organizers)
 
+@app.route("/organizer/details/<int:organizer_id>", methods=["GET"])
+def organizer_details(organizer_id):
+    organizer = Organizer.query.filter_by(id = organizer_id).first()
+    organizer_events = Event.query.filter_by(organization_id = organizer_id).all()
+    return render_template("organizer-details.html", organization=organizer, organization_events = organizer_events)
 
 @app.route("/organizer/signup", methods=["GET", "POST"])
 def organizerSignup():
@@ -232,7 +221,7 @@ def organizerSignup():
                 session["organizer_name"] = form.organization_name.data
                 session["organizer_email"] = form.organization_email.data
                 session["campus"] = form.organization_campus.data
-                return redirect(url_for("organizers.organizer_list"))  # Redirect to the organizer's dashboard
+                return redirect("/organizer/myAccount")  # Redirect to the organizer's dashboard
             else:
                 flash("You may only register with your UofT email")
         else:
@@ -291,16 +280,51 @@ def organizer_create_event():
 
     return render_template("index.html", form=form)
 
-@app.route("/eventDetails", methods=["GET", "POST"])
-@login_required
-def eventDetails():
-    return render_template("event-details.html")
+@app.route("/event_details/<int:event_id>", methods=["GET"])
+def event_details(event_id):
+    # Assuming you have an Event model and it has a relationship with Organization
+    event = Event.query.filter_by(id=event_id).first()
+
+    if event:
+        return render_template("event-details.html", event=event)
+    else:
+        # Handle the case where the event with the specified ID is not found
+        return render_template("event_not_found.html")
     
 @app.route("/myEvents", methods=["GET", "POST"])
 @login_required
 def myEvents():
-    return render_template("my-events.html")
+    # Get the event IDs belonging to the current user
 
+
+    user_event_ids = UserEvents.query.filter_by(user_id=current_user.id).values(text('event_id'))
+
+    user_event_ids = [event_id[0] for event_id in user_event_ids]
+
+    # Get the corresponding events from the Events table
+    user_events = Event.query.filter(Event.id.in_(user_event_ids)).all()
+
+    return render_template("my-events.html", user_events=user_events)
+
+
+
+@app.route("/register_for_event/<int:event_id>", methods=["POST"])
+@login_required
+def register_for_event(event_id):
+     # Add logic to register the user for the event in your database
+     # Example: Add an entry to the user_event table with user id and event id
+     if current_user.is_authenticated:
+            if current_user.role == "user":
+                # Assuming you have a UserEvent model and a current_user variable
+                new_registration = UserEvents(user_id=current_user.id, event_id=event_id)
+                db.session.add(new_registration)
+                db.session.commit()
+
+                # Add a flash message
+                flash("You have successfully registered for the event!", "success")
+
+     # Return a success response
+     return redirect("user/myAccount")
 
 
 

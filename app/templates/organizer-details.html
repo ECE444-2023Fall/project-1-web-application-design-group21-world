@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<div>
+  <form method="GET" action="/organizer/details" id="organizer-details">
+    <link href="{{ url_for('static', filename='css/organizer-details.css') }}" rel="stylesheet" />
+    <div class="organizer-details-container">
+        <header class="organizer-title-container">
+            <div class="organization-logo-container organization-logo-root-class-name">
+                <img alt="image" class="organization-logo-image"/>
+            </div>
+            <h1 class="organizer-title-text"><span>{{ organization.organizer_name }}</span></h1>
+            <span class="organizer-title-text1"><span>{{ organization.campus }}</span></span>
+            <span class="organizer-title-text2"><span># of Followers</span></span>
+        </header>
+
+        <div class="organization-email-container organization-email-root-class-name">
+            <span class="organization-email-text">
+                <span>{{ organization.organizer_email }}</span>
+            </span>
+            <span class="organization-email-text1"><span>Contact Email</span></span>
+        </div>
+
+        <div class="organization-desc-container organization-desc-root-class-name">
+            <span class="organization-desc-text"><span>About Us:</span></span>
+            <span class="organization-desc-text1">
+                <span>{{ organization.description }}</span>
+            </span>
+        </div>
+    </div>
+
+
+    <div class="event-row-container-org-container event-row-container-org-root-class-name">
+      <span class="event-row-container-org-text">
+        <span>Current Events</span>
+      </span>
+      {% for event in organization_events %}
+      <div class="event-row-component1-container event-row-component1-root-class-name3">
+        <a href="{{ url_for('event_details', event_id=event.id) }}" class="event-row-component1-navlink">
+          <img alt="image_alt4" src="{{ event.image_src }}" class="event-row-component1-image" />
+        </a>
+        <div class="event-row-component1-container1">
+          <a href="{{ url_for('event_details', event_id=event.id) }}" class="event-row-component1-navlink1">
+            <span>{{ event.name }}</span>
+          </a>
+          <span class="event-row-component1-text">
+            <span>{{ event.location }}</span>
+            <span>{{ event.date }}</span>
+            <span>{{ event.time }}</span>
+          </span>
+        </div>
+        <svg viewBox="0 0 731.4285714285713 1024" class="event-row-component1-icon">
+          <path d="M665.143 73.143c8.571 0 17.143 1.714 25.143 5.143 25.143 9.714 41.143 33.143 41.143 58.857v736.571c0 25.714-16 49.143-41.143 58.857-8 3.429-16.571 4.571-25.143 4.571-17.714 0-34.286-6.286-47.429-18.286l-252-242.286-252 242.286c-13.143 12-29.714 18.857-47.429 18.857-8.571 0-17.143-1.714-25.143-5.143-25.143-9.714-41.143-33.143-41.143-58.857v-736.571c0-25.714 16-49.143 41.143-58.857 8-3.429 16.571-5.143 25.143-5.143h598.857z"> </path>
+        </svg>
+      </div>
+      {% endfor %}
+    </div>
+    
+  
+{% endblock %}
