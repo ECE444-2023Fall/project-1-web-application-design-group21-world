@@ -1,33 +1,23 @@
 {% extends "base.html" %} {% block title %}Flasky{% endblock %} 
 {% block page_content %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <div>
   <link href="{{ url_for('static', filename='css/event-details.css') }}" rel="stylesheet" />
   <div class="event-details-container">
     <div class="event-description-container event-description-root-class-name">
       <div class="title-container title-root-class-name">
         <span class="title-text">
-          <span>EVENT_NAME by ORGANIZATION_NAME</span>
+          <span>{{ event.event_name }}</span>
         </span>
         <svg viewBox="0 0 731.4285714285713 1024" class="title-icon">
-          <path
-            d="M658.286 146.286h-585.143v709.714l292.571-280.571 50.857 48.571 241.714 232v-709.714zM665.143 73.143c8.571 0 17.143 1.714 25.143 5.143 25.143 9.714 41.143 33.143 41.143 58.857v736.571c0 25.714-16 49.143-41.143 58.857-8 3.429-16.571 4.571-25.143 4.571-17.714 0-34.286-6.286-47.429-18.286l-252-242.286-252 242.286c-13.143 12-29.714 18.857-47.429 18.857-8.571 0-17.143-1.714-25.143-5.143-25.143-9.714-41.143-33.143-41.143-58.857v-736.571c0-25.714 16-49.143 41.143-58.857 8-3.429 16.571-5.143 25.143-5.143h598.857z"
-          ></path>
+          <!-- Your path here -->
         </svg>
       </div>
       <div class="desc-container desc-root-class-name">
         <span class="desc-text"><span>Event Description:</span></span>
         <span class="desc-text1">
-          <span>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
-            condimentum sem sed est aliquet, nec eleifend ex imperdiet. Etiam
-            vitae sapien dui.Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Cras condimentum sem sed est aliquet, nec eleifend ex
-            imperdiet. Etiam vitae sapien dui.Lorem ipsum dolor sit amet,
-            consectetur adipiscing elit. Cras condimentum sem sed est aliquet,
-            nec eleifend ex imperdiet. Etiam vitae sapien dui.Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit. Cras condimentum sem sed est
-            aliquet, nec eleifend ex imperdiet. Etiam vitae sapien dui.
-          </span>
+          <span>{{ event.description }}</span>
         </span>
       </div>
       <div class="interest-areas1-container interest-areas1-root-class-name">
@@ -38,28 +28,28 @@
           class="interest-areas1-link"
         >
           <span>Interest Areas:</span>
-        </a>
-        <span class="interest-areas1-text"><span>AREA</span></span>
-        <span class="interest-areas1-text1"><span>AREA</span></span>
-        <span class="interest-areas1-text2"><span>AREA</span></span>
+        <!-- </a>
+        {% for interest in event.interests %}
+        <span class="interest-areas1-text"><span>{{ interest.name }}</span></span>
+        {% endfor %} -->
       </div>
       <div class="date-time-container date-time-root-class-name">
-        <span class="date-time-text"><span>Date: EVENT_DATE</span></span>
+        <span class="date-time-text"><span>Date: {{ event.date }}</span></span>
         <svg viewBox="0 0 950.8571428571428 1024" class="date-time-icon">
-          <path
-            d="M73.143 950.857h804.571v-585.143h-804.571v585.143zM292.571 256v-164.571c0-10.286-8-18.286-18.286-18.286h-36.571c-10.286 0-18.286 8-18.286 18.286v164.571c0 10.286 8 18.286 18.286 18.286h36.571c10.286 0 18.286-8 18.286-18.286zM731.429 256v-164.571c0-10.286-8-18.286-18.286-18.286h-36.571c-10.286 0-18.286 8-18.286 18.286v164.571c0 10.286 8 18.286 18.286 18.286h36.571c10.286 0 18.286-8 18.286-18.286zM950.857 219.429v731.429c0 40-33.143 73.143-73.143 73.143h-804.571c-40 0-73.143-33.143-73.143-73.143v-731.429c0-40 33.143-73.143 73.143-73.143h73.143v-54.857c0-50.286 41.143-91.429 91.429-91.429h36.571c50.286 0 91.429 41.143 91.429 91.429v54.857h219.429v-54.857c0-50.286 41.143-91.429 91.429-91.429h36.571c50.286 0 91.429 41.143 91.429 91.429v54.857h73.143c40 0 73.143 33.143 73.143 73.143z"
-          ></path>
+          <!-- Your path here -->
         </svg>
         <span class="date-time-text1">
-          <span>Time: EVENT_START to EVENT_END</span>
+          <span>Time: {{ event.time }} </span>
         </span>
       </div>
       <span class="event-description-text">
-        <span>Registration Fee: EVENT_FEE</span>
+        <span>Registration Fee: {{ event.fee }}</span>
       </span>
-      <button type="button" class="event-description-button button">
+      {% if current_user.name %}
+      <button type="button" id="registerButton" class="event-description-button button">
         <span>Register</span>
       </button>
+      {% endif %}
       <div class="location-container location-root-class-name">
         <a
           href="https://www.google.com/maps"
@@ -67,17 +57,38 @@
           rel="noreferrer noopener"
           class="location-link"
         >
-          <span>Location: EVENT_LOCATION</span>
+          <span>Location: {{ event.location }}</span>
         </a>
       </div>
     </div>
     <img alt="image" src="{{ url_for('static', filename='assets/hazelhublogo.svg') }}" class="event-details-image1" />
-    <a href="{{ url_for('discover' )}}" class="event-details-navlink2 button">
-      <span>
+    <span>
         <span>&lt; Back to Discover</span>
         <br />
-      </span>
-    </a>
+    </span>
   </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+      $("#registerButton").click(function () {
+          // Make an AJAX request to register for the event
+          $.ajax({
+              type: "POST",
+              url: "{{ url_for('register_for_event', event_id=event.id) }}",
+              success: function (response) {
+                  // Handle the success response (if needed)
+                  console.log("Registration successful");
+                  // You might want to redirect to a confirmation page or update the UI
+              },
+              error: function (error) {
+                  // Handle the error (if needed)
+                  console.error("Registration failed", error);
+              }
+          });
+      });
+  });
+</script>
+
+
 {% endblock %}
