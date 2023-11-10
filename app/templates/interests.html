@@ -1,0 +1,34 @@
+{% extends 'base.html' %} 
+{% block page_content %}
+<form method="POST" action="/user/myAccount" id="interests-form">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/interests.css') }}" />
+    <div class="interests-container">
+        <div class="interests-features">
+            <div class="interests-container1">
+                {% for interest_id, interest_name in interests_dict.items() %}
+                    <div class="feature-card1-feature-card feature-card1-root-class-name" data-interest-id="{{ interest_id }}">
+                        <h3 class="feature-card1-text"><span>{{ interest_name }}</span></h3>
+                        <img src="{{ url_for('static', filename='assets/' + interest_name + '.svg') }}" align="middle" />
+                        <input type="checkbox" name="selected_interests" value="{{ interest_id }}" class="hid">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="interests-button button">Submit</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const featureCards = document.querySelectorAll('.feature-card1-feature-card');
+
+        featureCards.forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('selected');
+                const checkbox = card.querySelector('.hidden-checkbox');
+                checkbox.checked = !checkbox.checked;
+            });
+        });
+    });
+</script>
+{% endblock %}
