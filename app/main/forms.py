@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, validators, SelectMultipleField
-from wtforms.validators import DataRequired, Email
-
+from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, validators, SelectMultipleField, widgets
+from wtforms.validators import DataRequired, Email, Optional
 
 class UserSignUpForm(FlaskForm):
     name = StringField("What is your full name?", validators=[DataRequired()])
@@ -39,6 +38,10 @@ class LoginForm(FlaskForm):
     password = PasswordField("Enter your password", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
 class userSignupInterestForm(FlaskForm):
-    interests = SelectMultipleField("Select Your Interests", validators=[DataRequired()], coerce=int)
+    interests = MultiCheckboxField("Select Your Interests", choices=[], validators=[Optional()], coerce=int)
     submit = SubmitField("Submit")   
