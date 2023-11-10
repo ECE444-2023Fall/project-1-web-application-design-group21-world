@@ -27,28 +27,6 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
-# Define the interests as a dictionary
-interests_dict = {
-    1: "Academics",
-    2: "Arts",
-    3: "Athletics",
-    4: "Recreation",
-    5: "Community Service",
-    6: "Culture & Identities",
-    7: "Environment & Sustainability",
-    8: "Global Interest",
-    9: "Hobby & Leisure",
-    10: "Leadership",
-    11: "Media",
-    12: "Politics",
-    13: "Social",
-    14: "Social Justices and Advocacy",
-    15: "Spirituality & Faith Communities",
-    16: "Student Governments, Councils & Unions",
-    17: "Work & Career Development"
-}
-
-
 @login_manager.user_loader
 def load_user(user_id):
     # Assuming User and Organizer are separate models
@@ -143,6 +121,7 @@ def userSignup():
                 session["major"] = form.major.data
                 session["campus"] = form.campus.data
                 session["yearOfStudy"] = form.year_of_study.data
+                login_user(user)
                 return redirect("/signup/interests")
             else:
                 flash("You may only register with your UofT email")
@@ -152,8 +131,10 @@ def userSignup():
     return render_template("index.html", form=form)
 
 @app.route("/signup/interests", methods=["GET", "POST"])
+@login_required
 def signupInterests():
     form = userSignupInterestForm()
+    form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
     if request.method == 'POST' and form.validate_on_submit():
         for id in form.interests.data:
             user = User.query.filter_by(email=current_user.email).first()
