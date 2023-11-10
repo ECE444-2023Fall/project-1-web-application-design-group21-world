@@ -29,16 +29,16 @@ def create_app(config_name):
     #         db.drop_all()
     #         db.create_all()
     #         app.logger.info("Initialized database")
-    # else:   
+    # else:
     #     app.logger.info("Database already contains user table.")
     with app.app_context():
-            db.drop_all()
-            db.create_all()
-            app.logger.info("Initialized database")
-    
+        db.drop_all()
+        db.create_all()
+        app.logger.info("Initialized database")
+
     from .main import main as main_blueprint
-    from .main.organizers import organizers_blueprint
     from .main.events import events_blueprint
+    from .main.organizers import organizers_blueprint
     from .main.users import users_blueprint
 
     app.register_blueprint(main_blueprint)

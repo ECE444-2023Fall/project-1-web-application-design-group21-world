@@ -2,37 +2,8 @@ import random
 import string
 
 from app import db
-from app.models import Event, Interest, User
+from app.models import Event, User
 from main import app
-
-interests_dict = {
-    1: "Academics",
-    2: "Arts",
-    3: "Athletics",
-    4: "Recreation",
-    5: "Community Service",
-    6: "Culture & Identities",
-    7: "Environment & Sustainability",
-    8: "Global Interest",
-    9: "Hobby & Leisure",
-    10: "Leadership",
-    11: "Media",
-    12: "Politics",
-    13: "Social",
-    14: "Social Justices and Advocacy",
-    15: "Spirituality & Faith Communities",
-    16: "Student Governments, Councils & Unions",
-    17: "Work & Career Development",
-}
-
-
-def seed_interests():
-    interests = []
-    with app.app_context():
-        for id, interest in interests_dict.items():
-            interests.append(Interest(id=id, name=interest))
-        db.session.add_all(interests)
-        db.session.commit()
 
 
 def create_events(num_events=10):
@@ -55,9 +26,6 @@ def create_events(num_events=10):
                 has_rsvp=random.choice(["Yes", "No"]),
                 external_registration_link=generate_random_strings(100),
             )
-            # for interest in random.sample(list(interests_dict.values()), random.choice(range(len(interests_dict)))):
-            #     event.add_interest(interest)
-
             db.session.add(event)
         db.session.commit()
 
@@ -79,8 +47,6 @@ def create_users(num_users=10):
                 campus=generate_random_strings(4),
                 year_of_study=generate_random_strings(10),
             )
-            # for interest in random.sample(list(interests_dict.values()), random.choice(range(len(interests_dict)))):
-            #     user.add_interest(interest)
             db.session.add(user)
         db.session.commit()
 
@@ -91,6 +57,5 @@ def generate_random_strings(length=10):
 
 
 if __name__ == "__main__":
-    create_users()
     create_events()
-    # seed_interests()
+    create_users()
