@@ -95,7 +95,7 @@ def userMyAccount():
         faculty=current_user.faculty,
         major=current_user.major,
         campus=current_user.campus,
-        yearOfStudy=current_user.yearOfStudy,
+        year_of_study=current_user.year_of_study,
     )
 
 
@@ -156,7 +156,7 @@ def userSignup():
                     faculty=form.faculty.data,
                     major=form.major.data,
                     campus=form.campus.data,
-                    yearOfStudy=form.year_of_study.data,
+                    year_of_study=form.year_of_study.data,
                 )
                 db.session.add(user)
                 db.session.commit()
@@ -165,7 +165,7 @@ def userSignup():
                 session["faculty"] = form.faculty.data
                 session["major"] = form.major.data
                 session["campus"] = form.campus.data
-                session["yearOfStudy"] = form.year_of_study.data
+                session["year_of_study"] = form.year_of_study.data
                 return redirect(url_for("users.user_list"))
             else:
                 flash("You may only register with your UofT email")
