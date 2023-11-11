@@ -64,9 +64,13 @@ class User(UserMixin, db.Model):
         if interest not in self.interests:
             self.interests.append(interest)
 
+
     def add_event(self, event):
         if event not in self.events:
             self.events.append(event)
+            
+    def update_interest(self, interest):
+        self.interests = interest
 
     def __repr__(self):
         return "<User %r" % self.name

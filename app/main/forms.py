@@ -3,6 +3,25 @@ from wtforms import (EmailField, PasswordField, SelectField, SelectMultipleField
                      SubmitField, validators, widgets)
 from wtforms.validators import DataRequired, Email, Optional
 
+class UserDetailsChangeForm(FlaskForm):
+    name = StringField("What is your full name?", validators=[DataRequired()])
+    faculty = SelectField(
+        "Faculty",
+        choices=[("Commerce", "Rotman"), ("Engineering", "Eng"), ("ArtSci", "A&S")],
+        validators=[DataRequired()],
+    )
+    major = StringField("Major", validators=[DataRequired()])
+    campus = SelectField(
+        "Campus",
+        choices=[("St. George"), ("Scarborough"), ("Missasauga")],
+        validators=[DataRequired()],
+    )
+    year_of_study = SelectField(
+        "Year of Study",
+        choices=[("1st"), ("2nd"), ("3rd"), ("4th"), ("5th"), ("Masters"), ("PhD"), ("other")],
+        validators=[DataRequired()],
+    )
+    submit = SubmitField("Modify")
 
 class UserSignUpForm(FlaskForm):
     name = StringField("What is your Full Name?", validators=[DataRequired()])
