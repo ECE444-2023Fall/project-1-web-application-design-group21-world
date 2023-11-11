@@ -31,6 +31,9 @@ class User(UserMixin, db.Model):
         if interest not in self.interests:
             self.interests.append(interest)
 
+    def update_interest(self, interest):
+        self.interests = interest
+
     def __repr__(self):
         return "<User %r" % self.name
 
