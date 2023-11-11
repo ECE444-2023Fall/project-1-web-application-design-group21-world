@@ -1,11 +1,17 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, FileField, validators
 from flask_wtf.file import FileAllowed
-from wtforms.validators import DataRequired, Email, Length, URL, Optional
+
+from wtforms import (EmailField, FileField, PasswordField, SelectField, StringField, SubmitField,
+                     validators)
+from wtforms.validators import URL, DataRequired, Email, Length, Optional
+
 
 class OrganizerSignupForm(FlaskForm):
-    organization_name = StringField("What is your Organization Name (*)?", validators=[DataRequired()])
-    organization_email = EmailField("What is your Organization UofT Email Address? (*)", validators=[DataRequired(), Email()])
+    organization_name = StringField("What is your organization name?", validators=[DataRequired()])
+    organization_email = EmailField(
+        "What is your organization UofT email address?", validators=[DataRequired(), Email()]
+    )
+
     password = PasswordField(
         "Enter your password (*)",
         validators=[

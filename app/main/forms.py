@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, validators, SelectMultipleField, widgets
+from wtforms import (EmailField, PasswordField, SelectField, SelectMultipleField, StringField,
+                     SubmitField, validators, widgets)
 from wtforms.validators import DataRequired, Email, Optional
 
 class UserDetailsChangeForm(FlaskForm):
@@ -58,10 +59,14 @@ class LoginForm(FlaskForm):
     password = PasswordField("Enter your Password", validators=[DataRequired()])
     submit = SubmitField("Log In")
 
+
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
+
 class userSignupInterestForm(FlaskForm):
-    interests = MultiCheckboxField("Select Your Interests", choices=[], validators=[Optional()], coerce=int)
-    submit = SubmitField("Submit")   
+    interests = MultiCheckboxField(
+        "Select Your Interests", choices=[], validators=[Optional()], coerce=int
+    )
+    submit = SubmitField("Submit")
