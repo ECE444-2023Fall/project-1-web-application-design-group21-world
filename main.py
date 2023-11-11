@@ -31,8 +31,8 @@ login_manager.init_app(app)
 def load_user(user_id):
     # Assuming User and Organizer are separate models
     # Check if the user ID corresponds to a User
-    user = User.query.get(int(user_id))
-    organizer = Organizer.query.get(int(user_id))
+    user = User.query.get(user_id)
+    organizer = Organizer.query.get(user_id)
     if user:
         return user
     elif organizer:
@@ -74,7 +74,7 @@ def userMyAccount():
     form.major.data = current_user.major
     form.campus.data = current_user.campus 
     form.year_of_study.data = current_user.year_of_study
-    return render_template("userMyAccount.html", form=form, interests=current_user.interests)
+    return render_template("userMyAccount.html", form=form, name=current_user.name, email=current_user.email, interests=current_user.interests)
 
 @app.route("/organizer/myAccount", methods=["GET", "POST"])
 @login_required
@@ -86,7 +86,6 @@ def organizerMyAccount():
 @app.route("/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
@@ -120,7 +119,10 @@ def userSignup():
         hashed_password = generate_password_hash(form.password.data)
         if email is None:
             if "utoronto" in form.email.data.split("@")[1]:
+                random_uuid = uuid.uuid4()
+                uuid_string = str(random_uuid)
                 user = User(
+                    id = uuid_string,
                     name=form.name.data,
                     email=form.email.data,
                     password=hashed_password,
@@ -131,12 +133,6 @@ def userSignup():
                 )
                 db.session.add(user)
                 db.session.commit()
-                session["name"] = form.name.data
-                session["email"] = form.email.data
-                session["faculty"] = form.faculty.data
-                session["major"] = form.major.data
-                session["campus"] = form.campus.data
-                session["year_of_study"] = form.year_of_study.data
                 login_user(user)
                 return redirect("/signup/interests")
             else:
@@ -180,7 +176,7 @@ def user_organizer_list():
         return render_template("organizerDashboard.html", organizers=organizers)
 
 
-@app.route("/organizer/details/<int:organizer_id>", methods=["GET"])
+@app.route("/organizer/details/<string:organizer_id>", methods=["GET"])
 def organizer_details(organizer_id):
     organizer = Organizer.query.filter_by(id = organizer_id).first()
     return render_template(
@@ -201,27 +197,26 @@ def organizerSignup():
                 if image:
                     random_uuid = uuid.uuid4()
                     uuid_string = str(random_uuid)
-                    image_path = "app/resources/" + "event_" + uuid_string + ".jpg"
+                    image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
                     # You can process and save the image here, e.g., save it to a folder or a database.
                     image.save(image_path)
                 else:
                     image_path = None
-                organizer = Organizer(
-                    organizer_name=form.organization_name.data,
-                    organizer_email=form.organization_email.data,
-                    password=hashed_password,
-                    description=form.organization_description.data,
-                    image_link=image_path,
-                    campus=form.organization_campus.data,
-                    website=form.organization_website_link.data,
-                    instagram=form.organization_instagram_link.data,
-                    linkedin=form.organization_linkedin_link.data,
-                )
+                random_uuid = uuid.uuid4()
+                uuid_string = str(random_uuid)
+                organizer = Organizer(id = uuid_string
+                                      ,organizer_name=form.organization_name.data, 
+                                      organizer_email=form.organization_email.data,
+                                      password = hashed_password,
+                                      description = form.organization_description.data,
+                                      image_link = image_path,
+                                      campus = form.organization_campus.data,
+                                      website = form.organization_website_link.data,
+                                      instagram = form.organization_instagram_link.data,
+                                      linkedin = form.organization_linkedin_link.data)
                 db.session.add(organizer)
                 db.session.commit()
-                session["organizer_name"] = form.organization_name.data
-                session["organizer_email"] = form.organization_email.data
-                session["campus"] = form.organization_campus.data
+                login_user(organizer)
                 return redirect("/organizer/myAccount")  # Redirect to the organizer's dashboard
             else:
                 flash("You may only register with your UofT email")
@@ -241,7 +236,7 @@ def organizer_create_event():
             if image:
                 random_uuid = uuid.uuid4()
                 uuid_string = str(random_uuid)
-                image_path = "app/resources/" + "event_" + uuid_string + ".jpg"
+                image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
                 # You can process and save the image here, e.g., save it to a folder or a database.
                 image.save(image_path)
             else:
@@ -262,10 +257,7 @@ def organizer_create_event():
             current_user.add_event(event_entry)
             db.session.add(event_entry)
             db.session.commit()
-
-            return redirect(
-                "/organizer/myAccount"
-            )  # Redirect to the organizer's account after successful form submission
+            return redirect("/organizer/myAccount")  # Redirect to the organizer's account after successful form submission
 
     return render_template("index.html", form=form)
 

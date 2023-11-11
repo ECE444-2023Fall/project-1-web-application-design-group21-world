@@ -46,7 +46,7 @@ EventInterests = Table(
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(255), primary_key=True)
     role = "user"
     name = db.Column(db.String(10), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -74,6 +74,9 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "<User %r" % self.name
+    
+    def get_id(self):
+        return self.id
 
 class Interest(db.Model):
     __tablename__ = "interests"
@@ -91,7 +94,7 @@ class Interest(db.Model):
 
 class Organizer(UserMixin, db.Model):
     __tablename__ = "organizers"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(255), primary_key=True)
     role = "organizer"
     organizer_name: Mapped[str] = mapped_column(String(30), nullable=False)
     organizer_email: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
@@ -113,6 +116,10 @@ class Organizer(UserMixin, db.Model):
         if interest not in self.interests:
             self.interests.append(interest)
 
+    def get_id(self):
+        return self.id
+    # Define a relationship with Interests, assuming you have a Many-to-Many relationship
+    # interests = db.relationship("Interest", secondary="organizer_interests", backref="organizers")
     def add_event(self, event):
         if event not in self.events:
             self.events.append(event)
