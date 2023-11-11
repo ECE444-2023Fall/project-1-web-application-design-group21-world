@@ -32,8 +32,8 @@ def create_app(config_name):
     # else:
     #     app.logger.info("Database already contains user table.")
     with app.app_context():
-        db.create_all()
-        app.logger.info("Initialized database")
+      db.create_all()
+      app.logger.info("Initialized database")
 
     from .main import main as main_blueprint
     from .main.events import events_blueprint

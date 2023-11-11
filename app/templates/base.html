@@ -3,7 +3,7 @@ block navbar %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 <div class="tob-bar-container tob-bar-root-class-name">
   <div class="tob-bar-top-bar">
-    <img alt="image" src="static/assets/hazelhublogo.svg" class="tob-bar-image" />
+    <img alt="image" src="{{ url_for('static', filename='assets/hazelhublogo.svg') }}" class="tob-bar-image" />
     <span class="tob-bar-text"><span>HazelHub</span></span>
     <nav class="tob-bar-links">
       <a href="/discover" class="tob-bar-navlink">

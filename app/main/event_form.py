@@ -4,6 +4,7 @@ from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email
 
 
+
 class EventForm(FlaskForm):
     event_name = StringField("Event Name", validators=[DataRequired()])
     organizer_id = StringField("Organization ID", validators=[DataRequired()])
