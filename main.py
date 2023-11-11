@@ -103,7 +103,10 @@ def userSignup():
         hashed_password = generate_password_hash(form.password.data)
         if email is None:
             if "utoronto" in form.email.data.split("@")[1]:
+                random_uuid = uuid.uuid4()
+                uuid_string = str(random_uuid)
                 user = User(
+                    id = uuid_string,
                     name=form.name.data,
                     email=form.email.data,
                     password=hashed_password,
@@ -149,7 +152,7 @@ def user_organizer_list():
     if organizers is not None:
         return render_template("organizerDashboard.html",  organizers=organizers)
 
-@app.route("/organizer/details/<int:organizer_id>", methods=["GET"])
+@app.route("/organizer/details/<string:organizer_id>", methods=["GET"])
 def organizer_details(organizer_id):
     organizer = Organizer.query.filter_by(id = organizer_id).first()
     organizer_events = Event.query.filter_by(organization_id = organizer_id).all()
@@ -168,12 +171,15 @@ def organizerSignup():
                 if image:
                     random_uuid = uuid.uuid4()
                     uuid_string = str(random_uuid)
-                    image_path = 'app/resources/' + "event_" + uuid_string + ".jpg"
+                    image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
                     # You can process and save the image here, e.g., save it to a folder or a database.
                     image.save(image_path)
                 else:
                     image_path = None
-                organizer = Organizer(organizer_name=form.organization_name.data, 
+                random_uuid = uuid.uuid4()
+                uuid_string = str(random_uuid)
+                organizer = Organizer(id = uuid_string
+                                      ,organizer_name=form.organization_name.data, 
                                       organizer_email=form.organization_email.data,
                                       password = hashed_password,
                                       description = form.organization_description.data,
@@ -207,7 +213,7 @@ def organizer_create_event():
             if image:
                 random_uuid = uuid.uuid4()
                 uuid_string = str(random_uuid)
-                image_path = 'app/resources/' + "event_" + uuid_string + ".jpg"
+                image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
                 # You can process and save the image here, e.g., save it to a folder or a database.
                 image.save(image_path)
             else:
