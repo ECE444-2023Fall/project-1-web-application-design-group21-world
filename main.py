@@ -74,7 +74,7 @@ def userMyAccount():
 @app.route("/organizer/myAccount", methods=["GET", "POST"])
 @login_required
 def organizerMyAccount():
-    print(current_user.role)
+    app.logger.info(current_user.role)
     return render_template("organizerMyAccount.html", name=current_user.organizer_name)
 
 
@@ -252,17 +252,6 @@ def organizer_create_event():
             current_user.add_event(event_entry)
             db.session.add(event_entry)
             db.session.commit()
-
-            session["event_name"] = form.event_name.data
-            session["organizer_id"] = organizer_id
-            session["description"] = form.description.data
-            session["date"] = form.date.data
-            session["time"] = form.time.data
-            session["location"] = form.location.data
-            session["google_map_link"] = form.google_map_link.data
-            session["fee"] = form.fee.data
-            session["has_rsvp"] = form.has_rsvp.data
-            session["external_registration_link"] = form.external_registration_link.data
 
             return redirect(
                 "/organizer/myAccount"
