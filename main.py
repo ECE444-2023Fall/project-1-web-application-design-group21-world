@@ -299,21 +299,23 @@ def allEvents():
 @app.route("/register_for_event/<int:event_id>", methods=["POST"])
 @login_required
 def register_for_event(event_id):
+    event = Event.query.get(event_id)
     # Add logic to register the user for the event in your database
     # Example: Add an entry to the user_event table with user id and event id
-    # if current_user.is_authenticated:
-    if current_user.role == "user":
-        # Assuming you have a UserEvent model and a current_user variable
-        app.logger.info(f"Current Role {current_user.role}")
-        current_user.add_event(Event.query.get(event_id))
-        db.session.add(current_user)
-        db.session.commit()
+    if current_user.is_authenticated:
+        if current_user.role == "user":
+            # Assuming you have a UserEvent model and a current_user variable
+            app.logger.info(f"Current Role {current_user.role}")
+            current_user.add_event(event)
+            db.session.add(current_user)
+            db.session.commit()
 
-        # Add a flash message
-    flash("You have successfully registered for the event!", "success")
+            # Add a flash message
+            # app.logger.info("You have successfully registered for the event!")
+            flash("You have successfully registered for the event!", "success")
 
     # Return a success response
-    return redirect("/myEvents")
+    return render_template("event-details.html", event=event)
 
 
 if __name__ == "__main__":
