@@ -32,7 +32,6 @@ def create_app(config_name):
     # else:   
     #     app.logger.info("Database already contains user table.")
     with app.app_context():
-            db.drop_all()
             db.create_all()
             app.logger.info("Initialized database")
     

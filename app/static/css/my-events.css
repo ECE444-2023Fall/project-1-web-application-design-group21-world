@@ -244,6 +244,7 @@
 }
 .my-events-text1 {
   color: var(--dl-color-hazelhub-dblack);
+  font-family: "DM Sans";
   font-size: 25px;
   font-style: normal;
   font-weight: 600;
@@ -251,6 +252,7 @@
 }
 .my-events-text2 {
   color: var(--dl-color-hazelhub-dblack);
+  font-family: "DM Sans";
   font-size: 25px;
   font-style: normal;
   font-weight: 600;
@@ -264,6 +266,7 @@
 
 .my-events-text3 {
   align-self: flex-start;
+  font-family: "DM Sans";
   margin-top: var(--dl-space-space-fourunits);
   margin-left: var(--dl-space-space-fourunits);
   margin-bottom: var(--dl-space-space-threeunits);
