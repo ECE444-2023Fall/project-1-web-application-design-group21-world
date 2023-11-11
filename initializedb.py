@@ -30,6 +30,7 @@ def seed_interests():
     interests = []
     with app.app_context():
         for id, interest in interests_dict.items():
+            
             interests.append(Interest(id=id, name=interest))
         db.session.add_all(interests)
         db.session.commit()
@@ -55,8 +56,8 @@ def create_events(num_events=10):
                 has_rsvp=random.choice(["Yes", "No"]),
                 external_registration_link=generate_random_strings(100),
             )
-            # for interest in random.sample(list(interests_dict.values()), random.choice(range(len(interests_dict)))):
-            #     event.add_interest(interest)
+            for interest in random.sample(Interest.query.all(), random.choice(range(3))):
+                event.add_interest(interest)
 
             db.session.add(event)
         db.session.commit()
@@ -79,8 +80,10 @@ def create_users(num_users=10):
                 campus=generate_random_strings(4),
                 year_of_study=generate_random_strings(10),
             )
-            # for interest in random.sample(list(interests_dict.values()), random.choice(range(len(interests_dict)))):
-            #     user.add_interest(interest)
+            for interest in random.sample(Interest.query.all(), random.choice(range(3))):
+                user.add_interest(interest)
+            for event in random.sample(Event.query.all(), random.choice(range(3))):
+                user.add_event(event)
             db.session.add(user)
         db.session.commit()
 
@@ -91,6 +94,6 @@ def generate_random_strings(length=10):
 
 
 if __name__ == "__main__":
-    create_users()
+    seed_interests()
     create_events()
-    # seed_interests()
+    create_users()

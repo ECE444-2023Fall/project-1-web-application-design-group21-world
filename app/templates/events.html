@@ -1,75 +1,39 @@
-{% extends "base.html" %}
-
-{% block title %}Events{% endblock %}
+{% extends "base.html" %} 
+{% block title %}Flasky{% endblock %} 
 
 {% block page_content %}
-<div class="page-header"> 
-    <h1>Events!</h1>
-</div>
-
-<div class="main">
-  <h1>Responsive Card Grid Layout</h1>
-  <ul class="cards">
-    <li class="cards_item">
-      <div class="card">
-        <div class="card_image"><img src="https://picsum.photos/500/300/?image=10"></div>
-        <div class="card_content">
-          <h2 class="card_title">Card Grid Layout</h2>
-          <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
-          <button class="btn card_btn">Read More</button>
+<div>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/my-events.css') }}" />
+  <div class="my-events-container">
+    
+    <div class="event-row-container-container event-row-container-root-class-name">
+      <span class="event-row-container-text">
+        <span>All Events</span>
+      </span>
+      
+      {% for event in events %}
+        <div class="event-row-component-container event-row-component-root-class-name">
+          <a href="{{ url_for('event_details', event_id=event.id) }}" class="event-row-component-navlink">
+            <img alt="image_alt3" src="{{ event.image_src }}" class="event-row-component-image" />
+          </a>
+          <div class="event-row-component-container1">
+            <a href="{{ url_for('event_details', event_id=event.id) }}" class="event-row-component-navlink1">
+              <span>{{ event.event_name }}</span>
+            </a>
+            <span class="event-row-component-text">
+              <span>{{ event.location }}</span>
+              <span>{{ event.date }}</span>
+              <span>{{ event.time }}</span>
+            </span>
+          </div>
+          <svg viewBox="0 0 1024 1024" class="event-row-component-icon">
+            <path d="M384 690l452-452 60 60-512 512-238-238 60-60z"></path>
+          </svg>
         </div>
-      </div>
-    </li>
-    <li class="cards_item">
-      <div class="card">
-        <div class="card_image"><img src="https://picsum.photos/500/300/?image=5"></div>
-        <div class="card_content">
-          <h2 class="card_title">Card Grid Layout</h2>
-          <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
-          <button class="btn card_btn">Read More</button>
-        </div>
-      </div>
-    </li>
-    <li class="cards_item">
-      <div class="card">
-        <div class="card_image"><img src="https://picsum.photos/500/300/?image=11"></div>
-        <div class="card_content">
-          <h2 class="card_title">Card Grid Layout</h2>
-          <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
-          <button class="btn card_btn">Read More</button>
-        </div>
-      </div>
-    </li>
-    <li class="cards_item">
-      <div class="card">
-        <div class="card_image"><img src="https://picsum.photos/500/300/?image=14"></div>
-        <div class="card_content">
-          <h2 class="card_title">Card Grid Layout</h2>
-          <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
-          <button class="btn card_btn">Read More</button>
-        </div>
-      </div>
-    </li>
-    <li class="cards_item">
-      <div class="card">
-        <div class="card_image"><img src="https://picsum.photos/500/300/?image=17"></div>
-        <div class="card_content">
-          <h2 class="card_title">Card Grid Layout</h2>
-          <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
-          <button class="btn card_btn">Read More</button>
-        </div>
-      </div>
-    </li>
-    <li class="cards_item">
-      <div class="card">
-        <div class="card_image"><img src="https://picsum.photos/500/300/?image=2"></div>
-        <div class="card_content">
-          <h2 class="card_title">Card Grid Layout</h2>
-          <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
-          <button class="btn card_btn">Read More</button>
-        </div>
-      </div>
-    </li>
-  </ul>
+      {% endfor %}
+      
+    </div>
+    
+  </div>
 </div>
 {% endblock %}

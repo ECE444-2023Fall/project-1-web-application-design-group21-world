@@ -60,13 +60,13 @@ class User(UserMixin, db.Model):
         secondary=UserInterests, back_populates="users"
     )
 
-    # def add_interest(self, interest):
-    #     if interest not in self.interests:
-    #         self.interests.append(interest)
+    def add_interest(self, interest):
+        if interest not in self.interests:
+            self.interests.append(interest)
 
-    # def add_event(self, event):
-    #     if event not in self.events:
-    #         self.events.append(event)
+    def add_event(self, event):
+        if event not in self.events:
+            self.events.append(event)
 
     def __repr__(self):
         return "<User %r" % self.name
@@ -106,13 +106,13 @@ class Organizer(UserMixin, db.Model):
         secondary=OrganizerInterests, back_populates="organizers"
     )
 
-    # def add_interest(self, interest):
-    #     if interest not in self.interests:
-    #         self.interests.append(interest)
+    def add_interest(self, interest):
+        if interest not in self.interests:
+            self.interests.append(interest)
 
-    # def add_event(self, event):
-    #     if event not in self.events:
-    #         self.events.append(event)
+    def add_event(self, event):
+        if event not in self.events:
+            self.events.append(event)
 
     def __repr__(self):
         return "<Organizer %r" % self.organizer_email
@@ -140,15 +140,15 @@ class Event(db.Model):
         secondary=EventInterests, back_populates="events"
     )
 
-    # def add_user(self, interest):
-    #     if interest not in self.interests:
-    #         self.interests.append(interest)
-    # def add_interest(self, interest):
-    #     if interest not in self.interests:
-    #         self.interests.append(interest)
-    # def add_organizer(self, event):
-    #     if event not in self.events:
-    #         self.events.append(event)
+    def add_user(self, interest):
+        if interest not in self.interests:
+            self.interests.append(interest)
+    def add_interest(self, interest):
+        if interest not in self.interests:
+            self.interests.append(interest)
+    def add_organizer(self, event):
+        if event not in self.events:
+            self.events.append(event)
 
     def __repr__(self):
         return f"Event: {self.event_name}"

@@ -291,8 +291,15 @@ def event_details(event_id):
 @app.route("/myEvents", methods=["GET", "POST"])
 @login_required
 def myEvents():
-    app.logger.info(f"MY ID IS: {current_user.id}")
+    app.logger.info(f"ID: {current_user.id} EVENTS: {Event.query.all()}")
+    
     return render_template("my-events.html", user_events=current_user.events)
+
+@app.route("/discover", methods=["GET", "POST"])
+@login_required
+def allEvents():
+    app.logger.info(f"EVENTS: {Event.query.all()}")
+    return render_template("events.html", events=Event.query.all())
 
 
 @app.route("/register_for_event/<int:event_id>", methods=["POST"])
