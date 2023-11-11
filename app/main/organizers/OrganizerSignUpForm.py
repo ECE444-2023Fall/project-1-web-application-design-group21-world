@@ -3,7 +3,7 @@ from flask_wtf.file import FileAllowed
 
 from wtforms import (EmailField, FileField, PasswordField, SelectField, StringField, SubmitField,
                      validators)
-from wtforms.validators import URL, DataRequired, Email, Length
+from wtforms.validators import URL, DataRequired, Email, Length, Optional
 
 
 class OrganizerSignupForm(FlaskForm):
