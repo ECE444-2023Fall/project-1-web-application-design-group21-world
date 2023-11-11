@@ -1,3 +1,13 @@
+@font-face{
+font-family: DM Sans;
+src: url('../fonts/DMSans-Regular.ttf');
+}
+
+@font-face{
+font-family: Renogare;
+src: url('../fonts/Renogare-Regular.otf');
+}
+
 :root {
     --dl-color-gray-500: #595959;
     --dl-color-gray-700: #999999;
@@ -140,8 +150,8 @@
     font-size: 30px;
     align-self: center;
     font-style: normal;
-    font-family: "DM Sans";
-    font-weight: 900;
+    font-family: "Renogare";
+    font-weight: 200;
   }
   .tob-bar-links {
     flex: 1;

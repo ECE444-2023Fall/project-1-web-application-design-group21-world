@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import FileField, StringField, SubmitField
 from flask_wtf.file import FileAllowed
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired, Email, Optional
 
 
 class EventForm(FlaskForm):
