@@ -1,4 +1,5 @@
 @import 'style.css';
+@import "top-bar.css";
 
   .organization-logo-container {
     flex: 0 0 auto;

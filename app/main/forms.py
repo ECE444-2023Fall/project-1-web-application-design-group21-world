@@ -6,7 +6,20 @@ class UserDetailsChangeForm(FlaskForm):
     name = StringField("What is your full name?", validators=[DataRequired()])
     faculty = SelectField(
         "Faculty",
-        choices=[("Commerce", "Rotman"), ("Engineering", "Eng"), ("ArtSci", "A&S")],
+        choices=[("Engineering", "Applied science and engineering"), 
+                 ("Architecture", "Architecture, landscape and design"), ("ArtSci", "Arts and Science"), 
+                 ("ContStd", " Continuing studies"), ("dentistry", "Dentistry"), ("Edu", "Education"), 
+                 ("Info", "Information"), ("Kinesology", "Kinesiology and physical education"), 
+                 ("Law", "Law"), ("Management", "Management"), ("Med", "Medicine"), ("Music", "Music"), 
+                 ("Nursing", "Nursing"), ("Pharmacy", "Pharmacy"), ("PubHealth", "Public Health"), 
+                 ("SocialWork", "Social Work"), ("Anthro", "Anthroplogy"), ("Bio", "Biology"), 
+                 ("ChemandPhy", "Chemical and Physical Sciences"), ("Eco", "Economics"), 
+                 ("English", "English and Drama"), ("Geography", "Geography"), ("Hist", "Historical Studies"), 
+                 ("ICCIT", "Instituute of Communication, Culture, Information and Technology (ICCIT)"), 
+                 ("Lang", "Language Studies"), ("Management", "Management"), 
+                 ("Math", "Mathematical and Computational Sciences"), ("Philo", "Philosophy"), 
+                 ("PolSci", "Political Science"), ("Psych", "Psychology"), ("Socio", "Sociology"), 
+                 ("VisStd", "Visual Studies"), ("Arts", "Arts"), ("Sci", "Science")],
         validators=[DataRequired()],
     )
     major = StringField("Major", validators=[DataRequired()])
