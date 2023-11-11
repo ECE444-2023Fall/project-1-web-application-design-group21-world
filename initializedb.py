@@ -79,8 +79,8 @@ def create_users(num_users=10):
                 campus=generate_random_strings(4),
                 year_of_study=random.choice(range(1,5)),
             )
-            for interest in random.sample(Interest.query.all(), random.choice(range(3))):
-                user.add_interest(interest)
+            # for interest in random.sample(Interest.query.all(), random.choice(range(3))):
+            #     user.add_interest(interest)
             for event in random.sample(Event.query.all(), random.choice(range(3))):
                 user.add_event(event)
             db.session.add(user)
