@@ -47,7 +47,8 @@
         <span>Registration Fee: {{ event.fee }} CAD</span>
       </span>
       {% if current_user.name %}
-      <button type="button" id="registerButton" class="event-description-button button">
+      <form method="POST" action="{{ url_for('register_for_event', event_id=event.id) }}" id="register_for_event-form">
+      <button type="submit" id="registerButton" class="event-description-button button">
         <span>Register</span>
       </button>
       {% endif %}
@@ -64,27 +65,5 @@
     </div>
   </div>
 </div>
-
-<script>
-  $(document).ready(function () {
-      $("#registerButton").click(function () {
-          // Make an AJAX request to register for the event
-          $.ajax({
-              type: "POST",
-              url: "{{ url_for('register_for_event', event_id=event.id) }}",
-              success: function (response) {
-                  // Handle the success response (if needed)
-                  console.log("Registration successful");
-                  // You might want to redirect to a confirmation page or update the UI
-              },
-              error: function (error) {
-                  // Handle the error (if needed)
-                  console.error("Registration failed", error);
-              }
-          });
-      });
-  });
-</script>
-
 
 {% endblock %}
