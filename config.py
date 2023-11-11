@@ -13,6 +13,9 @@ class Config:
     # FLASKY_MAIL_SUBJECT_PREFIX = "[Flasky]"
     # FLASKY_MAIL_SENDER = "Flasky Admin <flasky@example.com>"
     IMAGE_PATH = os.environ.get("IMAGE_PATH") or "app/static/assets"
+    IMAGE_PATH_EVENTS = os.environ.get("IMAGE_PATH") or "app/static/assets/organizers"
+    IMAGE_PATH_ORGANIZERS = os.environ.get("IMAGE_PATH") or "app/static/assets/events"
+    
     FLASKY_ADMIN = os.environ.get("FLASKY_ADMIN")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
