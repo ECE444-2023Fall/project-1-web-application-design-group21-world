@@ -1,4 +1,5 @@
 @import "style.css";
+@import "top-bar.css";
 /* Design */
 *,
 *::before,
@@ -7,7 +8,7 @@
 }
 
 html {
-  background-color: #ecf9ff;
+  background-color: #ffffff;
 }
 
 body {
@@ -48,6 +49,39 @@ img {
   cursor: pointer;
   margin-bottom: var(--dl-space-space-oneandhalfunits);
   background: var(--dl-color-hazelhub-tblue);
+}
+
+.btn-back {
+  color: #ffffff;
+  padding: 0.8rem;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: 0px;
+  font-weight: 400;
+  display: block;
+  width: fit-content;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-top: 20px;
+  margin-bottom: var(--dl-space-space-oneandhalfunits);
+  background: var(--dl-color-hazelhub-hazel);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.btn-back:hover {
+  background: var(--dl-color-hazelhub-beige);
+  color: #ffffff;
+}
+
+.btn-back:active {
+  background: var(--dl-color-hazelhub-beige);
+  color: #ffffff;
+}
+
+.btn-back:focus {
+  background: var(--dl-color-hazelhub-beige);
+  color: #ffffff;
 }
 
 .btn-success {
@@ -106,22 +140,32 @@ img {
 
 .card {
   background-color: white;
-  border-radius: 0.25rem;
+  border-radius: 0.2rem;
+  transition: 0.3s;
+  border: 10px solid;
+  border-top: 20px solid;
+  border-color: var(--dl-color-hazelhub-beige);
   box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
+.card:hover {
+  transform: scale(1.02);
+  background-color: rgba(225, 211, 185, 0.72);
+}
+
 .card_content {
   padding: 1rem;
-  background: linear-gradient(to bottom left, #EF8D9C 40%, #FFC39E 100%);
+  background: var(--dl-color-hazelhub-beige);
+  text-align: center;
 }
 
 .card_title {
-  color: #ffffff;
+  color: var(--dl-color-hazelhub-dblack);
   font-family: "DM Sans";
-  font-size: 1.1rem;
+  font-size: 3rem;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: capitalize;
@@ -129,12 +173,13 @@ img {
 }
 
 .card_text {
-  color: #ffffff;
+  color: var(--dl-color-hazelhub-dblack);
   font-family: "DM Sans";
-  font-size: 0.875rem;
+  font-size: 2rem;
   line-height: 1.5;
   margin-bottom: 1.25rem;    
   font-weight: 400;
+  text-align: center;
 }
 .made_by{
   font-family: "DM Sans";
