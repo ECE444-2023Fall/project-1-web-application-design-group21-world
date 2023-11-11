@@ -31,8 +31,8 @@ login_manager.init_app(app)
 def load_user(user_id):
     # Assuming User and Organizer are separate models
     # Check if the user ID corresponds to a User
-    user = User.query.get(int(user_id))
-    organizer = Organizer.query.get(int(user_id))
+    user = User.query.get(user_id)
+    organizer = Organizer.query.get(user_id)
     if user:
         return user
     elif organizer:
@@ -68,7 +68,6 @@ def organizerMyAccount():
 @app.route("/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
@@ -115,12 +114,6 @@ def userSignup():
                 )
                 db.session.add(user)
                 db.session.commit()
-                session["name"] = form.name.data
-                session["email"] = form.email.data
-                session["faculty"] = form.faculty.data
-                session["major"] = form.major.data
-                session["campus"] = form.campus.data
-                session["yearOfStudy"] = form.year_of_study.data
                 login_user(user)
                 return redirect("/signup/interests")
             else:
@@ -191,9 +184,7 @@ def organizerSignup():
                                       linkedin = form.organization_linkedin_link.data)
                 db.session.add(organizer)
                 db.session.commit()
-                session["organizer_name"] = form.organization_name.data
-                session["organizer_email"] = form.organization_email.data
-                session["campus"] = form.organization_campus.data
+                login_user(organizer)
                 return redirect("/organizer/myAccount")  # Redirect to the organizer's dashboard
             else:
                 flash("You may only register with your UofT email")
@@ -237,18 +228,6 @@ def organizer_create_event():
 
             db.session.add(event_entry)
             db.session.commit()
-
-            session["event_name"] = form.event_name.data
-            session["organization_id"] = organization_id
-            session["description"] = form.description.data
-            session["date"] = form.date.data
-            session["time"] = form.time.data
-            session["location"] = form.location.data
-            session["google_map_link"] = form.google_map_link.data
-            session["fee"] = form.fee.data
-            session["has_rsvp"] = form.has_rsvp.data
-            session["external_registration_link"] = form.external_registration_link.data
-
             return redirect("/organizer/myAccount")  # Redirect to the organizer's account after successful form submission
 
     return render_template("index.html", form=form)
