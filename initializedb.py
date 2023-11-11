@@ -94,5 +94,5 @@ def generate_random_strings(length=10):
 
 if __name__ == "__main__":
     seed_interests()
-    create_events()
-    create_users()
+    # create_events()
+    # create_users()
