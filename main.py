@@ -173,8 +173,9 @@ def user_organizer_list():
 
 @app.route("/organizer/details/<int:organizer_id>", methods=["GET"])
 def organizer_details(organizer_id):
+    organizer = Organizer.query.filter_by(id = organizer_id).first()
     return render_template(
-        "organizer-details.html", organization=current_user, organization_events=current_user.events
+        "organizer-details.html", organization=organizer, organization_events=organizer.events
     )
 
 
