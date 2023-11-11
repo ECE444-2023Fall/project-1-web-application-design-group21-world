@@ -1,13 +1,14 @@
-SOURCE= *.py app tests 
-MAX_LINE_LENGTH=100
+SOURCE= *.py app tests
+EXCLUDE= __pycache__ venv migrations .pytest_cache data
+MAX_LINE_LENGTH=79
 
 black:
-	black -l $(MAX_LINE_LENGTH) $(SOURCE)
+	black -l $(MAX_LINE_LENGTH) $(SOURCE) --force-exclude $(EXCLUDE)
 
 isort:
-	isort -l $(MAX_LINE_LENGTH) $(SOURCE)
+	isort -l $(MAX_LINE_LENGTH) --profile black $(SOURCE)
 
 autoflake:
-	autoflake $(SOURCE) -r
+	autoflake $(SOURCE) -r --remove-all-unused-imports --in-place --remove-unused-variables 
 
-quality: black isort autoflake
+quality: black autoflake isort
