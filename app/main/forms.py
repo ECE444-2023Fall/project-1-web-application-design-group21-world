@@ -37,7 +37,7 @@ class UserSignUpForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = EmailField("What is your UofT Email Address?", validators=[DataRequired(), Email()])
     password = PasswordField("Enter your Password", validators=[DataRequired()])
-    submit = SubmitField("Submit")
+    submit = SubmitField("Log In")
 
 class userSignupInterestForm(FlaskForm):
     interests = SelectMultipleField("Select Your Interests", validators=[DataRequired()], coerce=int)

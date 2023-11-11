@@ -41,17 +41,42 @@ img {
   padding: 0.8rem;
   font-size: 14px;
   text-transform: uppercase;
-  border-radius: 4px;
+  border: 0px;
   font-weight: 400;
   display: block;
   width: 100%;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: transparent;
+  margin-bottom: var(--dl-space-space-oneandhalfunits);
+  background: var(--dl-color-hazelhub-tblue);
+}
+
+.btn-success {
+  color: #ffffff;
+  padding: 0.8rem;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: 0px;
+  font-weight: 400;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  margin-bottom: var(--dl-space-space-oneandhalfunits);
+  background: var(--dl-color-hazelhub-tblue);
 }
 
 .btn:hover {
-  background-color: rgba(255, 255, 255, 0.12);
+  background: var(--dl-color-hazelhub-lblue);
+  color: #ffffff;
+}
+
+.btn:active {
+  background: var(--dl-color-hazelhub-lblue);
+  color: #ffffff;
+}
+
+.btn:focus {
+  background: var(--dl-color-hazelhub-lblue);
+  color: #ffffff;
 }
 
 .cards {
