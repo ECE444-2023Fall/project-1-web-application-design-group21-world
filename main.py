@@ -15,7 +15,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import create_app, db
 from app.main.event_form import EventForm
 from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm
-from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserEvents
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from app.models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
@@ -66,7 +65,7 @@ def userMyAccount():
         current_user.faculty = form.faculty.data
         current_user.major = form.major.data
         current_user.campus = form.campus.data
-        current_user.yearOfStudy = form.year_of_study.data
+        current_user.year_of_study = form.year_of_study.data
         print(current_user.name, form.name.data)
         db.session.commit()
         return redirect("/user/myAccount")
@@ -74,7 +73,7 @@ def userMyAccount():
     form.faculty.data = current_user.faculty
     form.major.data = current_user.major
     form.campus.data = current_user.campus 
-    form.year_of_study.data = current_user.yearOfStudy
+    form.year_of_study.data = current_user.year_of_study
     return render_template("userMyAccount.html", form=form, interests=current_user.interests)
 
 @app.route("/organizer/myAccount", methods=["GET", "POST"])
