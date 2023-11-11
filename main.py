@@ -151,12 +151,16 @@ def signupInterests():
     form = userSignupInterestForm()
     form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
     if request.method == 'POST' and form.validate_on_submit():
+        user = User.query.filter_by(email=current_user.email).first()
+        all_interests = []
         for id in form.interests.data:
-            user = User.query.filter_by(email=current_user.email).first()
             interest = Interest.query.filter_by(id=id).first()
-            user.add_interest(interest)
-            db.session.commit()
+            all_interests.append(interest)
+        user.update_interest(all_interests)    
+        db.session.commit()
         return redirect("/user/myAccount")
+    form.interests.default = [interest.id for interest in current_user.interests]
+    form.process()
     return render_template("interests.html", form=form)
 
 @app.route("/logout")
