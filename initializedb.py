@@ -72,12 +72,12 @@ def create_users(num_users=10):
         for i in range(num_users):
             user = User(
                 name=generate_random_strings(10),
-                email=generate_random_strings(20),
+                email=f"{generate_random_strings(10)}@mail.utoronto.ca",
                 password=generate_random_strings(15),
                 faculty=generate_random_strings(10),
                 major=generate_random_strings(5),
                 campus=generate_random_strings(4),
-                year_of_study=generate_random_strings(10),
+                year_of_study=random.choice(range(1,5)),
             )
             for interest in random.sample(Interest.query.all(), random.choice(range(3))):
                 user.add_interest(interest)
