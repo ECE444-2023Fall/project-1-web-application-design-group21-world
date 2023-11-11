@@ -144,6 +144,16 @@ def signupInterests():
         return redirect("/user/myAccount")
     return render_template("interests.html", form=form)
 
+@app.route("/discover", methods=["GET","POST"])
+@login_required
+def discoverEvents():
+    events = Event.query.all()
+    if events is not None:
+        return render_template(
+            "discover.html", 
+            events=events
+        )
+
 @app.route("/logout")
 @login_required
 def logout():
