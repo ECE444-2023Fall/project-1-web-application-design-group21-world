@@ -12,11 +12,11 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
 from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
-from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserEvents
+from app.models import Event, Interest, Organizer, OrganizerInterest, User, UserEvents
 from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from flask import request, redirect
-from app.main.event_form import EventForm
+from app.main.event_form import EventForm, eventInterestForm
 import uuid
 from sqlalchemy import text
 
@@ -241,12 +241,29 @@ def organizer_create_event():
                 has_rsvp=form.has_rsvp.data,
                 external_registration_link=form.external_registration_link.data,
             )
-
+            print(event_entry)
             db.session.add(event_entry)
             db.session.commit()
-            return redirect("/organizer/myAccount")  # Redirect to the organizer's account after successful form submission
+            session['event_id'] = event_entry.id
+            return redirect("/organizer/create/event/interests")
 
     return render_template("index.html", form=form)
+
+@app.route("/organizer/create/event/interests", methods=["GET", "POST"])
+@login_required
+def eventInterests():
+    form = eventInterestForm()
+    form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
+    if request.method == 'POST' and form.validate_on_submit():
+        for id in form.interests.data:
+            #print(session)
+            event = Event.query.filter_by(id=session['event_id']).first()
+            interest = Interest.query.filter_by(id=id).first()
+            event.add_interest(interest)
+            db.session.commit()
+        session.pop('event_id')
+        return redirect("/organizer/myAccount")
+    return render_template("interests_events.html", form=form)
 
 @app.route("/event_details/<int:event_id>", methods=["GET"])
 def event_details(event_id):

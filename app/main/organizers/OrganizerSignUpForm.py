@@ -24,6 +24,6 @@ class OrganizerSignupForm(FlaskForm):
     organization_description = StringField("Organization Description (*)", validators=[Length(max=500)])
     organization_website_link = StringField("Website Link", validators=[URL(), Optional()])
     organization_instagram_link = StringField("Instagram Link", validators=[URL(), Optional()])
-    organization_instagram_link = StringField("Instagram Link", validators=[URL(), Optional()])
+    organization_linkedin_link = StringField("LinkedIn Link", validators=[URL(), Optional()])
 
     submit = SubmitField("Submit")
