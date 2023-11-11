@@ -55,8 +55,8 @@ def create_events(num_events=10):
                 has_rsvp=random.choice(["Yes", "No"]),
                 external_registration_link=generate_random_strings(100),
             )
-            for interest in random.sample(Interest.query.all(), random.choice(range(3))):
-                event.add_interest(interest)
+            # for interest in random.sample(Interest.query.all(), random.choice(range(3))):
+            #     event.add_interest(interest)
 
             db.session.add(event)
         db.session.commit()
@@ -94,5 +94,5 @@ def generate_random_strings(length=10):
 
 if __name__ == "__main__":
     seed_interests()
-    # create_events()
+    create_events()
     # create_users()
