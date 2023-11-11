@@ -159,3 +159,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 data/data-dev.sqlite
+app/__pycache__/__init__.cpython-39.pyc
+data/data-dev.sqlite
