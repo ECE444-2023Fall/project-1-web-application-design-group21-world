@@ -74,7 +74,7 @@ def userMyAccount():
     form.major.data = current_user.major
     form.campus.data = current_user.campus 
     form.year_of_study.data = current_user.year_of_study
-    return render_template("userMyAccount.html", form=form, interests=current_user.interests)
+    return render_template("userMyAccount.html", form=form, name=current_user.name, email=current_user.email, interests=current_user.interests)
 
 @app.route("/organizer/myAccount", methods=["GET", "POST"])
 @login_required
