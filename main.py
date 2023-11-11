@@ -173,10 +173,8 @@ def user_organizer_list():
 
 @app.route("/organizer/details/<int:organizer_id>", methods=["GET"])
 def organizer_details(organizer_id):
-    organizer = Organizer.query.filter_by(id=organizer_id).first()
-    organizer_events = Event.query.filter_by(organizer_id=organizer_id).all()
     return render_template(
-        "organizer-details.html", organization=organizer, organization_events=organizer_events
+        "organizer-details.html", organization=current_user, organization_events=current_user.events
     )
 
 
@@ -226,10 +224,7 @@ def organizerSignup():
 @login_required
 def organizer_create_event():
     form = EventForm()
-    organizer = Organizer.query.filter_by(organizer_email=current_user.organizer_email).first()
-
     if form.validate_on_submit():
-        organizer_id = organizer.id
         event_name = Event.query.filter_by(event_name=form.event_name.data).first()
         if event_name is None:
             image = form.image.data
@@ -243,7 +238,7 @@ def organizer_create_event():
                 image_path = None
             event_entry = Event(
                 event_name=form.event_name.data,
-                organizer_id=organizer_id,
+                organizer_id=current_user.id,
                 description=form.description.data,
                 date=form.date.data,
                 time=form.time.data,
@@ -254,7 +249,7 @@ def organizer_create_event():
                 has_rsvp=form.has_rsvp.data,
                 external_registration_link=form.external_registration_link.data,
             )
-
+            current_user.add_event(event_entry)
             db.session.add(event_entry)
             db.session.commit()
 
@@ -288,11 +283,10 @@ def event_details(event_id):
         return render_template("event_not_found.html")
 
 
-@app.route("/myEvents", methods=["GET", "POST"])
+@app.route("/myEvents", methods=["GET"])
 @login_required
 def myEvents():
-    app.logger.info(f"ID: {current_user.id} EVENTS: {Event.query.all()}")
-    
+    # app.logger.info(f"ID: {current_user.id} EVENTS: {Event.query.all()}")
     return render_template("my-events.html", user_events=current_user.events)
 
 @app.route("/discover", methods=["GET", "POST"])
@@ -307,18 +301,19 @@ def allEvents():
 def register_for_event(event_id):
     # Add logic to register the user for the event in your database
     # Example: Add an entry to the user_event table with user id and event id
-    if current_user.is_authenticated:
-        if current_user.role == "user":
-            # Assuming you have a UserEvent model and a current_user variable
-            new_registration = UserEvents(user_id=current_user.id, event_id=event_id)
-            db.session.add(new_registration)
-            db.session.commit()
+    # if current_user.is_authenticated:
+    if current_user.role == "user":
+        # Assuming you have a UserEvent model and a current_user variable
+        app.logger.info(f"Current Role {current_user.role}")
+        current_user.add_event(Event.query.get(event_id))
+        db.session.add(current_user)
+        db.session.commit()
 
-            # Add a flash message
-            flash("You have successfully registered for the event!", "success")
+        # Add a flash message
+    flash("You have successfully registered for the event!", "success")
 
     # Return a success response
-    return redirect("user/myAccount")
+    return redirect("/myEvents")
 
 
 if __name__ == "__main__":
