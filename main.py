@@ -11,7 +11,7 @@ from flask_moment import Moment
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db
-from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm
+from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm
 from app.models import Event, EventInterest, Interest, Organizer, OrganizerInterest, User, UserEvents
 from app.main.forms import LoginForm, UserSignUpForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
@@ -55,7 +55,22 @@ def make_shell_context():
 @app.route("/user/myAccount", methods=["GET", "POST"])
 @login_required
 def userMyAccount():
-    return render_template("userMyAccount.html", name=current_user.name, email=current_user.email, faculty=current_user.faculty, major=current_user.major, campus=current_user.campus, yearOfStudy=current_user.yearOfStudy, interests=current_user.interests)
+    form = UserDetailsChangeForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.faculty = form.faculty.data
+        current_user.major = form.major.data
+        current_user.campus = form.campus.data
+        current_user.yearOfStudy = form.year_of_study.data
+        print(current_user.name, form.name.data)
+        db.session.commit()
+        return redirect("/user/myAccount")
+    form.name.data = current_user.name
+    form.faculty.data = current_user.faculty
+    form.major.data = current_user.major
+    form.campus.data = current_user.campus 
+    form.year_of_study.data = current_user.yearOfStudy
+    return render_template("userMyAccount.html", form=form, interests=current_user.interests)
 
 
 @app.route("/organizer/myAccount", methods=["GET", "POST"])
@@ -136,12 +151,16 @@ def signupInterests():
     form = userSignupInterestForm()
     form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
     if request.method == 'POST' and form.validate_on_submit():
+        user = User.query.filter_by(email=current_user.email).first()
+        all_interests = []
         for id in form.interests.data:
-            user = User.query.filter_by(email=current_user.email).first()
             interest = Interest.query.filter_by(id=id).first()
-            user.add_interest(interest)
-            db.session.commit()
+            all_interests.append(interest)
+        user.update_interest(all_interests)    
+        db.session.commit()
         return redirect("/user/myAccount")
+    form.interests.default = [interest.id for interest in current_user.interests]
+    form.process()
     return render_template("interests.html", form=form)
 
 @app.route("/discover", methods=["GET","POST"])
