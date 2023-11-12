@@ -197,7 +197,7 @@ def organizerSignup():
                 if image:
                     random_uuid = uuid.uuid4()
                     uuid_string = str(random_uuid)
-                    image_path = os.path.join(app.config["IMAGE_PATH_ORGANIZERS"], "organizer_" + uuid_string + image.filename.split(".")[1])
+                    image_path = os.path.join(app.config["IMAGE_PATH_ORGANIZERS"], "organizer_" + uuid_string + "." + image.filename.split(".")[1])
                     # You can process and save the image here, e.g., save it to a folder or a database.
                     image.save(image_path)
                 else:
