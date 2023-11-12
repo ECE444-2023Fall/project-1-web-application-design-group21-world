@@ -4,7 +4,14 @@
 
 <div>
   <link href="{{ url_for('static', filename='css/event-details.css') }}" rel="stylesheet" />
+  <span>
+        <a href="{{ url_for('allEvents') }}" class="btn-back">&lt; Back to Discover</a>
+        <br />
+  </span>
   <div class="event-details-container">
+	<div class="event-image-container">
+		<img alt="image" src="{{event.image_link}}" class="event-details-image1" />
+	</div>
     <div class="event-description-container event-description-root-class-name">
       <div class="title-container title-root-class-name">
         <span class="title-text">
@@ -16,9 +23,7 @@
       </div>
       <div class="desc-container desc-root-class-name">
         <span class="desc-text"><span>Event Description: </span></span>
-        <span class="desc-text1">
-          <span class="desc-text1">{{ event.description }}</span>
-        </span>
+        <span class="desc-text1">{{ event.description }}</span>
       </div>
       <div class="interest-areas1-container interest-areas1-root-class-name">
         <span class="interest-text">Interest Areas: </span>
@@ -37,7 +42,7 @@
         </span>
       </div>
       <span class="event-description-text">
-        <span>Registration Fee: {{ event.fee }}</span>
+        <span>Registration Fee: {{ event.fee }} CAD</span>
       </span>
       {% if current_user.role=="user" and not(event in current_user.events) %}
       <form method="POST" action="{{ url_for('register_for_event', event_id=event.id) }}" id="register_for_event-form">
@@ -62,11 +67,6 @@
         </a>
       </div>
     </div>
-    <img alt="image" src="{{ url_for('static', filename='assets/hazelhublogo.svg') }}" class="event-details-image1" />
-    <span>
-        <span>&lt; Back to Discover</span>
-        <br />
-    </span>
   </div>
 </div>
 
