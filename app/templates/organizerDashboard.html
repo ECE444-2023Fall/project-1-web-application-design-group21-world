@@ -7,7 +7,7 @@
         {% for organizer in organizers %}
             <div>
                 <p>{{ organizer.organizer_name }}, {{ organizer.organizer_email }}</p>
-                <a href="{{ url_for('organizer_details', organizer_id=organizer.id) }}" class="btn btn-primary">View Details</a>
+                <a href="{{ url_for('main.organizer_details', organizer_id=organizer.id) }}" class="btn btn-primary">View Details</a>
             </div>
         {% endfor %}
     </div>

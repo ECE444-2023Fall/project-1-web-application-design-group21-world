@@ -35,11 +35,11 @@
       </span>
       {% for event in organization_events %}
       <div class="event-row-component1-container event-row-component1-root-class-name3">
-        <a href="{{ url_for('event_details', event_id=event.id) }}" class="event-row-component1-navlink">
+        <a href="{{ url_for('main.event_details', event_id=event.id) }}" class="event-row-component1-navlink">
           <img alt="image_alt4" src="{{ event.image_src }}" class="event-row-component1-image" />
         </a>
         <div class="event-row-component1-container1">
-          <a href="{{ url_for('event_details', event_id=event.id) }}" class="event-row-component1-navlink1">
+          <a href="{{ url_for('main.event_details', event_id=event.id) }}" class="event-row-component1-navlink1">
             <span>{{ event.name }}</span>
           </a>
           <span class="event-row-component1-text">
