@@ -15,6 +15,13 @@ UserInterests = Table(
     Column("interest_id", ForeignKey("interests.id")),
 )
 
+EventInterests = Table(
+    "event_interests",
+    db.metadata,
+    Column("event_id", ForeignKey("events.id")),
+    Column("interest_id", ForeignKey("interests.id")),
+)
+
 UserEvents = Table(
     "users_events",
     db.metadata,
@@ -89,6 +96,9 @@ class Interest(db.Model):
     users: Mapped[List[User]] = relationship(secondary=UserInterests, back_populates="interests")
     organizers: Mapped[List[Organizer]] = relationship(
         secondary=OrganizerInterests, back_populates="interests"
+    )
+    events: Mapped[List[Event]] = relationship(
+        secondary=EventInterests, back_populates="interests"
     )
 
     def __repr__(self):
