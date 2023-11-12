@@ -20,7 +20,7 @@ class OrganizerSignupForm(FlaskForm):
         choices=[("St. George"), ("Scarborough"), ("Missasauga")],
         validators=[DataRequired()],
     )
-    image = FileField("Upload Organizer Image (*)", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'])])
+    image = FileField("Upload Organization Logo (*)", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'])])
     organization_description = StringField("Organization Description (*)", validators=[Length(max=500)])
     organization_website_link = StringField("Website Link", validators=[URL(), Optional()])
     organization_instagram_link = StringField("Instagram Link", validators=[URL(), Optional()])

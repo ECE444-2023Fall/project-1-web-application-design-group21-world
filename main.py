@@ -179,13 +179,13 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
-@app.route("/organizer/list", methods=["GET"])
+@app.route("/organizer/list", methods=["GET","POST"])
 def user_organizer_list():
     organizers = Organizer.query.all()
     if organizers is not None:
         return render_template("organizerDashboard.html",  organizers=organizers)
 
-@app.route("/organizer/details/<int:organizer_id>", methods=["GET"])
+@app.route("/organizer_details/<int:organizer_id>", methods=["GET"])
 def organizer_details(organizer_id):
     organizer = Organizer.query.filter_by(id = organizer_id).first()
     organizer_events = Event.query.filter_by(organization_id = organizer_id).all()
@@ -199,7 +199,7 @@ def organizerSignup():
         email = Organizer.query.filter_by(organizer_email=form.organization_email.data).first()
         hashed_password = generate_password_hash(form.password.data)
         if organizer is None and email is None:
-            if "utoronto" in form.organization_email.data.split("@")[1]:
+            #if "utoronto" in form.organization_email.data.split("@")[1]:
                 image = form.image.data
                 if image:
                     random_uuid = uuid.uuid4()
@@ -224,8 +224,8 @@ def organizerSignup():
                 session["organizer_email"] = form.organization_email.data
                 session["campus"] = form.organization_campus.data
                 return redirect("/organizer/myAccount")  # Redirect to the organizer's dashboard
-            else:
-                flash("You may only register with your UofT email")
+            #else:
+            #    flash("You may only register with your UofT email")
         else:
             flash("Account with this email address already exists!")
     return render_template("index.html", form=form)
