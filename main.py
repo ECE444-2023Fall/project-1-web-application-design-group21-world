@@ -266,6 +266,7 @@ def organizer_create_event():
 def event_details(event_id):
     # Assuming you have an Event model and it has a relationship with Organization
     event = Event.query.filter_by(id=event_id).first()
+    event.image_link = event.image_link.replace("app", "");
 
     if event:
         return render_template("event-details.html", event=event)
