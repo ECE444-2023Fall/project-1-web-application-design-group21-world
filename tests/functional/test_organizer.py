@@ -135,3 +135,32 @@ class FunctionalTests(TestCase):
         })
         assert response.status_code == 200
         assert b'This field is required.' in response.data  # Expect an error message for missing confirm_password
+
+
+    def test_organizer_login(self):
+        self.client.post('/organizer/signup', data={
+                "organization_name": 'Test Organization',
+                'organization_email': 'test@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'organization_campus': 'St. George',
+                'image': None,
+                'organization_description': 'Test organization description.',
+                'organization_website_link': 'https://www.testorganization.com',
+                'organization_instagram_link': 'https://www.instagram.com/testorganization',
+                'organization_linkedin_link': 'https://www.linkedin.com/testorganization',
+                'submit': 'Submit'
+            })
+        self.client.post('/logout')
+        response = self.client.post('/', data={'email': 'test@utoronto.ca', 'password': 'testpassword', 'role': 'organizer'})
+        self.assert200
+        assert(response.headers['location'] == '/organizer/myAccount')
+        self.assertTrue(current_user.is_authenticated)
+        self.assertTrue(current_user.role == "organizer")
+        self.assertEqual(current_user.organizer_name, 'Test Organization')
+
+
+    def test_invalid_login(self):
+        response = self.client.post('/', data={'email': 'invalid@example.com', 'password': 'wrongpassword', 'role': 'user'})
+        self.assertMessageFlashed('Invalid email or password')
+        self.assertFalse(current_user.is_authenticated)
