@@ -48,14 +48,16 @@
 .desc-text1 {
   color: var(--dl-color-hazelhub-dblack);
   font-size: 20px;
-  max-width: 500px;
+  max-width: 10%;
   font-style: normal;
   max-height: 150px;
   overflow-y: scroll;
+  overflow-x: hidden;
   font-family: "DM Sans";
   font-weight: 400;
   margin-left: var(--dl-space-space-twounits);
   padding-top: 2px;
+  word-wrap: break-word;
 }
 .desc-root-class-name {
   top: 182px;
@@ -255,6 +257,7 @@
   position: absolute;
   left:100px;
   top: 250px;
+  overflow-x: hidden;
   /*! background-color: var(--dl-color-hazelhub-lblue); */
 }
 .event-details-top-bar {
