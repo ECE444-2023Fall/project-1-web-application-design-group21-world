@@ -64,6 +64,9 @@ class User(UserMixin, db.Model):
         if interest not in self.interests:
             self.interests.append(interest)
 
+    def remove_event(self, event):
+        if event in self.events:
+            self.events.remove(event)
 
     def add_event(self, event):
         if event not in self.events:
@@ -118,11 +121,14 @@ class Organizer(UserMixin, db.Model):
 
     def get_id(self):
         return self.id
-    # Define a relationship with Interests, assuming you have a Many-to-Many relationship
-    # interests = db.relationship("Interest", secondary="organizer_interests", backref="organizers")
+    
     def add_event(self, event):
         if event not in self.events:
             self.events.append(event)
+    
+    def remove_event(self, event):
+        if event in self.events:
+            self.events.remove(event)
 
     def __repr__(self):
         return "<Organizer %r" % self.organizer_email

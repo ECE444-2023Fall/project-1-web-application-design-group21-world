@@ -281,7 +281,6 @@ def myEvents():
     return render_template("my-events.html", user_events=current_user.events)
 
 @app.route("/discover", methods=["GET", "POST"])
-@login_required
 def allEvents():
     app.logger.info(f"EVENTS: {Event.query.all()}")
     return render_template("events.html", events=Event.query.all())
@@ -291,23 +290,39 @@ def allEvents():
 @login_required
 def register_for_event(event_id):
     event = Event.query.get(event_id)
-    # Add logic to register the user for the event in your database
-    # Example: Add an entry to the user_event table with user id and event id
+
     if current_user.is_authenticated:
         if current_user.role == "user":
-            # Assuming you have a UserEvent model and a current_user variable
-            app.logger.info(f"Current Role {current_user.role}")
-            current_user.add_event(event)
-            db.session.add(current_user)
-            db.session.commit()
-
-            # Add a flash message
-            # app.logger.info("You have successfully registered for the event!")
-            flash("You have successfully registered for the event!", "success")
-
-    # Return a success response
+            if request.method == "POST":
+                # Assuming you have a UserEvent model and a current_user variable
+                app.logger.info(f"Current Role {current_user.role}")
+                current_user.add_event(event)
+                db.session.add(current_user)
+                db.session.commit()
+                flash("You have successfully registered for the event!", "success")
+            elif request.method == "DELETE":
+                app.logger.info(f"Current Role {current_user.role}")
+                current_user.remove_event(event)
+                db.session.add(current_user)
+                db.session.commit()
+                flash("You have successfully unregistered for the event!", "success")
+    
     return render_template("event-details.html", event=event)
 
+@app.route("/unregister_for_event/<int:event_id>", methods=["POST"])
+@login_required
+def unregister_for_event(event_id):
+    event = Event.query.get(event_id)
 
+    if current_user.is_authenticated:
+        if current_user.role == "user":
+            if request.method == "POST":
+                app.logger.info(f"Current Role {current_user.role}")
+                current_user.remove_event(event)
+                db.session.add(current_user)
+                db.session.commit()
+                flash("You have successfully unregistered for the event!", "success")
+    
+    return render_template("event-details.html", event=event)
 if __name__ == "__main__":
     app.run()
