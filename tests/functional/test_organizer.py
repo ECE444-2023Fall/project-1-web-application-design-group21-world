@@ -1,37 +1,137 @@
-from flask import url_for
+import pytest
+from flask import Flask
+from flask_testing import TestCase
+from flask_login import login_user, current_user
+from app import create_app, db, login_manager
+from flask_migrate import Migrate
+from app.models import Organizer, User 
+from bs4 import BeautifulSoup
+import io
+import uuid
 
-from app.models import Organizer
+class FunctionalTests(TestCase):
+    def create_app(self):
+        app = create_app("testing")
+        migrate = Migrate(app, db)
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        return app
+
+    def setUp(self):
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        user = User.query.get(user_id)
+        organizer = Organizer.query.get(user_id)
+        if user:
+            return user
+        elif organizer:
+            return organizer
+        return None
 
 
-def test_organizer_insert(client):
-    """Ensure that organizers can be added to Organizer Table"""
-    test_organizer = dict(
-        organizer_name="test organizer 01", organizer_email="testorganizer01@gmail.com"
-    )
+    def test_signup_successful(self):
+        response = self.client.get('/organizer/signup')
+        response = self.client.post('/organizer/signup', data={
+                "organization_name": 'Test Organization',
+                'organization_email': 'test@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'organization_campus': 'St. George',
+                'image': None,
+                'organization_description': 'Test organization description.',
+                'organization_website_link': 'https://www.testorganization.com',
+                'organization_instagram_link': 'https://www.instagram.com/testorganization',
+                'organization_linkedin_link': 'https://www.linkedin.com/testorganization',
+                'submit': 'Submit'
+            })
+        print(response.data)
+        self.assert200
+        assert(response.headers['location'] == '/organizer/myAccount')
 
-    response = client.post("/organizer/create", json=test_organizer, follow_redirects=True)
-    assert response.status_code == 200
-    with client:
-        organizer = Organizer.query.filter_by(
-            organizer_name=test_organizer["organizer_name"]
-        ).first()
-        assert organizer is not None
-        assert organizer.organizer_email == test_organizer["organizer_email"]
-        assert organizer.organizer_name == test_organizer["organizer_name"]
+            # Assert that the organizer has been added to the database
+        organizer = Organizer.query.filter_by(organizer_email='test@utoronto.ca').first()
+        self.assertIsNotNone(organizer)
+        self.assertEqual(organizer.organizer_name, 'Test Organization')
 
 
-def test_organizer_insert_multiple(client):
-    """Ensure that organizers can be added to Organizer Table"""
-    test_organizer = dict(
-        organizer_name="test organizer 02", organizer_email="testorganizer02@gmail.com"
-    )
 
-    response = client.post("/organizer/create", json=test_organizer, follow_redirects=True)
-    assert response.status_code == 200
-    with client:
-        organizer = Organizer.query.filter_by(
-            organizer_name=test_organizer["organizer_name"]
-        ).first()
-        assert organizer is not None
-        assert organizer.organizer_email == test_organizer["organizer_email"]
-        assert organizer.organizer_name == test_organizer["organizer_name"]
+    def test_duplicate_email(self):
+        # Add a test organizer to the database with a known email
+        existing_organizer = Organizer(
+            id=str(uuid.uuid4()),
+            organizer_name='Existing Organization',
+            organizer_email='existing@utoronto.ca',
+            password='existingpassword',
+            campus='UTSC',
+            description='Another test organization.',
+            image_link=None,
+            website='http://www.anotherorganization.com',
+            instagram='http://www.instagram.com/anotherorganization',
+            linkedin='http://www.linkedin.com/anotherorganization'
+        )
+        db.session.add(existing_organizer)
+        db.session.commit()
+
+        # Attempt to sign up with the existing email
+        response = self.client.get('/organizer/signup')
+        response = self.client.post('/organizer/signup', data={
+                "organization_name": 'Test Organization',
+                'organization_email': 'existing@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'organization_campus': 'St. George',
+                'image': None,
+                'organization_description': 'Test organization description.',
+                'organization_website_link': 'https://www.testorganization.com',
+                'organization_instagram_link': 'https://www.instagram.com/testorganization',
+                'organization_linkedin_link': 'https://www.linkedin.com/testorganization',
+                'submit': 'Submit'
+            })
+
+        # Additional assertions based on the expected behavior when email is already registered
+        print(response.data)
+        assert b"Account with this email address already exists!" in response.data
+        # Add more assertions if needed
+
+
+    def test_invalid_email_domain(self):
+        response = self.client.post('/organizer/signup', data={
+            "organization_name": 'Test Organization',
+                'organization_email': 'testorganization@gmail.com',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'organization_campus': 'St. George',
+                'image': None,
+                'organization_description': 'Test organization description.',
+                'organization_website_link': 'https://www.testorganization.com',
+                'organization_instagram_link': 'https://www.instagram.com/testorganization',
+                'organization_linkedin_link': 'https://www.linkedin.com/testorganization',
+                'submit': 'Submit'
+        })
+
+        assert response.status_code == 200
+        assert b'You may only register with your UofT email' in response.data
+
+
+    def test_incomplete_form(self):
+        response = self.client.post('/organizer/signup', data={
+            'organization_name': '',
+            'organization_email': '',
+            'password': '',
+            'confirm_password': '',  # Leaving confirm_password blank
+            'campus': '',
+            'image': None,
+            'description': ' ',
+            'website': 'http://www.testorganization.com',
+            'instagram': 'http://www.instagram.com/testorganization',
+            'linkedin': 'http://www.linkedin.com/testorganization',
+            'submit': 'Submit',
+        })
+        assert response.status_code == 200
+        assert b'This field is required.' in response.data  # Expect an error message for missing confirm_password
