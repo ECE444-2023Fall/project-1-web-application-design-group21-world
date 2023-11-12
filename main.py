@@ -66,7 +66,6 @@ def userMyAccount():
         current_user.major = form.major.data
         current_user.campus = form.campus.data
         current_user.year_of_study = form.year_of_study.data
-        print(current_user.name, form.name.data)
         db.session.commit()
         return redirect("/user/myAccount")
     form.name.data = current_user.name
@@ -92,16 +91,13 @@ def login():
         role = request.form.get("role")  # Get the selected role from the form
         if current_user.is_authenticated:
             logout_user()
-        print(current_user)
         if role == "user":
             user = User.query.filter_by(email=email).first()
             if user and check_password_hash(user.password, password):
-                print(f"User object: {user}")
                 login_user(user)
                 return redirect("/user/myAccount")  # Redirect to user's account
         elif role == "organizer":
             organizer = Organizer.query.filter_by(organizer_email=email).first()
-            print(f"Organizer object: {organizer}")
             if organizer and check_password_hash(organizer.password, password):
                 login_user(organizer)
                 return redirect("/organizer/myAccount")  # Redirect to organizer's account
