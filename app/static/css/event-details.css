@@ -255,6 +255,7 @@
   position: absolute;
   left:100px;
   top: 250px;
+  /*! background-color: var(--dl-color-hazelhub-lblue); */
 }
 .event-details-top-bar {
   flex: 0 0 auto;
@@ -341,6 +342,10 @@
   object-fit: cover;
   justify-content: center;
   border-radius: 10px;
+  border: solid;
+  border-width: 3px;
+  padding: 15px;
+  border-color: var(--dl-color-hazelhub-beige);
 }
 .event-details-navlink2 {
   top: 186px;
