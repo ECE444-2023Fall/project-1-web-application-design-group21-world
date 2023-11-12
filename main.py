@@ -106,7 +106,7 @@ def login():
                 login_user(organizer)
                 return redirect("/organizer/myAccount")  # Redirect to organizer's account
 
-        flash("Invalid email or password")
+        flash("Invalid email or password", "danger")
 
     return render_template("login.html", form=form)
 
@@ -136,9 +136,9 @@ def userSignup():
                 login_user(user)
                 return redirect("/signup/interests")
             else:
-                flash("You may only register with your UofT email")
+                flash("You may only register with your UofT email", "warning")
         else:
-            flash("Account with this email address already exists!")
+            flash("Account with this email address already exists!", "warning")
 
     return render_template("index.html", form=form)
 
@@ -219,9 +219,9 @@ def organizerSignup():
                 login_user(organizer)
                 return redirect("/organizer/myAccount")  # Redirect to the organizer's dashboard
             else:
-                flash("You may only register with your UofT email")
+                flash("You may only register with your UofT email", "warning")
         else:
-            flash("Account with this email address already exists!")
+            flash("Account with this email address already exists!", "warning")
     return render_template("index.html", form=form)
 
 
