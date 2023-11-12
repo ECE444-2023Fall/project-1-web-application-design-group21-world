@@ -17,6 +17,5 @@ def test_user_insert(new_user, client):
 
 def test_get_users(client):
     response = client.get("/list")
-    print(response.data)
     assert response.status_code == 200
     assert b"users are:" in response.data

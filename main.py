@@ -66,7 +66,6 @@ def userMyAccount():
         current_user.major = form.major.data
         current_user.campus = form.campus.data
         current_user.year_of_study = form.year_of_study.data
-        print(current_user.name, form.name.data)
         db.session.commit()
         return redirect("/user/myAccount")
     form.name.data = current_user.name
@@ -92,21 +91,18 @@ def login():
         role = request.form.get("role")  # Get the selected role from the form
         if current_user.is_authenticated:
             logout_user()
-        print(current_user)
         if role == "user":
             user = User.query.filter_by(email=email).first()
             if user and check_password_hash(user.password, password):
-                print(f"User object: {user}")
                 login_user(user)
                 return redirect("/user/myAccount")  # Redirect to user's account
         elif role == "organizer":
             organizer = Organizer.query.filter_by(organizer_email=email).first()
-            print(f"Organizer object: {organizer}")
             if organizer and check_password_hash(organizer.password, password):
                 login_user(organizer)
                 return redirect("/organizer/myAccount")  # Redirect to organizer's account
 
-        flash("Invalid email or password")
+        flash("Invalid email or password", "danger")
 
     return render_template("login.html", form=form)
 
@@ -136,9 +132,9 @@ def userSignup():
                 login_user(user)
                 return redirect("/signup/interests")
             else:
-                flash("You may only register with your UofT email")
+                flash("You may only register with your UofT email", "warning")
         else:
-            flash("Account with this email address already exists!")
+            flash("Account with this email address already exists!", "warning")
 
     return render_template("index.html", form=form)
 
@@ -197,7 +193,7 @@ def organizerSignup():
                 if image:
                     random_uuid = uuid.uuid4()
                     uuid_string = str(random_uuid)
-                    image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
+                    image_path = os.path.join(app.config["IMAGE_PATH_ORGANIZERS"], "organizer_" + uuid_string + "." + image.filename.split(".")[1])
                     # You can process and save the image here, e.g., save it to a folder or a database.
                     image.save(image_path)
                 else:
@@ -219,9 +215,9 @@ def organizerSignup():
                 login_user(organizer)
                 return redirect("/organizer/myAccount")  # Redirect to the organizer's dashboard
             else:
-                flash("You may only register with your UofT email")
+                flash("You may only register with your UofT email", "warning")
         else:
-            flash("Account with this email address already exists!")
+            flash("Account with this email address already exists!", "warning")
     return render_template("index.html", form=form)
 
 
@@ -236,7 +232,7 @@ def organizer_create_event():
             if image:
                 random_uuid = uuid.uuid4()
                 uuid_string = str(random_uuid)
-                image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
+                image_path = os.path.join(app.config["IMAGE_PATH_EVENTS"],"event_" + uuid_string + "." + image.filename.split(".")[1])
                 # You can process and save the image here, e.g., save it to a folder or a database.
                 image.save(image_path)
             else:

@@ -11,8 +11,6 @@ from . import organizers_blueprint
 @organizers_blueprint.route("/organizer/create", methods=["GET", "POST"])
 def organizer_create():
     if request.method == "POST":
-        print("REQUEST INFO", request.json)
-        print("Hello Are you Amon!!")
         organizer = Organizer(
             organizer_name=request.json["organizer_name"],
             organizer_email=request.json["organizer_email"],

@@ -39,13 +39,13 @@
       <span class="event-description-text">
         <span>Registration Fee: {{ event.fee }}</span>
       </span>
-      {% if current_user.name and not(event in current_user.events) %}
+      {% if current_user.role=="user" and not(event in current_user.events) %}
       <form method="POST" action="{{ url_for('register_for_event', event_id=event.id) }}" id="register_for_event-form">
       <button type="submit" id="registerButton" class="event-description-button button">
         <span>Register</span>
       </button>
       {% endif %}
-      {% if current_user.name and (event in current_user.events) %}
+      {% if current_user.role=="user" and (event in current_user.events) %}
       <form method="POST" action="{{ url_for('unregister_for_event', event_id=event.id) }}" id="register_for_event-form">
       <button type="submit" id="registerButton" class="event-description-button button">
         <span>Unregister</span>
