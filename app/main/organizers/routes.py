@@ -1,4 +1,5 @@
 import uuid
+import os
 
 from flask import current_app, flash, redirect, render_template, request, session, url_for
 from flask_login import (LoginManager, UserMixin, current_user, login_required, login_user,
@@ -8,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from ... import db
 from ...models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
-from ..forms import LoginForm, UserDetailsChangeForm, userSignupInterestForm, UserSignUpForm, OrganizerSignupForm
+from ..forms import LoginForm, UserDetailsChangeForm, userSignupInterestForm, UserSignUpForm, OrganizerSignupForm, OrganizerDetailsChangeForm
 
 from sqlalchemy.exc import IntegrityError
 

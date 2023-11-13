@@ -45,14 +45,14 @@
         <span>Registration Fee: {{ event.fee }} CAD</span>
       </span>
       {% if current_user.name and not(event in current_user.events) %}
-      <form method="POST" action="{{ url_for('main.register_for_event', event_id=event.id) }}" id="register_for_event-form">
+      <form method="POST" action="{{ url_for('events.register_for_event', event_id=event.id) }}" id="register_for_event-form">
       <button type="submit" id="registerButton" class="event-description-button button">
         <span>Register</span>
       </button>
       </form>
       {% endif %}
       {% if current_user.name and (event in current_user.events) %}
-      <form method="POST" action="{{ url_for('main.unregister_for_event', event_id=event.id) }}" id="register_for_event-form">
+      <form method="POST" action="{{ url_for('events.unregister_for_event', event_id=event.id) }}" id="register_for_event-form">
       <button type="submit" id="registerButton" class="event-description-button button">
         <span>Unregister</span>
       </button>

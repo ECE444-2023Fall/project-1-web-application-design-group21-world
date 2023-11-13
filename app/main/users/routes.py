@@ -1,7 +1,10 @@
 import uuid
 
 from flask import current_app, flash, redirect, render_template, request, session, url_for
-from flask_login import login_required
+from flask_login import (current_user, login_required, login_user,
+                         logout_user)
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 
 from ... import db

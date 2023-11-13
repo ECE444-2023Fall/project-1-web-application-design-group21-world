@@ -1,5 +1,8 @@
+import uuid
+import os
+
 from flask import current_app, flash, redirect, render_template, request, session, url_for
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from ...models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
@@ -61,7 +64,7 @@ def organizer_create_event():
             current_user.add_event(event_entry)
             db.session.add(event_entry)
             db.session.commit()
-            return redirect("/organizer/myAccount")
+            return redirect("/myEvents")
     else :
             print(form.errors)
             for field, errors in form.errors.items():
@@ -120,7 +123,7 @@ def register_for_event(event_id):
                 db.session.commit()
                 flash("You have successfully unregistered for the event!", "success")
     
-    return redirect(url_for("main.event_details", event_id=event.id))
+    return redirect(url_for("events.event_details", event_id=event.id))
 
 @events_blueprint.route("/unregister_for_event/<int:event_id>", methods=["POST"])
 @login_required
@@ -136,4 +139,4 @@ def unregister_for_event(event_id):
                 db.session.commit()
                 flash("You have successfully unregistered for the event!", "success")
     
-    return redirect(url_for("main.event_details", event_id=event.id))
+    return redirect(url_for("events.event_details", event_id=event.id))
