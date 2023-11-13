@@ -162,3 +162,110 @@ class FunctionalTests(TestCase):
         response = self.client.post('/', data={'email': 'invalid@example.com', 'password': 'wrongpassword', 'role': 'user'})
         self.assertMessageFlashed('Invalid email or password')
         self.assertFalse(current_user.is_authenticated)
+
+    def test_signup_successful_user(self):
+        response = self.client.get('/user/signup')
+        response = self.client.post('/user/signup', data={
+                "name": 'Test User',
+                'email': 'test@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'campus': 'St. George',
+                'faculty': "Commerce",
+                'major': "Testmajor",
+                'year_of_study': '1st',
+                'submit': 'Submit',
+            })
+        print(response.data)
+        self.assert200
+        assert(response.headers['location'] == '/signup/interests')
+
+            # Assert that the user has been added to the database
+        user = User.query.filter_by(email='test@utoronto.ca').first()
+        self.assertIsNotNone(user)
+        self.assertEqual(user.name, 'Test User')
+
+    def test_duplicate_email_user(self):
+        # Add a test organizer to the database with a known email
+        existing_user = User(
+            id=str(uuid.uuid4()),
+            name='Existing User',
+            email='existing@utoronto.ca',
+            password='existingpassword',
+            campus= 'St. George',
+            faculty= 'Commerce',
+            major= 'Testmajor',
+            year_of_study='1st',
+        )
+        db.session.add(existing_user)
+        db.session.commit()
+
+        # Attempt to sign up with the existing email
+        response = self.client.get('/user/signup')
+        response = self.client.post('/user/signup', data={
+                "name": 'Test anotherUser',
+                'email': 'existing@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'campus': 'St. George',
+                'faculty': "Commerce",
+                'major': "Testmajor",
+                'year_of_study': '1st',
+            })
+
+        # Additional assertions based on the expected behavior when email is already registered
+        print(response.data)
+        assert b"Account with this email address already exists!" in response.data
+
+    def test_invalid_email_domain_user(self):
+        response = self.client.post('/user/signup', data={
+                "name": 'Test anotherUser',
+                'email': 'existing@gmail.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'campus': 'St. George',
+                'faculty': "Commerce",
+                'major': "Testmajor",
+                'year_of_study': '1st',
+        })
+
+        assert response.status_code == 200
+        assert b'You may only register with your UofT email' in response.data
+
+    def test_incomplete_form_user(self):
+        response = self.client.post('/user/signup', data={
+                "name": 'Test anotherUser',
+                'email': 'existing@gmail.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'campus': 'St. George',
+                'year_of_study': '1st',
+            'submit': 'Submit',
+        })
+        assert response.status_code == 200
+        assert b'This field is required.' in response.data  # Expect an error message for missing confirm_password
+
+    def test_user_login(self):
+        self.client.post('/user/signup', data={
+                "name": 'Test anotherUser',
+                'email': 'existing@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'campus': 'St. George',
+                'faculty': "Commerce",
+                'major': "Testmajor",
+                'year_of_study': '1st',
+                'submit': 'Submit',
+            })
+        self.client.post('/logout')
+        response = self.client.post('/', data={'email': 'existing@utoronto.ca', 'password': 'testpassword', 'role': 'user'})
+        self.assert200
+        assert(response.headers['location'] == '/user/myAccount')
+        self.assertTrue(current_user.is_authenticated)
+        self.assertTrue(current_user.role == "user")
+        self.assertEqual(current_user.name, 'Test anotherUser')
+
+    def test_invalid_login_organizer(self):
+        response = self.client.post('/', data={'email': 'invalid@example.com', 'password': 'wrongpassword', 'role': 'organizer'})
+        self.assertMessageFlashed('Invalid email or password')
+        self.assertFalse(current_user.is_authenticated)
