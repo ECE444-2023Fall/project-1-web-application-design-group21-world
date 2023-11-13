@@ -9,7 +9,7 @@ class Config:
     IMAGE_PATH_EVENTS = os.environ.get("IMAGE_PATH") or "app/static/assets/events"
     IMAGE_PATH_ORGANIZERS = os.environ.get("IMAGE_PATH") or "app/static/assets/organizers"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+    WTF_CSRF_ENABLED = False
     @staticmethod
     def init_app(app):
         pass
