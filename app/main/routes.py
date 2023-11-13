@@ -1,7 +1,7 @@
 
 import uuid
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, abort
 from flask_login import (current_user, login_required, login_user,
                          logout_user)
 from sqlalchemy import text
@@ -141,6 +141,10 @@ def user_organizer_list():
 @main.route("/organizer/details/<string:organizer_id>", methods=["GET"])
 def organizer_details(organizer_id):
     organizer = Organizer.query.filter_by(id = organizer_id).first()
+
+    if organizer is None: 
+        abort(404)
+    
     return render_template(
         "organizer-details.html", organization=organizer, organization_events=organizer.events
     )

@@ -4,7 +4,7 @@ from flask_testing import TestCase
 from flask_login import login_user, current_user
 from app import create_app, db, login_manager
 from flask_migrate import Migrate
-from app.models import Organizer, User 
+from app.models import Organizer, User, Event 
 from bs4 import BeautifulSoup
 import io
 import uuid
@@ -164,3 +164,73 @@ class FunctionalTests(TestCase):
         response = self.client.post('/', data={'email': 'invalid@example.com', 'password': 'wrongpassword', 'role': 'user'})
         self.assertMessageFlashed('Invalid email or password')
         self.assertFalse(current_user.is_authenticated)
+
+    def test_organizer_details(self):
+        # Add a test organizer to the database with a known email
+        existing_organizer = Organizer(
+            id=str(1),
+            organizer_name='Test Organizer',
+            organizer_email='existing@utoronto.ca',
+            password='existingpassword',
+            campus='UTSC',
+            description='Another test organization.',
+            image_link=None,
+            website='http://www.anotherorganization.com',
+            instagram='http://www.instagram.com/anotherorganization',
+            linkedin='http://www.linkedin.com/anotherorganization'
+        )
+        db.session.add(existing_organizer)
+        db.session.commit()
+
+        # send a GET request to the route with the organizer_id parameter
+        response = self.client.get('/organizer/details/1')
+        self.assertEqual(response.status_code, 200)
+        # print(response.data)
+        self.assertIn(b'Test Organizer', response.data)
+
+    def test_organizer_details_route_not_found(self):
+        # Add a test organizer to the database with a known email
+        existing_organizer = Organizer(
+            id=str(1),
+            organizer_name='Test Organizer',
+            organizer_email='existing@utoronto.ca',
+            password='existingpassword',
+            campus='UTSC',
+            description='Another test organization.',
+            image_link=None,
+            website='http://www.anotherorganization.com',
+            instagram='http://www.instagram.com/anotherorganization',
+            linkedin='http://www.linkedin.com/anotherorganization'
+        )
+        db.session.add(existing_organizer)
+        db.session.commit()
+
+        # send a GET request to the route with invalid organizer_id parameter
+        response = self.client.get('/organizer/details/999')
+
+        # assert that the response status code is 404
+        self.assertEqual(response.status_code, 404)
+        # print(response.data)
+        self.assertIn(b'Page Not Found', response.data)
+
+    def test_organizer_create_event_success(self):
+        response = self.client.get('/organizer/create/event')
+        response = self.client.post('/organizer/create/event', data={
+                "event_name": 'Test Organization',
+                'description': 'Test Description',
+                'date': '2023-01-01',
+                'time': '12:00',
+                'location': 'St. George',
+                'fee': '10',
+                'has_rsvp': '1'
+            })
+        
+       
+        # Assert that the response status code is 200 (OK) or 302 (redirect)
+        self.assertIn(response.status_code, {200, 302})
+        
+        # Optionally, you can add assertions to check if the event is added to the database
+        event = Event.query.filter_by(event_name='Test Event').first()
+        
+        # self.assertIsNotNone(event)
+        self.assertEqual(event.organizer_id, current_user.id)
