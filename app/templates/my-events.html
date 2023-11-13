@@ -4,6 +4,9 @@
 {% block page_content %}
 <div>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/my-events.css') }}" />
+  {% if current_user.role == "organizer" %}
+  <a href="{{ url_for('events.organizer_create_event') }}" class="btn-back">Create Event</a>
+  {% endif %}
   <div class="my-events-container">
     <div class="event-row-container-container event-row-container-root-class-name">
       <span class="event-row-container-text">
@@ -12,11 +15,11 @@
       
       {% for event in user_events %}
         <div class="event-row-component-container event-row-component-root-class-name">
-          <a href="{{ url_for('event_details', event_id=event.id) }}" class="event-row-component-navlink">
+          <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component-navlink">
             <img alt="image_alt3" src="{{ event.image_src }}" class="event-row-component-image" />
           </a>
           <div class="event-row-component-container1">
-            <a href="{{ url_for('event_details', event_id=event.id) }}" class="event-row-component-navlink1">
+            <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component-navlink1">
               <span>{{ event.event_name }}</span>
             </a>
             <span class="event-row-component-text">
