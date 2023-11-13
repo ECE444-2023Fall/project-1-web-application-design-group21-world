@@ -307,7 +307,7 @@ def register_for_event(event_id):
                 db.session.commit()
                 flash("You have successfully unregistered for the event!", "success")
     
-    return render_template("event-details.html", event=event)
+    return redirect(url_for("event_details", event_id=event.id))
 
 @app.route("/unregister_for_event/<int:event_id>", methods=["POST"])
 @login_required
@@ -323,6 +323,6 @@ def unregister_for_event(event_id):
                 db.session.commit()
                 flash("You have successfully unregistered for the event!", "success")
     
-    return render_template("event-details.html", event=event)
+    return redirect(url_for("event_details", event_id=event.id))
 if __name__ == "__main__":
     app.run()
