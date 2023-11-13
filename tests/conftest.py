@@ -10,7 +10,6 @@ from app.models import User
 @pytest.fixture
 def client():
     app = create_app("testing")
-    # print("DATABASE URI PYTEST",app.config["SQLALCHEMY_DATABASE_URI"])
 
     with app.app_context():
         db.create_all()
@@ -28,8 +27,4 @@ def new_user():
     user = User(
         name=f"utorid{num}", email=f"test.{num}@mail.utoronto.ca", password=f"insecure{num}"
     )
-
-    print(user.name)
-    print(user.email)
-    print(user.password)
     return user

@@ -7,10 +7,10 @@ block navbar %}
     <span class="tob-bar-text"><span>HazelHub</span></span>
     <nav class="tob-bar-links">
       <a href="/discover" class="tob-bar-navlink">
-        <span>Discover  </span>
+        <span>Discover</span>
       </a>
       <a href="/myEvents" class="tob-bar-navlink1">
-        <span>My Events  </span>
+        <span>My Events</span>
       </a>
       <a href="/organizer/list" class="tob-bar-navlink2">
         <span>My Organizations</span>
@@ -30,8 +30,8 @@ block navbar %}
 </div>
 {% endblock %} {% block content %}
 <div class="container">
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning">
+  {% for category,message in get_flashed_messages(with_categories=true) %}
+  <div class="alert alert-{{category}}">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     {{ message }}
   </div>

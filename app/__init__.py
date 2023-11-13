@@ -25,13 +25,17 @@ def create_app(config_name):
 
     engine = sa.create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
     inspector = sa.inspect(engine)
-    if not inspector.has_table("users"):
-        with app.app_context():
+    # if not inspector.has_table("users"):
+    #     with app.app_context():
+    #         db.drop_all()
+    #         db.create_all()
+    #         app.logger.info("Initialized database")
+    # else:   
+    #     app.logger.info("Database already contains user table.")
+    with app.app_context():
             db.drop_all()
             db.create_all()
             app.logger.info("Initialized database")
-    else:   
-        app.logger.info("Database already contains user table.")
     
     login_manager.login_view = "main.login"
     login_manager.init_app(app)

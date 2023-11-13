@@ -9,7 +9,6 @@ from . import users_blueprint
 @users_blueprint.route("/create", methods=["GET", "POST"])
 def user_create():
     if request.method == "POST":
-        print("REQUEST INFO", request.json)
         user = User(
             name=request.json["name"],
             email=request.json["email"],
@@ -17,7 +16,6 @@ def user_create():
         )
         db.session.add(user)
         db.session.commit()
-        print("URL FOUND", url_for("users.user_list"))
         return redirect(url_for("users.user_list"))
 
     return render_template("index.html")
