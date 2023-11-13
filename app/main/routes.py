@@ -1,7 +1,7 @@
 
 import uuid
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, current_app
 from flask_login import (current_user, login_required, login_user,
                          logout_user)
 from sqlalchemy import text
@@ -14,6 +14,7 @@ from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from app.models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
 from sqlalchemy.exc import IntegrityError
+import os
 
 from . import main
 
@@ -57,7 +58,6 @@ def userMyAccount():
         current_user.major = form.major.data
         current_user.campus = form.campus.data
         current_user.year_of_study = form.year_of_study.data
-        print(current_user.name, form.name.data)
         db.session.commit()
         return redirect("/user/myAccount")
     form.name.data = current_user.name
@@ -70,6 +70,7 @@ def userMyAccount():
 @main.route("/organizer/myAccount", methods=["GET", "POST"])
 @login_required
 def organizerMyAccount():
+    current_app.logger.info(current_user.role)
     return render_template("organizerMyAccount.html", name=current_user.organizer_name)
 
 
@@ -160,7 +161,7 @@ def organizerSignup():
                     if image:
                         random_uuid = uuid.uuid4()
                         uuid_string = str(random_uuid)
-                        image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
+                        image_path = os.path.join(current_app.config["IMAGE_PATH_ORGANIZERS"], "organizer_" + uuid_string + "." + image.filename.split(".")[1])
                         # You can process and save the image here, e.g., save it to a folder or a database.
                         image.save(image_path)
                     else:
@@ -210,7 +211,7 @@ def organizer_create_event():
             if image:
                 random_uuid = uuid.uuid4()
                 uuid_string = str(random_uuid)
-                image_path = 'app/static/assets/organizers/' + "organizer_" + uuid_string + "." + image.filename.split(".")[1]
+                image_path = os.path.join(current_app.config["IMAGE_PATH_EVENTS"],"event_" + uuid_string + "." + image.filename.split(".")[1])
                 # You can process and save the image here, e.g., save it to a folder or a database.
                 image.save(image_path)
             else:
@@ -241,6 +242,11 @@ def event_details(event_id):
     # Assuming you have an Event model and it has a relationship with Organization
     event = Event.query.filter_by(id=event_id).first()
 
+    if (event.image_link is not None):
+        event.image_link = event.image_link.replace("app", "")
+    else:
+        event.image_link = "/static/assets/default_event_image.jpg"
+
     if event:
         return render_template("event-details.html", event=event)
     else:
@@ -256,6 +262,7 @@ def myEvents():
 
 @main.route("/discover", methods=["GET", "POST"])
 def allEvents():
+    current_app.logger.info(f"EVENTS: {Event.query.all()}")
     return render_template("events.html", events=Event.query.all())
 
 
@@ -268,17 +275,19 @@ def register_for_event(event_id):
         if current_user.role == "user":
             if request.method == "POST":
                 # Assuming you have a UserEvent model and a current_user variable
+                current_app.logger.info(f"Current Role {current_user.role}")
                 current_user.add_event(event)
                 db.session.add(current_user)
                 db.session.commit()
                 flash("You have successfully registered for the event!", "success")
             elif request.method == "DELETE":
+                current_app.logger.info(f"Current Role {current_user.role}")
                 current_user.remove_event(event)
                 db.session.add(current_user)
                 db.session.commit()
                 flash("You have successfully unregistered for the event!", "success")
     
-    return render_template("event-details.html", event=event)
+    return redirect(url_for("main.event_details", event_id=event.id))
 
 @main.route("/unregister_for_event/<int:event_id>", methods=["POST"])
 @login_required
@@ -288,9 +297,10 @@ def unregister_for_event(event_id):
     if current_user.is_authenticated:
         if current_user.role == "user":
             if request.method == "POST":
+                current_app.logger.info(f"Current Role {current_user.role}")
                 current_user.remove_event(event)
                 db.session.add(current_user)
                 db.session.commit()
                 flash("You have successfully unregistered for the event!", "success")
     
-    return render_template("event-details.html", event=event)
+    return redirect(url_for("main.event_details", event_id=event.id))
