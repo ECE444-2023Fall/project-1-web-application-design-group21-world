@@ -13,8 +13,6 @@ class FunctionalTests(TestCase):
     def create_app(self):
         app = create_app("testing")
         migrate = Migrate(app, db)
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
         return app
 
     def setUp(self):

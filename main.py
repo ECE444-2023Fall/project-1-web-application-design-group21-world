@@ -13,9 +13,7 @@ from sqlalchemy import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db, login_manager
-from app.main.event_form import EventForm
-from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm
-from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
+from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm, OrganizerSignupForm, EventForm
 from app.models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
 from sqlalchemy.exc import IntegrityError
@@ -57,7 +55,7 @@ def print_routes(app):
     for rule in app.url_map.iter_rules():
         print(f"Endpoint: {rule.endpoint}, Methods: {', '.join(rule.methods)}, Path: {rule}")
 
+
 if __name__ == "__main__":
-    print_routes(app)
-    app.run(debug=True)
+    app.run()
     

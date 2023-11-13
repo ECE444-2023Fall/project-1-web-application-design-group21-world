@@ -4,7 +4,7 @@ page_content%}
   <a href="{{ url_for('main.logout') }}">Logout</a>
   <h1>Hello, {% if name %}{{name}}{% else %}Stranger{% endif %}!</h1>
   <p>Email: {{email}}</p>
-  <a href="{{ url_for('main.signupInterests') }}">Change Current Interests?</a>
+  <a href="{{ url_for('users_blueprint.signupInterests') }}">Change Current Interests?</a>
   <p>Interests:</p>
   <ul>
     {% for interest in interests %}
