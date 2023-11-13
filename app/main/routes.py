@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from .. import  db, login_manager
 from app.main.event_form import EventForm
-from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm
+from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm, OrganizerDetailsChangeForm
 from app.main.organizers.OrganizerSignUpForm import OrganizerSignupForm
 from app.models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
@@ -51,6 +51,7 @@ def login():
 @main.route("/user/myAccount", methods=["GET", "POST"])
 @login_required
 def userMyAccount():
+    current_app.logger.info(current_user.role)
     form = UserDetailsChangeForm()
     if form.validate_on_submit():
         current_user.name = form.name.data
@@ -71,7 +72,23 @@ def userMyAccount():
 @login_required
 def organizerMyAccount():
     current_app.logger.info(current_user.role)
-    return render_template("organizerMyAccount.html", name=current_user.organizer_name)
+    form = OrganizerDetailsChangeForm()
+    if form.validate_on_submit():
+        current_user.organizer_name = form.organization_name.data
+        current_user.description = form.organization_description.data
+        current_user.campus = form.organization_campus.data
+        current_user.website = form.organization_website_link.data
+        current_user.instagram = form.organization_instagram_link.data
+        current_user.linkedin = form.organization_linkedin_link.data
+        db.session.commit()
+        return redirect("/organizer/myAccount")
+    form.organization_name.data = current_user.organizer_name
+    form.organization_description.data = current_user.description 
+    form.organization_campus.data = current_user.campus
+    form.organization_website_link.data = current_user.website
+    form.organization_instagram_link.data = current_user.instagram
+    form.organization_linkedin_link.data = current_user.linkedin
+    return render_template("organizerMyAccount.html", form=form)
 
 
 @main.route("/user/signup", methods=["GET", "POST"])

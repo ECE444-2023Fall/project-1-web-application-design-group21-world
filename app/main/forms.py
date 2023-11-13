@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (EmailField, PasswordField, SelectField, SelectMultipleField, StringField,
                      SubmitField, validators, widgets)
-from wtforms.validators import DataRequired, Email, Optional
+from wtforms.validators import DataRequired, Email, Optional, Length, URL
 
 class UserDetailsChangeForm(FlaskForm):
     name = StringField("What is your full name?", validators=[DataRequired()])
@@ -70,3 +70,16 @@ class userSignupInterestForm(FlaskForm):
         "Select Your Interests", choices=[], validators=[Optional()], coerce=int
     )
     submit = SubmitField("Submit")
+
+class OrganizerDetailsChangeForm(FlaskForm):
+    organization_name = StringField("What is your organization name?", validators=[DataRequired()])
+    organization_campus = SelectField(
+            "Campus",
+            choices=[("St. George"), ("Scarborough"), ("Missasauga")],
+            validators=[DataRequired()],
+        )
+    organization_description = StringField("Organization Description (*)", validators=[Length(max=500)])
+    organization_website_link = StringField("Website Link", validators=[URL(), Optional()])
+    organization_instagram_link = StringField("Instagram Link", validators=[URL(), Optional()])
+    organization_linkedin_link = StringField("LinkedIn Link", validators=[URL(), Optional()])
+    submit = SubmitField("Modify")
