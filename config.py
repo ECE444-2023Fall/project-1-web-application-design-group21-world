@@ -6,8 +6,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "hard to guess string"
     IMAGE_PATH = os.environ.get("IMAGE_PATH") or "app/static/assets"
-    IMAGE_PATH_EVENTS = os.environ.get("IMAGE_PATH") or "app/static/assets/events"
-    IMAGE_PATH_ORGANIZERS = os.environ.get("IMAGE_PATH") or "app/static/assets/organizers"
+    IMAGE_PATH_EVENTS = os.environ.get("IMAGE_PATH_EVENTS") or "app/static/assets/events"
+    IMAGE_PATH_ORGANIZERS = os.environ.get("IMAGE_PATH_ORGANIZERS") or "app/static/assets/organizers"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
     @staticmethod
