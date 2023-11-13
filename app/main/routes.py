@@ -94,31 +94,37 @@ def organizerMyAccount():
 @main.route("/user/signup", methods=["GET", "POST"])
 def userSignup():
     form = UserSignUpForm()
-    if form.validate_on_submit():
-        email = User.query.filter_by(email=form.email.data).first()
-        hashed_password = generate_password_hash(form.password.data)
-        if email is None:
-            if "utoronto" in form.email.data.split("@")[1]:
-                random_uuid = uuid.uuid4()
-                uuid_string = str(random_uuid)
-                user = User(
-                    id = uuid_string,
-                    name=form.name.data,
-                    email=form.email.data,
-                    password=hashed_password,
-                    faculty=form.faculty.data,
-                    major=form.major.data,
-                    campus=form.campus.data,
-                    year_of_study=form.year_of_study.data,
-                )
-                db.session.add(user)
-                db.session.commit()
-                login_user(user)
-                return redirect("/signup/interests")
+    if form.is_submitted():
+        if form.validate():
+            email = User.query.filter_by(email=form.email.data).first()
+            hashed_password = generate_password_hash(form.password.data)
+            if email is None:
+                if "utoronto" in form.email.data.split("@")[1]:
+                    random_uuid = uuid.uuid4()
+                    uuid_string = str(random_uuid)
+                    user = User(
+                        id = uuid_string,
+                        name=form.name.data,
+                        email=form.email.data,
+                        password=hashed_password,
+                        faculty=form.faculty.data,
+                        major=form.major.data,
+                        campus=form.campus.data,
+                        year_of_study=form.year_of_study.data,
+                    )
+                    db.session.add(user)
+                    db.session.commit()
+                    login_user(user)
+                    return redirect("/signup/interests")
+                else:
+                    flash("You may only register with your UofT email")
             else:
-                flash("You may only register with your UofT email")
-        else:
-            flash("Account with this email address already exists!")
+                flash("Account with this email address already exists!")
+        else :
+            print(form.errors)
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{field}: {error}', 'danger')
 
     return render_template("index.html", form=form)
 
@@ -249,7 +255,12 @@ def organizer_create_event():
             current_user.add_event(event_entry)
             db.session.add(event_entry)
             db.session.commit()
-            return redirect("/organizer/myAccount")  # Redirect to the organizer's account after successful form submission
+            return redirect("/organizer/myAccount")
+    else :
+            print(form.errors)
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{field}: {error}', 'danger')  # Redirect to the organizer's account after successful form submission
 
     return render_template("index.html", form=form)
 
