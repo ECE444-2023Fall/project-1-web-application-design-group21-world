@@ -294,7 +294,21 @@ def event_details(event_id):
 @login_required
 def myEvents():
     # app.logger.info(f"ID: {current_user.id} EVENTS: {Event.query.all()}")
-    return render_template("my-events.html", user_events=current_user.events)
+    #return render_template("events_rec.html", user_events=current_user.events) #my-events
+    if current_user.is_authenticated:
+        if current_user.role == "user":
+            eventIntID_query = db.session.query(EventInterests).all() #remove session here?
+            eventIntID = {item.interest_id for item in eventIntID_query}
+            userIntID_query = db.session.query(UserInterests).filter_by(user_id=current_user.id).all()
+            userIntID = {item.interest_id for item in userIntID_query}
+            common = eventIntID.intersection(userIntID)
+            if common:
+                event_query = db.session.query(EventInterests.c.event_id).filter(EventInterests.c.interest_id.in_(common)).all()
+                event_ids = [event_id for(event_id,) in event_query]
+                events = db.session.query(Event).filter(Event.id.in_(event_ids)).all()
+                return render_template("events_rec.html", user_events=current_user.events,u_id=events)
+            else:
+                return render_template("events_rec.html", user_events=current_user.events)
 
 @app.route("/discover", methods=["GET", "POST"])
 def allEvents():
@@ -340,24 +354,6 @@ def unregister_for_event(event_id):
                 flash("You have successfully unregistered for the event!", "success")
     
     return render_template("event-details.html", event=event)
-
-@app.route("/user/myAccount/recommendedEvents", methods=["GET", "POST"])
-@login_required
-def eventRec():
-    if current_user.is_authenticated:
-        if current_user.role == "user":
-            eventIntID_query = db.session.query(EventInterests).all() #remove session here?
-            eventIntID = {item.interest_id for item in eventIntID_query}
-            userIntID_query = db.session.query(UserInterests).filter_by(user_id=current_user.id).all()
-            userIntID = {item.interest_id for item in userIntID_query}
-            common = eventIntID.intersection(userIntID)
-            if common:
-                event_query = db.session.query(EventInterests.c.event_id).filter(EventInterests.c.interest_id.in_(common)).all()
-                event_ids = [event_id for(event_id,) in event_query]
-                events = db.session.query(Event).filter(Event.id.in_(event_ids)).all()
-                return render_template("events_rec.html", u_id=events)
-            else:
-                return render_template("event_not_found.html")
 
 if __name__ == "__main__":
     app.run()
