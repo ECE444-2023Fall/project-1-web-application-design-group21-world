@@ -63,7 +63,6 @@ class FunctionalTests(TestCase):
                 'location': 'Test',
                 'google_map_link': 'https://www.google.com/maps',
                 'fee': '0',
-                'has_rsvp': 'Yes',
                 'external_registration_link': 'https://www.google.com/maps',
                 'submit': 'Submit',
         })
@@ -551,7 +550,6 @@ class FunctionalTests(TestCase):
                 location="Toronto, Ontario, Canada",
                 google_map_link="https://test.com",
                 fee="1",
-                has_rsvp="Yes",
                 external_registration_link="https://test.com",
             )
             db.session.add(event)
