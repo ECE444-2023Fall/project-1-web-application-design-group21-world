@@ -217,6 +217,16 @@
   font-family: "DM Sans";
   font-weight: 400;
 }
+.event-attendees {
+  top: 500px;
+  left: 20px;
+  color: var(--dl-color-hazelhub-dblack);
+  position: absolute;
+  font-size: 24px;
+  font-style: normal;
+  font-family: "DM Sans";
+  font-weight: 400;
+}
 .event-description-button {
   /*! left: 385px; */
   bottom: 23px;
