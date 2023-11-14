@@ -316,6 +316,54 @@ class FunctionalTests(TestCase):
         response = self.client.post('/', data={'email': 'invalid@example.com', 'password': 'wrongpassword', 'role': 'organizer'})
         self.assertMessageFlashed('Invalid email or password')
         self.assertFalse(current_user.is_authenticated)    
+
+    def test_organizer_details(self):
+        # Add a test organizer to the database with a known email
+        existing_organizer = Organizer(
+            id=str(1),
+            organizer_name='Test Organizer',
+            organizer_email='existing@utoronto.ca',
+            password='existingpassword',
+            campus='UTSC',
+            description='Another test organization.',
+            image_link=None,
+            website='http://www.anotherorganization.com',
+            instagram='http://www.instagram.com/anotherorganization',
+            linkedin='http://www.linkedin.com/anotherorganization'
+        )
+        db.session.add(existing_organizer)
+        db.session.commit()
+
+        # send a GET request to the route with the organizer_id parameter
+        response = self.client.get('/organizer/details/1')
+        self.assertEqual(response.status_code, 200)
+        
+        self.assertIn(b'Test Organizer', response.data)
+
+    def test_organizer_details_route_not_found(self):
+        # Add a test organizer to the database with a known email
+        existing_organizer = Organizer(
+            id=str(1),
+            organizer_name='Test Organizer',
+            organizer_email='existing@utoronto.ca',
+            password='existingpassword',
+            campus='UTSC',
+            description='Another test organization.',
+            image_link=None,
+            website='http://www.anotherorganization.com',
+            instagram='http://www.instagram.com/anotherorganization',
+            linkedin='http://www.linkedin.com/anotherorganization'
+        )
+        db.session.add(existing_organizer)
+        db.session.commit()
+
+        # send a GET request to the route with invalid organizer_id parameter
+        response = self.client.get('/organizer/details/999')
+
+        # assert that the response status code is 404
+        self.assertEqual(response.status_code, 404)
+        
+        self.assertIn(b'Page Not Found', response.data)
     
     def test_registration(self):
             event = Event(
