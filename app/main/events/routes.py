@@ -29,7 +29,7 @@ def events_create():
         )
         db.session.add(event)
         db.session.commit()
-        return render_template("events_new.html", name=event.event_name, event=event)
+        return render_template("events_new.html", name=current_user.organizer_name, event=event)
     return render_template("index_event.html")
 
 @events_blueprint.route("/organizer/create/event", methods=["GET", "POST"])
