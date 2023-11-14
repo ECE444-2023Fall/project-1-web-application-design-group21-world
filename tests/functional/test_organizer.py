@@ -4,7 +4,7 @@ from flask_testing import TestCase
 from flask_login import login_user, current_user
 from app import create_app, db, login_manager
 from flask_migrate import Migrate
-from app.models import Organizer, User 
+from app.models import Organizer, User, Event 
 from bs4 import BeautifulSoup
 import io
 import uuid
@@ -269,3 +269,58 @@ class FunctionalTests(TestCase):
         response = self.client.post('/', data={'email': 'invalid@example.com', 'password': 'wrongpassword', 'role': 'organizer'})
         self.assertMessageFlashed('Invalid email or password')
         self.assertFalse(current_user.is_authenticated)
+    
+    
+    def test_registration(self):
+            event = Event(
+                event_name="Test Event",
+                organizer_id="1",
+                description="Lorem Ipsum",
+                date="01/01/1960",
+                time="00:00",
+                location="Toronto, Ontario, Canada",
+                google_map_link="https://test.com",
+                fee="1",
+                has_rsvp="Yes",
+                external_registration_link="https://test.com",
+            )
+            db.session.add(event)
+            db.session.commit()
+
+            assert event in Event.query.all()
+
+            event = Event.query.filter(Event.event_name == "Test Event").first()
+
+            self.client.post(
+                "/user/signup",
+                data={
+                    "name": "Test anotherUser",
+                    "email": "existing@utoronto.ca",
+                    "password": "testpassword",
+                    "confirm": "testpassword",
+                    "campus": "St. George",
+                    "faculty": "Commerce",
+                    "major": "Testmajor",
+                    "year_of_study": "1st",
+                    "submit": "Submit",
+                },
+            )
+            self.client.post("/logout")
+            response = self.client.post(
+                "/",
+                data={
+                    "email": "existing@utoronto.ca",
+                    "password": "testpassword",
+                    "role": "user",
+                },
+            )
+            self.assert200
+            assert response.headers["location"] == "/user/myAccount"
+
+            response = self.client.post(f"/register_for_event/{event.id}")
+            assert event in current_user.events
+            assert current_user in event.users
+
+            response = self.client.post(f"/unregister_for_event/{event.id}")
+            assert event not in current_user.events
+            assert current_user not in event.users
