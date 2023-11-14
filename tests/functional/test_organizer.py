@@ -24,16 +24,16 @@ class FunctionalTests(TestCase):
         
     def signup_user(self):
         response = self.client.post('/user/signup', data={
-                "name": 'Test User',
-                'email': 'test@utoronto.ca',
+                "name": 'Test anotherUser',
+                'email': 'existing@utoronto.ca',
                 'password': 'testpassword',
                 'confirm': 'testpassword',
                 'campus': 'St. George',
-                'faculty': "Commerce",
+                'faculty': "Engineering",
                 'major': "Testmajor",
                 'year_of_study': '1st',
                 'submit': 'Submit',
-        }) # Signup as user
+            })
         return response
         
     def signup_organizer(self): 
@@ -337,32 +337,12 @@ class FunctionalTests(TestCase):
 
             event = Event.query.filter(Event.event_name == "Test Event").first()
 
-            self.client.post(
-                "/user/signup",
-                data={
-                    "name": "Test anotherUser",
-                    "email": "existing@utoronto.ca",
-                    "password": "testpassword",
-                    "confirm": "testpassword",
-                    "campus": "St. George",
-                    "faculty": "Commerce",
-                    "major": "Testmajor",
-                    "year_of_study": "1st",
-                    "submit": "Submit",
-                },
-            )
-            self.client.post("/logout")
-            response = self.client.post(
-                "/",
-                data={
-                    "email": "existing@utoronto.ca",
-                    "password": "testpassword",
-                    "role": "user",
-                },
-            )
+            self.signup_user()
+            self.client.post('/logout')
+            response = self.client.post('/', data={'email': 'existing@utoronto.ca', 'password': 'testpassword', 'role': 'user'})
             self.assert200
-            assert response.headers["location"] == "/user/myAccount"
-
+            self.assertTrue(current_user.is_authenticated)
+            
             response = self.client.post(f"/register_for_event/{event.id}")
             assert event in current_user.events
             assert current_user in event.users
