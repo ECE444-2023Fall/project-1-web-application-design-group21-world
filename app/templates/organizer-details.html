@@ -6,18 +6,17 @@
     <div class="organizer-details-container">
         <header class="organizer-title-container">
             <div class="organization-logo-container organization-logo-root-class-name">
-                <img alt="image" class="organization-logo-image"/>
+                <img alt="image" class="organization-logo-image" src="{{ organization.image_link | replace('app', '') }}"/>
             </div>
             <h1 class="organizer-title-text"><span>{{ organization.organizer_name }}</span></h1>
             <span class="organizer-title-text1"><span>{{ organization.campus }}</span></span>
-            <span class="organizer-title-text2"><span># of Followers</span></span>
         </header>
 
         <div class="organization-email-container organization-email-root-class-name">
             <span class="organization-email-text">
                 <span>{{ organization.organizer_email }}</span>
             </span>
-            <span class="organization-email-text1"><span>Contact Email</span></span>
+            <span class="organization-email-text1"><span>Contact Email:</span></span>
         </div>
 
         <div class="organization-desc-container organization-desc-root-class-name">
@@ -30,17 +29,17 @@
 
 
     <div class="event-row-container-org-container event-row-container-org-root-class-name">
-      <span class="event-row-container-org-text">
+      <span class="event-row-container-org-text" style="margin-bottom:10px;">
         <span>Current Events</span>
       </span>
       {% for event in organization_events %}
       <div class="event-row-component1-container event-row-component1-root-class-name3">
         <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component1-navlink">
-          <img alt="image_alt4" src="{{ event.image_src }}" class="event-row-component1-image" />
+          <img alt="image_alt4" src="{{ event.image_link | replace('app', '') }}" onerror="this.onerror=null; this.src='/static/assets/default_event_image.jpg'"  class="event-row-component1-image" />
         </a>
         <div class="event-row-component1-container1">
           <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component1-navlink1">
-            <span>{{ event.name }}</span>
+            <span>{{ event.event_name }}</span>
           </a>
           <span class="event-row-component1-text">
             <span>{{ event.location }}</span>
