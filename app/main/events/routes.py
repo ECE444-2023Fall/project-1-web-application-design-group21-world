@@ -84,7 +84,7 @@ def eventInterests():
     if request.method == 'POST' and form.validate_on_submit():
         if not form.interests.data:
             flash('Please select at least one interest area.', 'danger')
-            return render_template("interests_events.html", form=form, event_id = event_id)
+            return render_template("interests_events.html", form=form, event_id = session['event_id'])
         for id in form.interests.data:
             event = Event.query.filter_by(id=session['event_id']).first()
             interest = Interest.query.filter_by(id=id).first()
@@ -92,7 +92,7 @@ def eventInterests():
             db.session.commit()
         session.pop('event_id')
         return redirect("/discover")
-    return render_template("interests_events.html", form=form, event_id=event_id)
+    return render_template("interests_events.html", form=form, event_id=session['event_id'])
 
 @events_blueprint.route("/event_details/<int:event_id>", methods=["GET"])
 def event_details(event_id):
