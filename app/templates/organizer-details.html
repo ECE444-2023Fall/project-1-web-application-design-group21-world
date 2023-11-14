@@ -35,7 +35,7 @@
       {% for event in organization_events %}
       <div class="event-row-component1-container event-row-component1-root-class-name3">
         <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component1-navlink">
-          <img alt="image_alt4" src="{{ event.image_link | replace('app', '') }}" class="event-row-component1-image" />
+          <img alt="image_alt4" src="{{ event.image_link | replace('app', '') }}" onerror="this.onerror=null; this.src='/static/assets/default_event_image.jpg'"  class="event-row-component1-image" />
         </a>
         <div class="event-row-component1-container1">
           <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component1-navlink1">
