@@ -66,6 +66,8 @@ def organizer_create_event():
             db.session.commit()
             session['event_id'] = event_entry.id
             return redirect("/organizer/create/event/interests")
+        else:
+            flash("Event name already exists, enter a different name please ", 'danger')
     else :
             print(form.errors)
             for field, errors in form.errors.items():
