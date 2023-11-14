@@ -21,6 +21,53 @@ class FunctionalTests(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+        
+    def signup_user(self):
+        response = self.client.post('/user/signup', data={
+                "name": 'Test User',
+                'email': 'test@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'campus': 'St. George',
+                'faculty': "Commerce",
+                'major': "Testmajor",
+                'year_of_study': '1st',
+                'submit': 'Submit',
+        }) # Signup as user
+        return response
+        
+    def signup_organizer(self): 
+        response = self.client.post('/organizer/signup', data={
+                "organization_name": 'Test Organization',
+                'organization_email': 'test@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'organization_campus': 'St. George',
+                'image': None,
+                'organization_description': 'Test organization description.',
+                'organization_website_link': 'https://www.testorganization.com',
+                'organization_instagram_link': 'https://www.instagram.com/testorganization',
+                'organization_linkedin_link': 'https://www.linkedin.com/testorganization',
+                'submit': 'Submit'
+        }) # Signup as organizer
+        return response
+        
+    def create_event(self): 
+        response = self.client.post('/organizer/create/event', data={
+                "event_name": 'Test',
+                'organizer_id': '1',
+                'description': 'Test',
+                'date': '01/01/2000',
+                'time': '00:00',
+                'image': None,
+                'location': 'Test',
+                'google_map_link': 'https://www.google.com/maps',
+                'fee': '0',
+                'has_rsvp': 'Yes',
+                'external_registration_link': 'https://www.google.com/maps',
+                'submit': 'Submit',
+        })
+        return response
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -171,7 +218,7 @@ class FunctionalTests(TestCase):
                 'password': 'testpassword',
                 'confirm': 'testpassword',
                 'campus': 'St. George',
-                'faculty': "Commerce",
+                'faculty': "Engineering",
                 'major': "Testmajor",
                 'year_of_study': '1st',
                 'submit': 'Submit',
@@ -193,7 +240,7 @@ class FunctionalTests(TestCase):
             email='existing@utoronto.ca',
             password='existingpassword',
             campus= 'St. George',
-            faculty= 'Commerce',
+            faculty= 'Engineering',
             major= 'Testmajor',
             year_of_study='1st',
         )
@@ -208,7 +255,7 @@ class FunctionalTests(TestCase):
                 'password': 'testpassword',
                 'confirm': 'testpassword',
                 'campus': 'St. George',
-                'faculty': "Commerce",
+                'faculty': "Engineering",
                 'major': "Testmajor",
                 'year_of_study': '1st',
             })
@@ -224,7 +271,7 @@ class FunctionalTests(TestCase):
                 'password': 'testpassword',
                 'confirm': 'testpassword',
                 'campus': 'St. George',
-                'faculty': "Commerce",
+                'faculty': "Engineering",
                 'major': "Testmajor",
                 'year_of_study': '1st',
         })
@@ -252,7 +299,7 @@ class FunctionalTests(TestCase):
                 'password': 'testpassword',
                 'confirm': 'testpassword',
                 'campus': 'St. George',
-                'faculty': "Commerce",
+                'faculty': "Engineering",
                 'major': "Testmajor",
                 'year_of_study': '1st',
                 'submit': 'Submit',
@@ -268,8 +315,7 @@ class FunctionalTests(TestCase):
     def test_invalid_login_organizer(self):
         response = self.client.post('/', data={'email': 'invalid@example.com', 'password': 'wrongpassword', 'role': 'organizer'})
         self.assertMessageFlashed('Invalid email or password')
-        self.assertFalse(current_user.is_authenticated)
-    
+        self.assertFalse(current_user.is_authenticated)    
     
     def test_registration(self):
             event = Event(
@@ -324,3 +370,27 @@ class FunctionalTests(TestCase):
             response = self.client.post(f"/unregister_for_event/{event.id}")
             assert event not in current_user.events
             assert current_user not in event.users
+        
+    def test_organizer_appears_webpage(self):
+        self.signup_organizer()
+        response = self.client.get('/organizer/list')
+         
+        assert b'href="/organizer/details/' in response.data # Check if webpage updated
+        
+    def test_organizer_not_appears_webpage(self):
+        self.signup_user();
+        response = self.client.get('/organizer/list')
+        
+        assert b'href="/organizer/details/' not in response.data # Check if webpage updated (it shouldn't)
+        
+    def test_event_is_created_on_webpage(self):
+        self.signup_organizer();
+        response = self.client.get('/discover')
+        
+        assert b'event-row-component-container event-row-component-root-class-name' not in response.data # Check if no events yet
+        
+        self.create_event()
+        
+        response = self.client.get('/discover')
+        
+        assert b'event-row-component-container event-row-component-root-class-name' in response.data # Check if events added in webpage
