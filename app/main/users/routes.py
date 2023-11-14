@@ -99,6 +99,10 @@ def signupInterests():
     form = userSignupInterestForm()
     form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
     if request.method == 'POST' and form.validate_on_submit():
+        if not form.interests.data:
+            flash('Please select at least one interest area.', 'danger')
+            return render_template("interests.html", form=form)
+
         user = User.query.filter_by(email=current_user.email).first()
         all_interests = []
         for id in form.interests.data:
@@ -106,7 +110,7 @@ def signupInterests():
             all_interests.append(interest)
         user.update_interest(all_interests)    
         db.session.commit()
-        return redirect("/user/myAccount")
+        return redirect("/discover")
     form.interests.default = [interest.id for interest in current_user.interests]
     form.process()
     return render_template("interests.html", form=form)
