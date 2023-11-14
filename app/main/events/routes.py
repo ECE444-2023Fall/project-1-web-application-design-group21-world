@@ -74,7 +74,7 @@ def organizer_create_event():
                 for error in errors:
                     flash(f'{field}: {error}', 'danger')  # Redirect to the organizer's account after successful form submission
 
-    return render_template("index.html", form=form)
+    return render_template("index.html", form=form, name=current_user.organizer_name)
 
 @events_blueprint.route("/organizer/create/event/interests", methods=["GET", "POST"])
 @login_required
