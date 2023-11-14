@@ -214,16 +214,36 @@ class FunctionalTests(TestCase):
         self.assertIn(b'Page Not Found', response.data)
 
     def test_organizer_create_event_success(self):
-        response = self.client.get('/organizer/create/event')
-        response = self.client.post('/organizer/create/event', data={
-                "event_name": 'Test Organization',
-                'description': 'Test Description',
-                'date': '2023-01-01',
-                'time': '12:00',
-                'location': 'St. George',
-                'fee': '10',
-                'has_rsvp': '1'
-            })
+        self.client.post('/organizer/signup', 
+                         data={ "organization_name": 'Test Organization', 
+                               'organization_email': 'test@utoronto.ca', 
+                               'password': 'testpassword', 
+                               'confirm': 'testpassword', 
+                               'organization_campus': 'St. George', 
+                               'image': None, 
+                               'organization_description': 'Test organization description.', 
+                               'organization_website_link': 'https://www.testorganization.com', 
+                               'organization_instagram_link': 'https://www.instagram.com/testorganization', 
+                               'organization_linkedin_link': 'https://www.linkedin.com/testorganization', 
+                               'submit': 'Submit' })
+
+        self.client.post('/logout') 
+        response = self.client.post('/', data={
+            'email': 'test@utoronto.ca', 
+            'password': 'testpassword', 
+            'role': 'organizer'}) 
+        organizer = Organizer.query.filter_by(organizer_email='test@utoronto.ca').first() 
+        response = self.client.post('/organizer/create/event', 
+                                    data={ "event_name": 'Test Event', 
+                                          "organizer_id": organizer.id, 
+                                          "image": None, 
+                                          'description': 'Test Description', 
+                                          'date': '2023-01-01', 
+                                          'time': '12:00', 
+                                          'location': 'St. George', 
+                                          "google_map_link": "https://map.google.com", 
+                                          'fee': '10', 
+                                          'has_rsvp': '1' })
         
        
         # Assert that the response status code is 200 (OK) or 302 (redirect)
