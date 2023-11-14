@@ -31,3 +31,10 @@ jobs:
       - name: Run autoflake
         run: |
           autoflake *.py app tests -r --remove-all-unused-imports --in-place --remove-unused-variables
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git commit -am "Autoformat code with Black" || true
+          git push
+
