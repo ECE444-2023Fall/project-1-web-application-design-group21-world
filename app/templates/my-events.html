@@ -7,11 +7,10 @@
   {% if current_user.role == "organizer" %}
   <a href="{{ url_for('events.organizer_create_event') }}" class="btn-back">Create Event</a>
   {% endif %}
+  <div class="page-header"> 
+    <h1>My Events</h1>
+</div>
   <div class="my-events-container">
-    <div class="event-row-container-container event-row-container-root-class-name">
-      <span class="event-row-container-text">
-        <span>Registered Events</span>
-      </span>
       
       {% for event in user_events %}
         <div class="event-row-component-container event-row-component-root-class-name">
@@ -34,7 +33,6 @@
         </div>
       {% endfor %}
       
-    </div>
     
   </div>
 </div>

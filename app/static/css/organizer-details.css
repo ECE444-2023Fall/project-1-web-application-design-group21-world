@@ -23,6 +23,17 @@
     padding-bottom: var(--dl-space-space-halfunit);
     text-decoration: none;
   }
+  .event-row-component1-desc {
+	  position: relative;
+	  top: -7.8em;
+	  left: 30em;
+	  max-width: 240px;
+	  overflow-y: scroll;
+	  overflow-x: hidden;
+	  max-height: 95px;
+    background-color: var(--dl-color-hazelhub-beige);
+  }
+
   .organization-logo-image {
     width: 200px;
     height: 200px;
@@ -44,7 +55,7 @@
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
-    background-color: var(--dl-color-hazelhub-hazel2);
+    background-color: var(--dl-color-hazelhub-beige);
 	border-radius: 10px;
   }
   .organizer-title-text {
@@ -207,7 +218,7 @@
     color: var(--dl-color-hazelhub-dblack);
     position: absolute;
     font-size: 20px;
-    max-width: 500px;
+    max-width: 800px;
     font-style: normal;
     max-height: 150px;
     overflow-y: scroll;
@@ -228,4 +239,6 @@
     justify-content: flex-start;
     padding-bottom: 50px;
   }
+  
+
   
