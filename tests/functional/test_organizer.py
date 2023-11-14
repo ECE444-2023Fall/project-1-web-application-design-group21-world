@@ -364,40 +364,81 @@ class FunctionalTests(TestCase):
         self.assertEqual(response.status_code, 404)
         
         self.assertIn(b'Page Not Found', response.data)
-    
-    def test_registration(self):
-            event = Event(
-                event_name="Test Event",
-                organizer_id="1",
-                description="Lorem Ipsum",
-                date="01/01/1960",
-                time="00:00",
-                location="Toronto, Ontario, Canada",
-                google_map_link="https://test.com",
-                fee="1",
-                has_rsvp="Yes",
-                external_registration_link="https://test.com",
-            )
-            db.session.add(event)
-            db.session.commit()
 
-            assert event in Event.query.all()
+    def test_organizer_create_event_success(self):
+        self.client.post('/organizer/signup', 
+                         data={ "organization_name": 'Test Organization', 
+                               'organization_email': 'test@utoronto.ca', 
+                               'password': 'testpassword', 
+                               'confirm': 'testpassword', 
+                               'organization_campus': 'St. George', 
+                               'image': None, 
+                               'organization_description': 'Test organization description.', 
+                               'organization_website_link': 'https://www.testorganization.com', 
+                               'organization_instagram_link': 'https://www.instagram.com/testorganization', 
+                               'organization_linkedin_link': 'https://www.linkedin.com/testorganization', 
+                               'submit': 'Submit' })
 
-            event = Event.query.filter(Event.event_name == "Test Event").first()
+        self.client.post('/logout') 
+        response = self.client.post('/', data={
+            'email': 'test@utoronto.ca', 
+            'password': 'testpassword', 
+            'role': 'organizer'}) 
+        organizer = Organizer.query.filter_by(organizer_email='test@utoronto.ca').first() 
+        response = self.client.post('/organizer/create/event', 
+                                    data={ "event_name": 'Test Event', 
+                                          "organizer_id": organizer.id, 
+                                          "image": None, 
+                                          'description': 'Test Description', 
+                                          'date': '2023-01-01', 
+                                          'time': '12:00', 
+                                          'location': 'St. George', 
+                                          "google_map_link": "https://map.google.com", 
+                                          'fee': '10', 
+                                          'has_rsvp': '1' })
+        
+       
+        # Assert that the response status code is 200 (OK) or 302 (redirect)
+        self.assertIn(response.status_code, {200, 302})
+        
+        event = Event.query.filter_by(event_name='Test Event').first()
+        
+        self.assertEqual(event.organizer_id, current_user.id)
 
-            self.signup_user()
-            self.client.post('/logout')
-            response = self.client.post('/', data={'email': 'existing@utoronto.ca', 'password': 'testpassword', 'role': 'user'})
-            self.assert200
-            self.assertTrue(current_user.is_authenticated)
+    def test_organizer_create_event_failure(self):
+            self.client.post('/organizer/signup', 
+                            data={ "organization_name": 'Test Organization', 
+                                'organization_email': 'test@utoronto.ca', 
+                                'password': 'testpassword', 
+                                'confirm': 'testpassword', 
+                                'organization_campus': 'St. George', 
+                                'image': None, 
+                                'organization_description': 'Test organization description.', 
+                                'organization_website_link': 'https://www.testorganization.com', 
+                                'organization_instagram_link': 'https://www.instagram.com/testorganization', 
+                                'organization_linkedin_link': 'https://www.linkedin.com/testorganization', 
+                                'submit': 'Submit' })
+
+            self.client.post('/logout') 
+            response = self.client.post('/', data={
+                'email': 'test@utoronto.ca', 
+                'password': 'testpassword', 
+                'role': 'organizer'}) 
+            organizer = Organizer.query.filter_by(organizer_email='test@utoronto.ca').first() 
+            response = self.client.post('/organizer/create/event', 
+                                        data={ "event_name": '', 
+                                            "organizer_id": organizer.id, 
+                                            "image": None, 
+                                            'description': 'Test Description', 
+                                            'date': '2023-01-01', 
+                                            'time': '12:00', 
+                                            'location': 'St. George', 
+                                            "google_map_link": "https://map.google.com", 
+                                            'fee': '10', 
+                                            'has_rsvp': '1' })
             
-            response = self.client.post(f"/register_for_event/{event.id}")
-            assert event in current_user.events
-            assert current_user in event.users
-
-            response = self.client.post(f"/unregister_for_event/{event.id}")
-            assert event not in current_user.events
-            assert current_user not in event.users
+            
+            self.assertIn(b'This field is required.', response.data)
         
     def test_organizer_appears_webpage(self):
         self.signup_organizer()
@@ -498,3 +539,45 @@ class FunctionalTests(TestCase):
             
             
             self.assertIn(b'This field is required.', response.data)
+            
+         
+    def test_registration(self):
+            event = Event(
+                event_name="Test Event",
+                organizer_id="1",
+                description="Lorem Ipsum",
+                date="01/01/1960",
+                time="00:00",
+                location="Toronto, Ontario, Canada",
+                google_map_link="https://test.com",
+                fee="1",
+                has_rsvp="Yes",
+                external_registration_link="https://test.com",
+            )
+            db.session.add(event)
+            db.session.commit()
+
+            assert event in Event.query.all()
+
+            event = Event.query.filter(Event.event_name == "Test Event").first()
+
+            self.signup_user()
+            self.client.post("/logout")
+            response = self.client.post(
+                "/",
+                data={
+                    "email": "existing@utoronto.ca",
+                    "password": "testpassword",
+                    "role": "user",
+                },
+            )
+            self.assert200
+            self.assertTrue(current_user.is_authenticated)
+
+            response = self.client.post(f"/register_for_event/{event.id}")
+            assert event in current_user.events
+            assert current_user in event.users
+
+            response = self.client.post(f"/unregister_for_event/{event.id}")
+            assert event not in current_user.events
+            assert current_user not in event.users
