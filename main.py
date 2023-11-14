@@ -13,7 +13,7 @@ from sqlalchemy import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db, login_manager
-from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm, OrganizerSignupForm, EventForm
+from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm, OrganizerSignupForm, EventForm, eventInterestForm
 from app.models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
 from sqlalchemy.exc import IntegrityError

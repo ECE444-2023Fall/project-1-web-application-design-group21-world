@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 
 from ...models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
-from ..forms import LoginForm, UserDetailsChangeForm, userSignupInterestForm, UserSignUpForm, OrganizerSignupForm, EventForm
+from ..forms import LoginForm, UserDetailsChangeForm, userSignupInterestForm, UserSignUpForm, OrganizerSignupForm, EventForm, eventInterestForm
 from ... import db
 from ...models import Event
 from . import events_blueprint
@@ -24,7 +24,7 @@ def events_create():
             location=request.json["location"],
             google_map_link=request.json["google_map_link"],
             fee=request.json["fee"],
-            has_rsvp=request.json["has_rsvp"],
+            #has_rsvp=request.json["has_rsvp"],
             external_registration_link=request.json["external_registration_link"],
         )
         db.session.add(event)
@@ -34,6 +34,7 @@ def events_create():
 
 @events_blueprint.route("/organizer/create/event", methods=["GET", "POST"])
 @login_required
+
 def organizer_create_event():
     form = EventForm()
     if form.validate_on_submit():
@@ -58,13 +59,13 @@ def organizer_create_event():
                 location=form.location.data,
                 google_map_link=form.google_map_link.data,
                 fee=form.fee.data,
-                has_rsvp=form.has_rsvp.data,
                 external_registration_link=form.external_registration_link.data,
             )
             current_user.add_event(event_entry)
             db.session.add(event_entry)
             db.session.commit()
-            return redirect("/myEvents")
+            session['event_id'] = event_entry.id
+            return redirect("/organizer/create/event/interests")
         else:
             flash("Event name already exists, enter a different name please ", 'danger')
     else :
@@ -75,6 +76,23 @@ def organizer_create_event():
 
     return render_template("index.html", form=form)
 
+@events_blueprint.route("/organizer/create/event/interests", methods=["GET", "POST"])
+@login_required
+def eventInterests():
+    form = eventInterestForm()
+    form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
+    if request.method == 'POST' and form.validate_on_submit():
+        if not form.interests.data:
+            flash('Please select at least one interest area.', 'danger')
+            return render_template("interests_events.html", form=form, event_id = event_id)
+        for id in form.interests.data:
+            event = Event.query.filter_by(id=session['event_id']).first()
+            interest = Interest.query.filter_by(id=id).first()
+            event.add_interest(interest)
+            db.session.commit()
+        session.pop('event_id')
+        return redirect("/discover")
+    return render_template("interests_events.html", form=form, event_id=event_id)
 
 @events_blueprint.route("/event_details/<int:event_id>", methods=["GET"])
 def event_details(event_id):
@@ -94,8 +112,24 @@ def event_details(event_id):
 @events_blueprint.route("/myEvents", methods=["GET"])
 @login_required
 def myEvents():
-    # app.logger.info(f"ID: {current_user.id} EVENTS: {Event.query.all()}")
-    return render_template("my-events.html", user_events=current_user.events)
+    if current_user.is_authenticated:
+        if current_user.role == "user":
+            user_event_ids = [event.id for event in current_user.events]
+            eventIntID_query = db.session.query(EventInterests).all() 
+            eventIntID = {item.interest_id for item in eventIntID_query}
+            userIntID_query = db.session.query(UserInterests).filter_by(user_id=current_user.id).all()
+            userIntID = {item.interest_id for item in userIntID_query}
+            common = eventIntID.intersection(userIntID)
+            if common:
+                event_query = (
+                    db.session.query(Event).filter(Event.id.notin_(user_event_ids), Event.id.in_(common))
+                    .all()
+                )
+                return render_template("events_rec.html", user_events=current_user.events,u_id=event_query)
+            else:
+                return render_template("events_rec.html", user_events=current_user.events)
+        elif current_user.role == "organizer":
+            return render_template("events_rec.html", user_events=current_user.events)
 
 @events_blueprint.route("/discover", methods=["GET", "POST"])
 def allEvents():

@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block page_content %}
+<form method="POST" action="/organizer/create/event/interests" id="interests-form">
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/interests.css') }}"
+  />
+    <div class="interests-container1">
+      {{ form.csrf_token }} 
+        {% for subfield in form.interests %}
+        <div class="feature-card1-feature-card feature-card1-root-class-name">
+          <h3 class="feature-card1-text">
+            <span>{{ subfield.label }}</span>
+          </h3>
+          <img
+            src="{{ url_for('static', filename='assets/' + subfield.label.text + '.svg') }}"
+            align="middle"
+          />
+          <p>
+            {{ subfield() }}
+          </p>
+        </div>
+        {% endfor %}
+    </div>
+      <div class="interests-container2">
+        <button type="submit" class="interests-button btn">Submit</button>
+    </div>
+</form>
+
+<a href="https://storyset.com">All llustrations by Storyset</a>
+{% endblock %}
