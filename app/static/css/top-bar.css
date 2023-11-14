@@ -1,0 +1,86 @@
+@import "style.css";
+
+.tob-bar-container {
+    width: auto;
+    height: auto;
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .tob-bar-top-bar {
+    flex: 0 0 auto;
+    width: 100%;
+    display: flex;
+    z-index: 100;
+    position: relative;
+    align-self: center;
+    align-items: center;
+    padding-top: var(--dl-space-space-halfunit);
+    padding-left: var(--dl-space-space-halfunit);
+    border-radius: var(--dl-radius-radius-radius4);
+    padding-right: var(--dl-space-space-oneandhalfunits);
+    padding-bottom: var(--dl-space-space-halfunit);
+    justify-content: flex-start;
+    background-color: var(--dl-color-hazelhub-bb);
+  }
+  .tob-bar-image {
+    width: 99px;
+    height: 115px;
+    object-fit: cover;
+    padding-top: var(--dl-space-space-halfunit);
+    padding-left: var(--dl-space-space-halfunit);
+    padding-right: var(--dl-space-space-halfunit);
+    padding-bottom: var(--dl-space-space-halfunit);
+  }
+  .tob-bar-text {
+    color: var(--dl-color-hazelhub-tblue);
+    font-size: 30px;
+    align-self: center;
+    font-style: normal;
+    font-family: "Renogare";
+    font-weight: 200;
+  }
+  .tob-bar-links {
+    flex: 1;
+    width: 1200px;
+    height: 39px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .tob-bar-navlink {
+    color: var(--dl-color-hazelhub-dblack);
+    font-size: 25px;
+    font-style: normal;
+    font-family: "DM Sans";
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .tob-bar-navlink1 {
+    color: var(--dl-color-hazelhub-dblack);
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 600;
+    margin-left: var(--dl-space-space-twounits);
+    text-decoration: none;
+  }
+  .tob-bar-text1 {
+    color: var(--dl-color-hazelhub-dblack);
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 600;
+    margin-left: var(--dl-space-space-twounits);
+  }
+  .tob-bar-text2 {
+    color: var(--dl-color-hazelhub-dblack);
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 600;
+    margin-left: var(--dl-space-space-twounits);
+  }
+  .tob-bar-root-class-name {
+    height: var(--dl-size-size-large);
+  }
+  

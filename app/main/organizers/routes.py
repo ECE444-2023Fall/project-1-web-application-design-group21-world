@@ -1,7 +1,7 @@
 import uuid
 import os
 
-from flask import current_app, flash, redirect, render_template, request, session, url_for
+from flask import current_app, flash, redirect, render_template, request, session, url_for, abort
 from flask_login import (LoginManager, UserMixin, current_user, login_required, login_user,
                          logout_user)
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -73,6 +73,10 @@ def user_organizer_list():
 @organizers_blueprint.route("/organizer/details/<string:organizer_id>", methods=["GET"])
 def organizer_details(organizer_id):
     organizer = Organizer.query.filter_by(id = organizer_id).first()
+
+    if organizer is None: 
+        abort(404)
+    
     return render_template(
         "organizer-details.html", organization=organizer, organization_events=organizer.events
     )
