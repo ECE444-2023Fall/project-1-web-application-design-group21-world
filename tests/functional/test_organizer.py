@@ -4,7 +4,7 @@ from flask_testing import TestCase
 from flask_login import login_user, current_user
 from app import create_app, db, login_manager
 from flask_migrate import Migrate
-from app.models import Organizer, User 
+from app.models import Organizer, User, Interest
 from bs4 import BeautifulSoup
 import io
 import uuid
@@ -269,3 +269,31 @@ class FunctionalTests(TestCase):
         response = self.client.post('/', data={'email': 'invalid@example.com', 'password': 'wrongpassword', 'role': 'organizer'})
         self.assertMessageFlashed('Invalid email or password')
         self.assertFalse(current_user.is_authenticated)
+
+    def test_empty_modify_user_interest(self):
+        interest1 = Interest(id=1, name='int1')
+        interest2 = Interest(id=2, name='int2')
+        db.session.add(interest1)
+        db.session.commit()
+        db.session.add(interest2)
+        db.session.commit()
+        res = self.client.post('/user/signup', data={
+                "name": 'Test anotherUser',
+                'email': 'existing@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'campus': 'St. George',
+                'faculty': "Commerce",
+                'major': "Testmajor",
+                'year_of_study': '1st',
+                'submit': 'Submit',
+            })
+        assert(res.headers['location'] == '/signup/interests')
+        res = self.client.post('/signup/interests', data={'interests': [interest1.id, interest2.id]})
+        print(current_user.interests)
+        assert(current_user.interests == [interest1, interest2])
+        res = self.client.post('/signup/interests', data={'interests': []})
+        print(current_user.interests)
+        assert(current_user.interests == [])
+
+    

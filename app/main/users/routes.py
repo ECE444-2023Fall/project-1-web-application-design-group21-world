@@ -101,9 +101,10 @@ def signupInterests():
     if request.method == 'POST' and form.validate_on_submit():
         user = User.query.filter_by(email=current_user.email).first()
         all_interests = []
-        for id in form.interests.data:
-            interest = Interest.query.filter_by(id=id).first()
-            all_interests.append(interest)
+        if form.interests.data:
+            for id in form.interests.data:
+                interest = Interest.query.filter_by(id=id).first()
+                all_interests.append(interest)
         user.update_interest(all_interests)    
         db.session.commit()
         return redirect("/user/myAccount")
