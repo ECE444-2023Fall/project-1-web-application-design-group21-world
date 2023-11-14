@@ -145,7 +145,7 @@ img {
 }
 
 .card {
-  background-color: white;
+  background-color: var(--dl-color-hazelhub-beige);
   border-radius: 0.2rem;
   transition: 0.3s;
   border: 10px solid;

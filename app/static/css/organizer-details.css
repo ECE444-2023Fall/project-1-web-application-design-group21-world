@@ -39,8 +39,8 @@
     height: 200px;
     align-self: center;
     object-fit: contain;
-    border: 2px solid var(--dl-color-hazelhub-beige);
-    background-color: var(--dl-color-hazelhub-beige);
+    border: 2px solid var(--dl-color-hazelhub-cream);
+    background-color: var(--dl-color-hazelhub-cream);
     border-radius: var(--dl-radius-radius-radius4);
   }
   .organization-logo-root-class-name {
@@ -79,7 +79,7 @@
     justify-content: flex-start;
   }
   .organization-email-text {
-    top: 20px;
+    top: 8px;
     left: 212px;
     color: var(--dl-color-hazelhub-dblack);
     position: absolute;

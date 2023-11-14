@@ -14,7 +14,7 @@
                 <a href="{{ url_for('organizers.organizer_details', organizer_id=organizer.id) }}">
                     <div class="event-row-component-container event-row-component-root-class-name">
                         <a href="{{ url_for('organizers.organizer_details', organizer_id=organizer.id) }}" class="event-row-component-navlink">
-                            <img alt="image_alt3" src="{{ organizer.image_link }}" onerror="this.onerror=null; this.src='/static/assets/26126.jpg'" class="event-row-component-image" />
+                            <img alt="image_alt3" src="{{ organizer.image_link | replace('app', '')}}" onerror="this.onerror=null; this.src='/static/assets/26126.jpg'" class="event-row-component-image" />
                         </a>
                         <div class="event-row-component-container1">
                             <a href="{{ url_for('organizers.organizer_details', organizer_id=organizer.id) }}" class="event-row-component-navlink1">
