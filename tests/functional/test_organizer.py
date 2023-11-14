@@ -57,7 +57,7 @@ class FunctionalTests(TestCase):
                 "event_name": 'Test',
                 'organizer_id': '1',
                 'description': 'Test',
-                'date': '01/01/2000',
+                'date': '2023-09-12',
                 'time': '00:00',
                 'image': None,
                 'location': 'Test',
