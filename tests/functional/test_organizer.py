@@ -461,8 +461,7 @@ class FunctionalTests(TestCase):
         
         response = self.client.get('/discover')
         
-        assert b'event-row-component-container event-row-component-root-class-name' in response.data # Check if events added in webpage
-<<<<<<< HEAD
+        assert b'Test Event' in response.data # Check if events added in webpage
     
     def test_event_details(self):
         existing_event = Event(
@@ -506,11 +505,6 @@ class FunctionalTests(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertIn(b'Page Not Found', response.data)
         
-
-        
-=======
-
-
     def test_organizer_create_event_success(self):
         self.client.post('/organizer/signup', 
                          data={ "organization_name": 'Test Organization', 
@@ -626,4 +620,3 @@ class FunctionalTests(TestCase):
             response = self.client.post(f"/unregister_for_event/{event.id}")
             assert event not in current_user.events
             assert current_user not in event.users
->>>>>>> 40e963f8cf883c0c540a6b62999f79a3ddecb3c5

@@ -1,7 +1,7 @@
 import uuid
 import os
 
-from flask import current_app, flash, redirect, render_template, request, session, url_for
+from flask import current_app, flash, redirect, render_template, request, session, url_for, abort
 from flask_login import login_required, current_user
 
 from ...models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
@@ -98,17 +98,12 @@ def eventInterests():
 def event_details(event_id):
     # Assuming you have an Event model and it has a relationship with Organization
     event = Event.query.filter_by(id=event_id).first()
-
+    if event is None: 
+        abort(404)
     if (event.image_link is None):
         event.image_link = "/static/assets/default_event_image.jpg"
-
-    if event:
-        attendees = len(event.users)
-        print(attendees)
-        return render_template("event-details.html", event=event, attendees=attendees)
-    else:
-        # Handle the case where the event with the specified ID is not found
-        return render_template("event_not_found.html")
+    attendees = len(event.users)
+    return render_template("event-details.html", event=event, attendees=attendees)
 
 
 @events_blueprint.route("/myEvents", methods=["GET"])
