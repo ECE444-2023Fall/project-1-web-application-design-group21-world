@@ -23,6 +23,17 @@
     padding-bottom: var(--dl-space-space-halfunit);
     text-decoration: none;
   }
+  .event-row-component1-desc {
+	  position: relative;
+	  top: -7.8em;
+	  left: 30em;
+	  max-width: 240px;
+	  overflow-y: scroll;
+	  overflow-x: hidden;
+	  max-height: 95px;
+    background-color: var(--dl-color-hazelhub-beige);
+  }
+
   .organization-logo-image {
     width: 200px;
     height: 200px;
