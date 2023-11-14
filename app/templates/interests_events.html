@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block page_content %}
+<form method="POST" action="/organizer/create/event/interests" id="interests-form">
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/interests.css') }}"
+  />
+  <div class="interests-container">
+    <div class="interests-features">
+      <div class="interests-container1">
+        {{ form.csrf_token }} {{ form.interests.label }}
+        <ul>
+          {% for subfield in form.interests %}
+          <div class="feature-card1-feature-card feature-card1-root-class-name">
+            <h3 class="feature-card1-text">
+              <span>{{ subfield.label }}</span>
+            </h3>
+            <img
+              src="{{ url_for('static', filename='assets/' + subfield.label.text + '.svg') }}"
+              align="middle"
+            />
+            <li>{{ subfield() }}</li>
+          </div>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="interests-button button">Submit</button>
+</form>
+{% endblock %}
+

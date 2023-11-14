@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 
 from ...models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
                         OrganizerInterests, User, UserEvents, UserInterests)
-from ..forms import LoginForm, UserDetailsChangeForm, userSignupInterestForm, UserSignUpForm, OrganizerSignupForm, EventForm
+from ..forms import LoginForm, UserDetailsChangeForm, userSignupInterestForm, UserSignUpForm, OrganizerSignupForm, EventForm, eventInterestForm
 from ... import db
 from ...models import Event
 from . import events_blueprint
@@ -24,7 +24,7 @@ def events_create():
             location=request.json["location"],
             google_map_link=request.json["google_map_link"],
             fee=request.json["fee"],
-            has_rsvp=request.json["has_rsvp"],
+            #has_rsvp=request.json["has_rsvp"],
             external_registration_link=request.json["external_registration_link"],
         )
         db.session.add(event)
@@ -58,21 +58,37 @@ def organizer_create_event():
                 location=form.location.data,
                 google_map_link=form.google_map_link.data,
                 fee=form.fee.data,
-                has_rsvp=form.has_rsvp.data,
+                #has_rsvp=form.has_rsvp.data,
                 external_registration_link=form.external_registration_link.data,
             )
             current_user.add_event(event_entry)
             db.session.add(event_entry)
             db.session.commit()
-            return redirect("/myEvents")
-    else :
-            print(form.errors)
-            for field, errors in form.errors.items():
-                for error in errors:
-                    flash(f'{field}: {error}', 'danger')  # Redirect to the organizer's account after successful form submission
+            session['event_id'] = event_entry.id
+            return redirect("/organizer/create/event/interests")
+    #else :
+    #        print(form.errors)
+    #        for field, errors in form.errors.items():
+    #            for error in errors:
+    #                flash(f'{field}: {error}', 'danger')  # Redirect to the organizer's account after successful form submission
 
     return render_template("index.html", form=form)
 
+@events_blueprint.route("/organizer/create/event/interests", methods=["GET", "POST"])
+@login_required
+def eventInterests():
+    form = eventInterestForm()
+    form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
+    if request.method == 'POST' and form.validate_on_submit():
+        for id in form.interests.data:
+            #print(session)
+            event = Event.query.filter_by(id=session['event_id']).first()
+            interest = Interest.query.filter_by(id=id).first()
+            event.add_interest(interest)
+            db.session.commit()
+        session.pop('event_id')
+        return redirect("/organizer/myAccount")
+    return render_template("interests_events.html", form=form)
 
 @events_blueprint.route("/event_details/<int:event_id>", methods=["GET"])
 def event_details(event_id):

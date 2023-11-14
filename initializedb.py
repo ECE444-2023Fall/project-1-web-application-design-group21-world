@@ -52,7 +52,7 @@ def create_events(num_events=10):
                 location=generate_random_strings(10),
                 google_map_link=generate_random_strings(10),
                 fee=random.choice(range(20)),
-                has_rsvp=random.choice(["Yes", "No"]),
+                #has_rsvp=random.choice(["Yes", "No"]),
                 external_registration_link=generate_random_strings(100),
             )
             # for interest in random.sample(Interest.query.all(), random.choice(range(3))):
