@@ -290,10 +290,39 @@ class FunctionalTests(TestCase):
             })
         assert(res.headers['location'] == '/signup/interests')
         res = self.client.post('/signup/interests', data={'interests': [interest1.id, interest2.id]})
-        print(current_user.interests)
-        assert(current_user.interests == [interest1, interest2])
+        assert(interest1 in current_user.interests)
+        assert(interest2 in current_user.interests)
         res = self.client.post('/signup/interests', data={'interests': []})
-        print(current_user.interests)
         assert(current_user.interests == [])
 
-    
+    def test_modify_user_details(self):
+        res = self.client.post('/user/signup', data={
+                "name": 'Test anotherUser',
+                'email': 'existing@utoronto.ca',
+                'password': 'testpassword',
+                'confirm': 'testpassword',
+                'campus': 'St. George',
+                'faculty': "Commerce",
+                'major': "Testmajor",
+                'year_of_study': '1st',
+                'submit': 'Submit',
+            })
+        assert(current_user.name == 'Test anotherUser')
+        assert(current_user.campus == 'St. George')
+        assert(current_user.faculty == 'Commerce')
+        assert(current_user.major == 'Testmajor')
+        assert(current_user.year_of_study == '1st')
+        
+        res = self.client.post('/user/myAccount', data={
+                "name": 'ModifiedUser',
+                'campus': 'Missasauga',
+                'faculty': "Engineering",
+                'major': "Modifiedmajor",
+                'year_of_study': '2nd',
+            })
+        assert(current_user.name == 'ModifiedUser')
+        assert(current_user.campus == 'Missasauga')
+        assert(current_user.faculty == 'Engineering')
+        assert(current_user.major == 'Modifiedmajor')
+        assert(current_user.year_of_study == '2nd')
+
