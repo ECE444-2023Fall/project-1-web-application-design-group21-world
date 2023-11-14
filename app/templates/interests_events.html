@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block page_content %}
-<form method="POST" action="/organizer/create/event/interests/{{event_id}}" id="interests-form">
+<form method="POST" action="/organizer/create/event/interests" id="interests-form">
   <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/interests.css') }}"
