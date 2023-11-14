@@ -103,7 +103,9 @@ def event_details(event_id):
         event.image_link = "/static/assets/default_event_image.jpg"
 
     if event:
-        return render_template("event-details.html", event=event)
+        attendees = len(event.users)
+        print(attendees)
+        return render_template("event-details.html", event=event, attendees=attendees)
     else:
         # Handle the case where the event with the specified ID is not found
         return render_template("event_not_found.html")

@@ -43,6 +43,9 @@
       <span class="event-description-text">
         <span>Registration Fee: {{ event.fee }} CAD</span>
       </span>
+      <span class="event-attendees">
+        <span>Number of Attendees: {{ attendees }}</span>
+      </span>
       {% if current_user.role=="user" and not(event in current_user.events) %}
       <form method="POST" action="{{ url_for('events.register_for_event', event_id=event.id) }}" id="register_for_event-form">
       <button type="submit" id="registerButton" class="event-description-button button">
