@@ -4,12 +4,12 @@
 {% block page_content %}
 <div>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/my-events.css') }}" />
+  <div class="page-header"> 
+    <h1>Discover Events!</h1>
+</div>
   <div class="my-events-container">
     
-    <div class="event-row-container-container event-row-container-root-class-name">
-      <span class="event-row-container-text">
-        <span>All Events</span>
-      </span>
+    
       
       {% for event in events %}
         <div class="event-row-component-container event-row-component-root-class-name">
@@ -26,13 +26,9 @@
               <span>{{ event.time }}</span>
             </span>
           </div>
-          <svg viewBox="0 0 1024 1024" class="event-row-component-icon">
-            <path d="M384 690l452-452 60 60-512 512-238-238 60-60z"></path>
-          </svg>
         </div>
       {% endfor %}
       
-    </div>
     
   </div>
 </div>
