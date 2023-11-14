@@ -1,21 +1,12 @@
 
-import uuid
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+from werkzeug.security import check_password_hash
 
-from flask import flash, redirect, render_template, request, url_for, current_app
-from flask_login import (current_user, login_required, login_user,
-                         logout_user)
-from sqlalchemy import text
-from werkzeug.security import check_password_hash, generate_password_hash
-
-from .. import  db, login_manager
-from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm, OrganizerDetailsChangeForm, EventForm
-from app.models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
-                        OrganizerInterests, User, UserEvents, UserInterests)
-from sqlalchemy.exc import IntegrityError
-import os
+from app.main.forms import LoginForm
+from app.models import Organizer, User
 
 from . import main
-
 
 
 @main.route("/", methods=["GET", "POST"])
@@ -33,13 +24,19 @@ def login():
             if user and check_password_hash(user.password, password):
                 print(f"User object: {user}")
                 login_user(user)
-                return redirect("/user/myAccount")  # Redirect to user's account
+                return redirect(
+                    "/user/myAccount"
+                )  # Redirect to user's account
         elif role == "organizer":
-            organizer = Organizer.query.filter_by(organizer_email=email).first()
+            organizer = Organizer.query.filter_by(
+                organizer_email=email
+            ).first()
             print(f"Organizer object: {organizer}")
             if organizer and check_password_hash(organizer.password, password):
                 login_user(organizer)
-                return redirect("/organizer/myAccount")  # Redirect to organizer's account
+                return redirect(
+                    "/organizer/myAccount"
+                )  # Redirect to organizer's account
 
         flash("Invalid email or password")
 

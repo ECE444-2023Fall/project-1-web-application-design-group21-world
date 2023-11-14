@@ -62,7 +62,9 @@ class User(UserMixin, db.Model):
     major = db.Column(db.String(255))
     campus = db.Column(db.String(255))
     year_of_study = db.Column(db.String(255))
-    events: Mapped[List[Event]] = relationship(secondary=UserEvents, back_populates="users")
+    events: Mapped[List[Event]] = relationship(
+        secondary=UserEvents, back_populates="users"
+    )
     interests: Mapped[List[Interest]] = relationship(
         secondary=UserInterests, back_populates="users"
     )
@@ -78,21 +80,24 @@ class User(UserMixin, db.Model):
     def add_event(self, event):
         if event not in self.events:
             self.events.append(event)
-            
+
     def update_interest(self, interest):
         self.interests = interest
 
     def __repr__(self):
         return "<User %r" % self.name
-    
+
     def get_id(self):
         return self.id
+
 
 class Interest(db.Model):
     __tablename__ = "interests"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    users: Mapped[List[User]] = relationship(secondary=UserInterests, back_populates="interests")
+    users: Mapped[List[User]] = relationship(
+        secondary=UserInterests, back_populates="interests"
+    )
     organizers: Mapped[List[Organizer]] = relationship(
         secondary=OrganizerInterests, back_populates="interests"
     )
@@ -109,7 +114,9 @@ class Organizer(UserMixin, db.Model):
     id = db.Column(db.String(255), primary_key=True)
     role = "organizer"
     organizer_name: Mapped[str] = mapped_column(String(30), nullable=False)
-    organizer_email: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
+    organizer_email: Mapped[str] = mapped_column(
+        String(30), unique=True, nullable=False
+    )
     password = db.Column(db.String(255), nullable=False)
     description: Mapped[str] = mapped_column(String(10000), nullable=True)
     image_link: Mapped[str] = mapped_column(String(1000), nullable=True)
@@ -130,11 +137,11 @@ class Organizer(UserMixin, db.Model):
 
     def get_id(self):
         return self.id
-    
+
     def add_event(self, event):
         if event not in self.events:
             self.events.append(event)
-    
+
     def remove_event(self, event):
         if event in self.events:
             self.events.remove(event)
@@ -147,7 +154,9 @@ class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     event_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    organizer_id = db.Column(db.Integer, db.ForeignKey("organizers.id"), nullable=True)
+    organizer_id = db.Column(
+        db.Integer, db.ForeignKey("organizers.id"), nullable=True
+    )
     description: Mapped[str] = mapped_column(String(10000), nullable=True)
     image_link: Mapped[str] = mapped_column(String(1000), nullable=True)
     date: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -155,9 +164,13 @@ class Event(db.Model):
     location: Mapped[str] = mapped_column(String(100), nullable=False)
     google_map_link: Mapped[str] = mapped_column(String(100), nullable=True)
     fee: Mapped[int] = mapped_column(Integer, nullable=True)
-    #has_rsvp: Mapped[str] = mapped_column(String(100), nullable=False)
-    external_registration_link: Mapped[str] = mapped_column(String(200), nullable=True)
-    users: Mapped[List[User]] = relationship(secondary=UserEvents, back_populates="events")
+    # has_rsvp: Mapped[str] = mapped_column(String(100), nullable=False)
+    external_registration_link: Mapped[str] = mapped_column(
+        String(200), nullable=True
+    )
+    users: Mapped[List[User]] = relationship(
+        secondary=UserEvents, back_populates="events"
+    )
     organizers: Mapped[List[Organizer]] = relationship(
         secondary=OrganizerEvents, back_populates="events"
     )
@@ -168,9 +181,11 @@ class Event(db.Model):
     def add_user(self, interest):
         if interest not in self.interests:
             self.interests.append(interest)
+
     def add_interest(self, interest):
         if interest not in self.interests:
             self.interests.append(interest)
+
     def add_organizer(self, event):
         if event not in self.events:
             self.events.append(event)

@@ -1,16 +1,24 @@
 import uuid
 
-from flask import current_app, flash, redirect, render_template, request, session, url_for
-from flask_login import (current_user, login_required, login_user,
-                         logout_user)
-from werkzeug.security import check_password_hash, generate_password_hash
-
-
+from flask import (
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
+from flask_login import current_user, login_required, login_user
+from werkzeug.security import generate_password_hash
 
 from ... import db
-from ...models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
-                        OrganizerInterests, User, UserEvents, UserInterests)
-from ..forms import LoginForm, UserDetailsChangeForm, userSignupInterestForm, UserSignUpForm, OrganizerSignupForm
+from ...models import Interest, User
+from ..forms import (
+    UserDetailsChangeForm,
+    UserSignUpForm,
+    userSignupInterestForm,
+)
 from . import users_blueprint
 
 
@@ -33,7 +41,12 @@ def user_create():
 def user_list():
     users = User.query.all()
     if users is not None:
-        return render_template("user.html", name=session.get("first_name", "Stranger"), users=users)
+        return render_template(
+            "user.html",
+            name=session.get("first_name", "Stranger"),
+            users=users,
+        )
+
 
 @users_blueprint.route("/user/myAccount", methods=["GET", "POST"])
 @login_required
@@ -51,9 +64,15 @@ def userMyAccount():
     form.name.data = current_user.name
     form.faculty.data = current_user.faculty
     form.major.data = current_user.major
-    form.campus.data = current_user.campus 
+    form.campus.data = current_user.campus
     form.year_of_study.data = current_user.year_of_study
-    return render_template("userMyAccount.html", form=form, name=current_user.name, email=current_user.email, interests=current_user.interests)
+    return render_template(
+        "userMyAccount.html",
+        form=form,
+        name=current_user.name,
+        email=current_user.email,
+        interests=current_user.interests,
+    )
 
 
 @users_blueprint.route("/user/signup", methods=["GET", "POST"])
@@ -68,7 +87,7 @@ def userSignup():
                     random_uuid = uuid.uuid4()
                     uuid_string = str(random_uuid)
                     user = User(
-                        id = uuid_string,
+                        id=uuid_string,
                         name=form.name.data,
                         email=form.email.data,
                         password=hashed_password,
@@ -85,22 +104,25 @@ def userSignup():
                     flash("You may only register with your UofT email")
             else:
                 flash("Account with this email address already exists!")
-        else :
+        else:
             print(form.errors)
             for field, errors in form.errors.items():
                 for error in errors:
-                    flash(f'{field}: {error}', 'danger')
+                    flash(f"{field}: {error}", "danger")
 
     return render_template("index.html", form=form)
+
 
 @users_blueprint.route("/signup/interests", methods=["GET", "POST"])
 @login_required
 def signupInterests():
     form = userSignupInterestForm()
-    form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
-    if request.method == 'POST' and form.validate_on_submit():
+    form.interests.choices = [
+        (interest.id, interest.name) for interest in Interest.query.all()
+    ]
+    if request.method == "POST" and form.validate_on_submit():
         if not form.interests.data:
-            flash('Please select at least one interest area.', 'danger')
+            flash("Please select at least one interest area.", "danger")
             return render_template("interests.html", form=form)
 
         user = User.query.filter_by(email=current_user.email).first()
@@ -108,9 +130,11 @@ def signupInterests():
         for id in form.interests.data:
             interest = Interest.query.filter_by(id=id).first()
             all_interests.append(interest)
-        user.update_interest(all_interests)    
+        user.update_interest(all_interests)
         db.session.commit()
         return redirect("/discover")
-    form.interests.default = [interest.id for interest in current_user.interests]
+    form.interests.default = [
+        interest.id for interest in current_user.interests
+    ]
     form.process()
     return render_template("interests.html", form=form)

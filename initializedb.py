@@ -24,7 +24,7 @@ def seed_interests():
         14: "Social Justices and Advocacy",
         15: "Spirituality & Faith Communities",
         16: "Student Governments, Councils & Unions",
-        17: "Work & Career Development"
+        17: "Work & Career Development",
     }
 
     interests = []
@@ -52,7 +52,7 @@ def create_events(num_events=10):
                 location=generate_random_strings(10),
                 google_map_link=generate_random_strings(10),
                 fee=random.choice(range(20)),
-                #has_rsvp=random.choice(["Yes", "No"]),
+                # has_rsvp=random.choice(["Yes", "No"]),
                 external_registration_link=generate_random_strings(100),
             )
             # for interest in random.sample(Interest.query.all(), random.choice(range(3))):
@@ -77,11 +77,13 @@ def create_users(num_users=10):
                 faculty=generate_random_strings(10),
                 major=generate_random_strings(5),
                 campus=generate_random_strings(4),
-                year_of_study=random.choice(range(1,5)),
+                year_of_study=random.choice(range(1, 5)),
             )
             # for interest in random.sample(Interest.query.all(), random.choice(range(3))):
             #     user.add_interest(interest)
-            for event in random.sample(Event.query.all(), random.choice(range(3))):
+            for event in random.sample(
+                Event.query.all(), random.choice(range(3))
+            ):
                 user.add_event(event)
             db.session.add(user)
         db.session.commit()

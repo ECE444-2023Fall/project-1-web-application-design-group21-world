@@ -1,26 +1,23 @@
-import json
 import os
-import uuid
-from datetime import datetime
 
-from flask import flash, redirect, render_template, request, session, url_for
-from flask_bootstrap import Bootstrap
-from flask_login import (LoginManager, UserMixin, current_user, login_required, login_user,
-                         logout_user)
 from flask_migrate import Migrate
-from flask_moment import Moment
-from sqlalchemy import text
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import create_app, db, login_manager
-from app.main.forms import LoginForm, UserSignUpForm, userSignupInterestForm, UserDetailsChangeForm, OrganizerSignupForm, EventForm
-from app.models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
-                        OrganizerInterests, User, UserEvents, UserInterests)
-from sqlalchemy.exc import IntegrityError
-
+from app.models import (
+    Event,
+    EventInterests,
+    Interest,
+    Organizer,
+    OrganizerEvents,
+    OrganizerInterests,
+    User,
+    UserEvents,
+    UserInterests,
+)
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
+
 
 # Register the user loader function
 @login_manager.user_loader
@@ -34,6 +31,7 @@ def load_user(user_id):
     elif organizer:
         return organizer
     return None
+
 
 @app.shell_context_processor
 def make_shell_context():
@@ -50,12 +48,14 @@ def make_shell_context():
         EventInterests=EventInterests,
     )
 
+
 def print_routes(app):
     """Print all registered routes in a Flask app."""
     for rule in app.url_map.iter_rules():
-        print(f"Endpoint: {rule.endpoint}, Methods: {', '.join(rule.methods)}, Path: {rule}")
+        print(
+            f"Endpoint: {rule.endpoint}, Methods: {', '.join(rule.methods)}, Path: {rule}"
+        )
 
 
 if __name__ == "__main__":
     app.run()
-    

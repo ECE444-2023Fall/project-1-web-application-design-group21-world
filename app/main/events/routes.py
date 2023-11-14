@@ -1,14 +1,21 @@
-import uuid
 import os
+import uuid
 
-from flask import current_app, flash, redirect, render_template, request, session, url_for, abort
-from flask_login import login_required, current_user
+from flask import (
+    abort,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
+from flask_login import current_user, login_required
 
-from ...models import (Event, EventInterests, Interest, Organizer, OrganizerEvents,
-                        OrganizerInterests, User, UserEvents, UserInterests)
-from ..forms import LoginForm, UserDetailsChangeForm, userSignupInterestForm, UserSignUpForm, OrganizerSignupForm, EventForm, eventInterestForm
 from ... import db
-from ...models import Event
+from ...models import Event, EventInterests, Interest, UserInterests
+from ..forms import EventForm, eventInterestForm
 from . import events_blueprint
 
 
@@ -24,27 +31,39 @@ def events_create():
             location=request.json["location"],
             google_map_link=request.json["google_map_link"],
             fee=request.json["fee"],
-            #has_rsvp=request.json["has_rsvp"],
-            external_registration_link=request.json["external_registration_link"],
+            # has_rsvp=request.json["has_rsvp"],
+            external_registration_link=request.json[
+                "external_registration_link"
+            ],
         )
         db.session.add(event)
         db.session.commit()
-        return render_template("events_new.html", name=current_user.organizer_name, event=event)
+        return render_template(
+            "events_new.html", name=current_user.organizer_name, event=event
+        )
     return render_template("index_event.html")
+
 
 @events_blueprint.route("/organizer/create/event", methods=["GET", "POST"])
 @login_required
-
 def organizer_create_event():
     form = EventForm()
     if form.validate_on_submit():
-        event_name = Event.query.filter_by(event_name=form.event_name.data).first()
+        event_name = Event.query.filter_by(
+            event_name=form.event_name.data
+        ).first()
         if event_name is None:
             image = form.image.data
             if image:
                 random_uuid = uuid.uuid4()
                 uuid_string = str(random_uuid)
-                image_path = os.path.join(current_app.config["IMAGE_PATH_EVENTS"],"event_" + uuid_string + "." + image.filename.split(".")[1])
+                image_path = os.path.join(
+                    current_app.config["IMAGE_PATH_EVENTS"],
+                    "event_"
+                    + uuid_string
+                    + "."
+                    + image.filename.split(".")[1],
+                )
                 # You can process and save the image here, e.g., save it to a folder or a database.
                 image.save(image_path)
             else:
@@ -64,46 +83,67 @@ def organizer_create_event():
             current_user.add_event(event_entry)
             db.session.add(event_entry)
             db.session.commit()
-            session['event_id'] = event_entry.id
+            session["event_id"] = event_entry.id
             return redirect("/organizer/create/event/interests")
         else:
-            flash("Event name already exists, enter a different name please ", 'danger')
-    else :
-            print(form.errors)
-            for field, errors in form.errors.items():
-                for error in errors:
-                    flash(f'{field}: {error}', 'danger')  # Redirect to the organizer's account after successful form submission
+            flash(
+                "Event name already exists, enter a different name please ",
+                "danger",
+            )
+    else:
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(
+                    f"{field}: {error}", "danger"
+                )  # Redirect to the organizer's account after successful form submission
 
-    return render_template("index.html", form=form, name=current_user.organizer_name)
+    return render_template(
+        "index.html", form=form, name=current_user.organizer_name
+    )
 
-@events_blueprint.route("/organizer/create/event/interests", methods=["GET", "POST"])
+
+@events_blueprint.route(
+    "/organizer/create/event/interests", methods=["GET", "POST"]
+)
 @login_required
 def eventInterests():
     form = eventInterestForm()
-    form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
-    if request.method == 'POST' and form.validate_on_submit():
+    form.interests.choices = [
+        (interest.id, interest.name) for interest in Interest.query.all()
+    ]
+    if request.method == "POST" and form.validate_on_submit():
         if not form.interests.data:
-            flash('Please select at least one interest area.', 'danger')
-            return render_template("interests_events.html", form=form, event_id = session['event_id'])
+            flash("Please select at least one interest area.", "danger")
+            return render_template(
+                "interests_events.html",
+                form=form,
+                event_id=session["event_id"],
+            )
         for id in form.interests.data:
-            event = Event.query.filter_by(id=session['event_id']).first()
+            event = Event.query.filter_by(id=session["event_id"]).first()
             interest = Interest.query.filter_by(id=id).first()
             event.add_interest(interest)
             db.session.commit()
-        session.pop('event_id')
+        session.pop("event_id")
         return redirect("/discover")
-    return render_template("interests_events.html", form=form, event_id=session['event_id'])
+    return render_template(
+        "interests_events.html", form=form, event_id=session["event_id"]
+    )
+
 
 @events_blueprint.route("/event_details/<int:event_id>", methods=["GET"])
 def event_details(event_id):
     # Assuming you have an Event model and it has a relationship with Organization
     event = Event.query.filter_by(id=event_id).first()
-    if event is None: 
+    if event is None:
         abort(404)
-    if (event.image_link is None):
+    if event.image_link is None:
         event.image_link = "/static/assets/default_event_image.jpg"
     attendees = len(event.users)
-    return render_template("event-details.html", event=event, attendees=attendees)
+    return render_template(
+        "event-details.html", event=event, attendees=attendees
+    )
 
 
 @events_blueprint.route("/myEvents", methods=["GET"])
@@ -112,26 +152,43 @@ def myEvents():
     if current_user.is_authenticated:
         if current_user.role == "user":
             user_event_ids = [event.id for event in current_user.events]
-            eventIntID_query = db.session.query(EventInterests).all() 
+            eventIntID_query = db.session.query(EventInterests).all()
             eventIntID = {item.interest_id for item in eventIntID_query}
-            userIntID_query = db.session.query(UserInterests).filter_by(user_id=current_user.id).all()
+            userIntID_query = (
+                db.session.query(UserInterests)
+                .filter_by(user_id=current_user.id)
+                .all()
+            )
             userIntID = {item.interest_id for item in userIntID_query}
             common = eventIntID.intersection(userIntID)
             if common:
                 event_query = (
-                    db.session.query(Event).filter(Event.id.notin_(user_event_ids), Event.id.in_(common))
+                    db.session.query(Event)
+                    .filter(
+                        Event.id.notin_(user_event_ids), Event.id.in_(common)
+                    )
                     .all()
                 )
-                return render_template("events_rec.html", user_events=current_user.events,u_id=event_query)
+                return render_template(
+                    "events_rec.html",
+                    user_events=current_user.events,
+                    u_id=event_query,
+                )
             else:
-                return render_template("events_rec.html", user_events=current_user.events)
+                return render_template(
+                    "events_rec.html", user_events=current_user.events
+                )
         elif current_user.role == "organizer":
-            return render_template("events_rec.html", user_events=current_user.events)
+            return render_template(
+                "events_rec.html", user_events=current_user.events
+            )
+
 
 @events_blueprint.route("/discover", methods=["GET", "POST"])
 def allEvents():
     current_app.logger.info(f"EVENTS: {Event.query.all()}")
     return render_template("discover.html", events=Event.query.all())
+
 
 @events_blueprint.route("/register_for_event/<int:event_id>", methods=["POST"])
 @login_required
@@ -146,11 +203,17 @@ def register_for_event(event_id):
                 current_user.add_event(event)
                 db.session.add(current_user)
                 db.session.commit()
-                flash("You have successfully registered for the event!", "success")
-    
+                flash(
+                    "You have successfully registered for the event!",
+                    "success",
+                )
+
     return redirect(url_for("events.event_details", event_id=event.id))
 
-@events_blueprint.route("/unregister_for_event/<int:event_id>", methods=["POST"])
+
+@events_blueprint.route(
+    "/unregister_for_event/<int:event_id>", methods=["POST"]
+)
 @login_required
 def unregister_for_event(event_id):
     event = Event.query.get(event_id)
@@ -162,6 +225,9 @@ def unregister_for_event(event_id):
                 current_user.remove_event(event)
                 db.session.add(current_user)
                 db.session.commit()
-                flash("You have successfully unregistered for the event!", "success")
-    
+                flash(
+                    "You have successfully unregistered for the event!",
+                    "success",
+                )
+
     return redirect(url_for("events.event_details", event_id=event.id))
