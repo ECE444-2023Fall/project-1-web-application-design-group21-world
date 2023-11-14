@@ -65,6 +65,8 @@ def organizer_create_event():
             db.session.add(event_entry)
             db.session.commit()
             return redirect("/myEvents")
+        else:
+            flash("Event name already exists, enter a different name please ", 'danger')
     else :
             print(form.errors)
             for field, errors in form.errors.items():
@@ -79,9 +81,7 @@ def event_details(event_id):
     # Assuming you have an Event model and it has a relationship with Organization
     event = Event.query.filter_by(id=event_id).first()
 
-    if (event.image_link is not None):
-        event.image_link = event.image_link.replace("app", "")
-    else:
+    if (event.image_link is None):
         event.image_link = "/static/assets/default_event_image.jpg"
 
     if event:

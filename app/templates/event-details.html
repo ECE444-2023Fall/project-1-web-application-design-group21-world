@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Flasky{% endblock %} 
+{% extends "base.html" %} {% block title %}HazelHub{% endblock %} 
 {% block page_content %}
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -10,7 +10,7 @@
   </span>
   <div class="event-details-container">
 	<div class="event-image-container">
-		<img alt="image" src="{{event.image_link}}" class="event-details-image1" />
+		<img alt="image" src="{{event.image_link | replace('app', '')}}" class="event-details-image1" />
 	</div>
     <div class="event-description-container event-description-root-class-name">
       <div class="title-container title-root-class-name">
