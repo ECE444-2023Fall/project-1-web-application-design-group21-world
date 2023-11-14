@@ -150,12 +150,6 @@ def register_for_event(event_id):
                 db.session.add(current_user)
                 db.session.commit()
                 flash("You have successfully registered for the event!", "success")
-            elif request.method == "DELETE":
-                current_app.logger.info(f"Current Role {current_user.role}")
-                current_user.remove_event(event)
-                db.session.add(current_user)
-                db.session.commit()
-                flash("You have successfully unregistered for the event!", "success")
     
     return redirect(url_for("events.event_details", event_id=event.id))
 
