@@ -66,11 +66,11 @@ def organizer_create_event():
             db.session.commit()
             session['event_id'] = event_entry.id
             return redirect("/organizer/create/event/interests")
-    #else :
-    #        print(form.errors)
-    #        for field, errors in form.errors.items():
-    #            for error in errors:
-    #                flash(f'{field}: {error}', 'danger')  # Redirect to the organizer's account after successful form submission
+    else :
+            print(form.errors)
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{field}: {error}', 'danger')  # Redirect to the organizer's account after successful form submission
 
     return render_template("index.html", form=form)
 
@@ -108,8 +108,22 @@ def event_details(event_id):
 @events_blueprint.route("/myEvents", methods=["GET"])
 @login_required
 def myEvents():
-    # app.logger.info(f"ID: {current_user.id} EVENTS: {Event.query.all()}")
-    return render_template("my-events.html", user_events=current_user.events)
+    if current_user.is_authenticated:
+        if current_user.role == "user":
+            eventIntID_query = db.session.query(EventInterests).all() #remove session here?
+            eventIntID = {item.interest_id for item in eventIntID_query}
+            userIntID_query = db.session.query(UserInterests).filter_by(user_id=current_user.id).all()
+            userIntID = {item.interest_id for item in userIntID_query}
+            common = eventIntID.intersection(userIntID)
+            if common:
+                event_query = db.session.query(EventInterests.c.event_id).filter(EventInterests.c.interest_id.in_(common)).all()
+                event_ids = [event_id for(event_id,) in event_query]
+                events = db.session.query(Event).filter(Event.id.in_(event_ids)).all()
+                return render_template("events_rec.html", user_events=current_user.events,u_id=events)
+            else:
+                return render_template("events_rec.html", user_events=current_user.events)
+        elif current_user.role == "organizer":
+            return render_template("events_rec.html", user_events=current_user.events)
 
 @events_blueprint.route("/discover", methods=["GET", "POST"])
 def allEvents():
