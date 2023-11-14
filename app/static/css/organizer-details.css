@@ -44,7 +44,7 @@
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
-    background-color: var(--dl-color-hazelhub-hazel2);
+    background-color: var(--dl-color-hazelhub-beige);
 	border-radius: 10px;
   }
   .organizer-title-text {
@@ -207,7 +207,7 @@
     color: var(--dl-color-hazelhub-dblack);
     position: absolute;
     font-size: 20px;
-    max-width: 500px;
+    max-width: 800px;
     font-style: normal;
     max-height: 150px;
     overflow-y: scroll;
@@ -228,4 +228,6 @@
     justify-content: flex-start;
     padding-bottom: 50px;
   }
+  
+
   

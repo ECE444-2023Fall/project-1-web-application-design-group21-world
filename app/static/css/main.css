@@ -7,9 +7,15 @@
   box-sizing: border-box;
 }
 
+.alert {
+  background: var(--dl-color-hazelhub-cream);
+  border-radius: 10px;
+}
+
 html {
   background-color: #ffffff;
 }
+
 
 body {
   color: #272727;
@@ -18,6 +24,7 @@ body {
   font-weight: 400;
   letter-spacing: 0;
   padding: 1rem;
+  align-items: center ;
 }
 
 .main{
@@ -118,7 +125,6 @@ img {
   flex-wrap: wrap;
   list-style: none;
   margin: 0;
-  padding: 0;
 }
 
 .cards_item {
@@ -134,7 +140,7 @@ img {
 
 @media (min-width: 56rem) {
   .cards_item {
-    width: 33.3333%;
+    width: 31%;
   }
 }
 
@@ -181,6 +187,19 @@ img {
   font-weight: 400;
   text-align: center;
 }
+
+.card-img-top {
+  width: 300px;
+  height: 250px;
+  object-fit: contain;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--dl-color-hazelhub-beige);
+
+}
+
 .made_by{
   font-family: "DM Sans";
   font-weight: 400;

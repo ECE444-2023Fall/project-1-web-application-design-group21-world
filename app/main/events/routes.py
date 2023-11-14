@@ -134,7 +134,7 @@ def myEvents():
 @events_blueprint.route("/discover", methods=["GET", "POST"])
 def allEvents():
     current_app.logger.info(f"EVENTS: {Event.query.all()}")
-    return render_template("events.html", events=Event.query.all())
+    return render_template("discover.html", events=Event.query.all())
 
 @events_blueprint.route("/register_for_event/<int:event_id>", methods=["POST"])
 @login_required

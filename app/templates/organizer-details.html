@@ -27,24 +27,35 @@
             <span class="organization-email-text1"><span>Contact Email:</span></span>
         </div>
 
+          <div class="organization-email-container organization-email-root-class-name">
+            <span class="organization-email-text">
+                <span>{{ organization.organization_website_link }}</span>
+            </span>
+            <span class="organization-email-text1"><span>Website:</span></span>
+          </div>
+
+      <div class="organization-email-container organization-email-root-class-name">
+        <span class="organization-email-text">
+            <span>{{ organization.organization_instagram_link }}</span>
+        </span>
+        <span class="organization-email-text1"><span>Instagram:</span></span>
+    </div>
+
+    <div class="organization-email-container organization-email-root-class-name">
+      <span class="organization-email-text">
+          <span>{{ organization.organization_linkedin_link }}</span>
+      </span>
+      <span class="organization-email-text1"><span>Linkedin:</span></span>
+  </div>
+
         <div class="organization-desc-container organization-desc-root-class-name">
             <span class="organization-desc-text"><span>About Us:</span></span>
             <span class="organization-desc-text1">
                 <span>{{ organization.description }}</span>
             </span>
           </span>
-          <h1 class="organizer-details1-text1">
-            <span>Contact Email: {{ organization.organizer_email }}</span>
-          </h1>
-          <h1 class="organizer-details1-text2">
-            <span>Website: {{ organization.organization_website_link }}</span>
-          </h1>
-          <h1 class="organizer-details1-text3">
-            <span>Instagram: {{ organization.organization_instagram_link }}</span>
-          </h1>
-          <h1 class="organizer-details1-text4">
-            <span>Linkedin: {{ organization.organization_linkedin_link }}</span>
-          </h1>
+          
+         
         </div>
       </div>
     </div>

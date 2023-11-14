@@ -7,13 +7,14 @@
     <h1>Discover Events!</h1>
 </div>
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 <div class="main">
   <ul class="cards">
   {% for event in events %}
     <li class="cards_item">
-        <a href="/event_details/{{event.id}}">
+        <a href="{{ url_for('events.event_details', event_id=event.id) }}">
       <div class="card">
-        <div class="card_image"><img src="{{event.image_link}}"></div>
+        <div class="card-img-top"><img src="{{event.image_link | replace('app', '')}}"></div>
         <div class="card_content">
           <h1 class="card_title">{{event.event_name}}</h1>
           <h2 class="card_text">{{event.date}}  |  {{event.time}}</h2>
