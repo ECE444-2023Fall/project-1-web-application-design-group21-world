@@ -1,0 +1,63 @@
+{% extends "base.html" %} 
+{% block title %}Flasky{% endblock %} 
+
+{% block page_content %}
+<div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my-events.css') }}" />
+    {% if current_user.role == "organizer" %}
+    <a href="{{ url_for('events.organizer_create_event') }}" class="btn-back">Create Event</a>
+    {% endif %}
+    <div class="event-rec-container">
+      <h1 class="page-header">My Events</h1>
+    
+      <div>
+        {% for event in user_events %}
+        <div class="event-row-component-container event-row-component-root-class-name">
+          <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component-navlink">
+            <img alt="Oops!" src="{{event.image_link | replace('app', '')}}" onerror="this.onerror=null; this.src='/static/assets/default_event_image.jpg'" class="event-row-component-image" />
+          </a>
+          <div class="event-row-component-container1">
+            <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component-navlink1">
+              <span>{{ event.event_name }}</span>
+            </a>
+            <span class="event-row-component-text">
+              <span>{{ event.location }}</span>
+              <span>{{ event.date }}</span>
+              <span>{{ event.time }}</span>
+            </span>
+          </div>
+          <svg viewBox="0 0 1024 1024" class="event-row-component-icon">
+            <path d="M384 690l452-452 60 60-512 512-238-238 60-60z"></path>
+          </svg>
+        </div>
+      {% endfor %}
+
+      {%if current_user.role == "user" %}
+      <div>
+            <h1 class="page-header">Events Recommendations</h1>
+            {% for item in u_id %}
+             <div class="event-row-component-container event-row-component-root-class-name">
+                <a href="{{ url_for ('events.event_details', event_id=item.id) }}" class="event-row-component-navlink">
+                  <img alt="image_alt3" src="{{item.image_link | replace('app', '')}}" onerror="this.onerror=null; this.src='/static/assets/default_event_image.jpg'" class="event-row-component-image" />
+                </a>
+                <div class="event-row-component-container1">
+                <a href="{{  url_for ('events.event_details', event_id=item.id) }}" class="event-row-component-navlink1">
+                  <span>{{ item.event_name }}</span>
+                </a>
+                <span class="event-row-component-text">
+                  <span>{{ item.location }}</span>
+                  <span>{{ item.date }}</span>
+                  <span>{{ item.time }}</span>
+                </span>
+              </div>
+              <svg>
+                <path d="M384 690l452-452 60 60-512 512-238-238 60-60z"></path>
+              </svg>
+          </div>
+    {% endfor %}
+    {%endif%}
+  </div>
+  
+</div>
+</div>
+{% endblock %}
