@@ -84,7 +84,7 @@ def eventInterests():
     if request.method == 'POST' and form.validate_on_submit():
         if not form.interests.data:
             flash('Please select at least one interest area.', 'danger')
-            return render_template("interests_events.html", form=form, event_id = event_id)
+            return render_template("interests_events.html", form=form, event_id = session['event_id'])
         for id in form.interests.data:
             event = Event.query.filter_by(id=session['event_id']).first()
             interest = Interest.query.filter_by(id=id).first()
@@ -92,7 +92,7 @@ def eventInterests():
             db.session.commit()
         session.pop('event_id')
         return redirect("/discover")
-    return render_template("interests_events.html", form=form, event_id=event_id)
+    return render_template("interests_events.html", form=form, event_id=session['event_id'])
 
 @events_blueprint.route("/event_details/<int:event_id>", methods=["GET"])
 def event_details(event_id):
@@ -136,7 +136,7 @@ def myEvents():
 @events_blueprint.route("/discover", methods=["GET", "POST"])
 def allEvents():
     current_app.logger.info(f"EVENTS: {Event.query.all()}")
-    return render_template("events.html", events=Event.query.all())
+    return render_template("discover.html", events=Event.query.all())
 
 @events_blueprint.route("/register_for_event/<int:event_id>", methods=["POST"])
 @login_required
@@ -152,12 +152,6 @@ def register_for_event(event_id):
                 db.session.add(current_user)
                 db.session.commit()
                 flash("You have successfully registered for the event!", "success")
-            elif request.method == "DELETE":
-                current_app.logger.info(f"Current Role {current_user.role}")
-                current_user.remove_event(event)
-                db.session.add(current_user)
-                db.session.commit()
-                flash("You have successfully unregistered for the event!", "success")
     
     return redirect(url_for("events.event_details", event_id=event.id))
 
