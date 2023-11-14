@@ -92,7 +92,6 @@ class Interest(db.Model):
     __tablename__ = "interests"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    events: Mapped[List[Event]] = relationship(secondary=EventInterests, back_populates="interests")
     users: Mapped[List[User]] = relationship(secondary=UserInterests, back_populates="interests")
     organizers: Mapped[List[Organizer]] = relationship(
         secondary=OrganizerInterests, back_populates="interests"

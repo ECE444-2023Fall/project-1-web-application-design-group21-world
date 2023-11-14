@@ -29,8 +29,9 @@
         </div>
       {% endfor %}
 
+      {%if current_user.role == "user" %}
       <div>
-            <h1 class="page-header">Events Reccomendations</h1>
+            <h1 class="page-header">Events Recommendations</h1>
             {% for item in u_id %}
              <div class="event-row-component-container event-row-component-root-class-name">
                 <a href="{{ url_for ('event_details', event_id=item.id) }}" class="event-row-component-navlink">
@@ -51,7 +52,7 @@
               </svg>
           </div>
     {% endfor %}
-    
+    {%endif%}
   </div>
   
 </div>

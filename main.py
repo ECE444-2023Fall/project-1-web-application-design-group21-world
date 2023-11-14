@@ -309,6 +309,8 @@ def myEvents():
                 return render_template("events_rec.html", user_events=current_user.events,u_id=events)
             else:
                 return render_template("events_rec.html", user_events=current_user.events)
+        elif current_user.role == "organizer":
+            return render_template("events_rec.html", user_events=current_user.events)
 
 @app.route("/discover", methods=["GET", "POST"])
 def allEvents():
