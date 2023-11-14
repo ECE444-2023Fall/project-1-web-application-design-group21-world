@@ -378,13 +378,13 @@ class FunctionalTests(TestCase):
         assert b'href="/organizer/details/' in response.data # Check if webpage updated
         
     def test_organizer_not_appears_webpage(self):
-        self.signup_user();
+        self.signup_user()
         response = self.client.get('/organizer/list')
         
         assert b'href="/organizer/details/' not in response.data # Check if webpage updated (it shouldn't)
         
     def test_event_is_created_on_webpage(self):
-        self.signup_organizer();
+        self.signup_organizer()
         response = self.client.get('/discover')
         
         assert b'event-row-component-container event-row-component-root-class-name' not in response.data # Check if no events yet
