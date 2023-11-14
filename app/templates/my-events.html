@@ -16,7 +16,7 @@
       {% for event in user_events %}
         <div class="event-row-component-container event-row-component-root-class-name">
           <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component-navlink">
-            <img alt="image_alt3" src="{{ event.image_src }}" onerror="this.onerror=null; this.src='/static/assets/default_event_image.jpg'" class="event-row-component-image" />
+            <img alt="image_alt3" src="{{event.image_link | replace('app', '')}}" onerror="this.onerror=null; this.src='/static/assets/default_event_image.jpg'" class="event-row-component-image" />
           </a>
           <div class="event-row-component-container1">
             <a href="{{ url_for('events.event_details', event_id=event.id) }}" class="event-row-component-navlink1">
