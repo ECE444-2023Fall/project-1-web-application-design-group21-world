@@ -88,26 +88,6 @@
   align-items: flex-start;
   justify-content: center;
 }
-.interests-button {
-  color: var(--dl-color-hazelhub-dblack);
-  width: var(--dl-size-size-maxwidth);
-  height: var(--dl-size-size-small);
-  align-self: center;
-  box-shadow: 5px 5px 10px 0px #d4d4d4;
-  text-align: center;
-  transition: 0.3s;
-  border-color: var(--dl-color-hazelhub-dblack);
-  margin-bottom: var(--dl-space-space-threeunits);
-  padding-bottom: 0.5rem;
-}
-.interests-button:hover {
-  background-color: rgba(183, 210, 210, 0.51);
-}
-.interests-button:active {
-  font-style: normal;
-  font-weight: 500;
-  background-color: var(--dl-color-hazelhub-bb);
-}
 @media(max-width: 991px) {
   .interests-container1 {
     grid-template-columns: 1fr 1fr;
@@ -196,7 +176,6 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
   .interests-button {
-    color: var(--dl-color-hazelhub-dblack);
     width: var(--dl-size-size-maxwidth);
     height: var(--dl-size-size-small);
     align-self: center;
@@ -207,13 +186,9 @@
     margin-bottom: var(--dl-space-space-threeunits);
     padding-bottom: 0.5rem;
   }
-  .interests-button:hover {
-    background-color: rgba(183, 210, 210, 0.51);
-  }
   .interests-button:active {
     font-style: normal;
     font-weight: 500;
-    background-color: var(--dl-color-hazelhub-bb);
   }
   @media(max-width: 991px) {
     .interests-container1 {
