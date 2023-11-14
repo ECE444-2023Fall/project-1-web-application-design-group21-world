@@ -153,7 +153,7 @@ class Event(db.Model):
     date: Mapped[str] = mapped_column(String(100), nullable=False)
     time: Mapped[str] = mapped_column(String(100), nullable=False)
     location: Mapped[str] = mapped_column(String(100), nullable=False)
-    google_map_link: Mapped[str] = mapped_column(String(100), nullable=False)
+    google_map_link: Mapped[str] = mapped_column(String(100), nullable=True)
     fee: Mapped[int] = mapped_column(Integer, nullable=True)
     #has_rsvp: Mapped[str] = mapped_column(String(100), nullable=False)
     external_registration_link: Mapped[str] = mapped_column(String(200), nullable=True)

@@ -461,9 +461,50 @@ class FunctionalTests(TestCase):
         
         response = self.client.get('/discover')
         
-        assert b'event-row-component-container event-row-component-root-class-name' in response.data # Check if events added in webpage
+        assert b'Test Event' in response.data # Check if events added in webpage
+    
+    def test_event_details(self):
+        existing_event = Event(
+            id=str(1),
+            event_name='Test Event',
+            organizer_id=str(2),
+            description='A test Event.',
+            image_link= None,
+            date='2023-11-14',
+            time='12pm',
+            location='Test Location',
+            google_map_link=None,
+            fee='10',
+            external_registration_link=None
+        )
+        db.session.add(existing_event)
+        db.session.commit()
 
+        response = self.client.get('/event_details/1')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Test Event', response.data)
 
+    def test_event_details_route_not_found(self):
+        existing_event = Event(
+            id=str(1),
+            event_name='Test Event',
+            organizer_id=str(2),
+            description='A test Event.',
+            image_link= None,
+            date='2023-11-14',
+            time='12pm',
+            location='Test Location',
+            google_map_link=None,
+            fee='10',
+            external_registration_link=None
+        )
+        db.session.add(existing_event)
+        db.session.commit()
+
+        response = self.client.get('/event_details/100000')
+        self.assertEqual(response.status_code, 404)
+        self.assertIn(b'Page Not Found', response.data)
+        
     def test_organizer_create_event_success(self):
         self.client.post('/organizer/signup', 
                          data={ "organization_name": 'Test Organization', 
