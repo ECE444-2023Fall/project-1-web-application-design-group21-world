@@ -1,10 +1,17 @@
-{% extends "base.html" %} {% block title %}Flasky{% endblock %} 
+{% extends "base.html" %} {% block title %}HazelHub{% endblock %} 
 {% block page_content %}
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <div>
   <link href="{{ url_for('static', filename='css/event-details.css') }}" rel="stylesheet" />
+  <span>
+        <a href="{{ url_for('events.allEvents') }}" class="btn-back">&lt; Back to Discover</a>
+        <br />
+  </span>
   <div class="event-details-container">
+	<div class="event-image-container">
+		<img alt="image" src="{{event.image_link | replace('app', '')}}" class="event-details-image1" />
+	</div>
     <div class="event-description-container event-description-root-class-name">
       <div class="title-container title-root-class-name">
         <span class="title-text">
@@ -16,9 +23,7 @@
       </div>
       <div class="desc-container desc-root-class-name">
         <span class="desc-text"><span>Event Description: </span></span>
-        <span class="desc-text1">
-          <span class="desc-text1">{{ event.description }}</span>
-        </span>
+        <span class="desc-text1">{{ event.description }}</span>
       </div>
       <div class="interest-areas1-container interest-areas1-root-class-name">
         <span class="interest-text">Interest Areas: </span>
@@ -37,12 +42,21 @@
         </span>
       </div>
       <span class="event-description-text">
-        <span>Registration Fee: {{ event.fee }}</span>
+        <span>Registration Fee: {{ event.fee }} CAD</span>
       </span>
-      {% if current_user.name %}
-      <button type="button" id="registerButton" class="event-description-button button">
+      {% if current_user.role=="user" and not(event in current_user.events) %}
+      <form method="POST" action="{{ url_for('events.register_for_event', event_id=event.id) }}" id="register_for_event-form">
+      <button type="submit" id="registerButton" class="event-description-button button">
         <span>Register</span>
       </button>
+      </form>
+      {% endif %}
+      {% if current_user.role=="user" and (event in current_user.events) %}
+      <form method="POST" action="{{ url_for('events.unregister_for_event', event_id=event.id) }}" id="register_for_event-form">
+      <button type="submit" id="registerButton" class="event-description-button button">
+        <span>Unregister</span>
+      </button>
+      </form>
       {% endif %}
       <div class="location-container location-root-class-name">
         <a
@@ -55,34 +69,7 @@
         </a>
       </div>
     </div>
-    <img alt="image" src="{{event.image_link}}" class="event-details-image1" />
-    <span>
-        <span>&lt; Back to Discover</span>
-        <br />
-    </span>
   </div>
 </div>
-
-<script>
-  $(document).ready(function () {
-      $("#registerButton").click(function () {
-          // Make an AJAX request to register for the event
-          $.ajax({
-              type: "POST",
-              url: "{{ url_for('register_for_event', event_id=event.id) }}",
-              success: function (response) {
-                  // Handle the success response (if needed)
-                  console.log("Registration successful");
-                  // You might want to redirect to a confirmation page or update the UI
-              },
-              error: function (error) {
-                  // Handle the error (if needed)
-                  console.error("Registration failed", error);
-              }
-          });
-      });
-  });
-</script>
-
 
 {% endblock %}

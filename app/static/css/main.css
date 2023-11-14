@@ -51,6 +51,39 @@ img {
   background: var(--dl-color-hazelhub-tblue);
 }
 
+.btn-back {
+  color: #ffffff;
+  padding: 0.8rem;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: 0px;
+  font-weight: 400;
+  display: block;
+  width: fit-content;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-top: 20px;
+  margin-bottom: var(--dl-space-space-oneandhalfunits);
+  background: var(--dl-color-hazelhub-hazel);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.btn-back:hover {
+  background: var(--dl-color-hazelhub-beige);
+  color: #ffffff;
+}
+
+.btn-back:active {
+  background: var(--dl-color-hazelhub-beige);
+  color: #ffffff;
+}
+
+.btn-back:focus {
+  background: var(--dl-color-hazelhub-beige);
+  color: #ffffff;
+}
+
 .btn-success {
   color: #ffffff;
   padding: 0.8rem;
