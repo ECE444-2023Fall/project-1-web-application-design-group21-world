@@ -54,18 +54,16 @@ class FunctionalTests(TestCase):
         
     def create_event(self): 
         response = self.client.post('/organizer/create/event', data={
-                "event_name": 'Test',
-                'organizer_id': '1',
-                'description': 'Test',
-                'date': '01/01/2000',
-                'time': '00:00',
-                'image': None,
-                'location': 'Test',
-                'google_map_link': 'https://www.google.com/maps',
-                'fee': '0',
-                'has_rsvp': 'Yes',
-                'external_registration_link': 'https://www.google.com/maps',
-                'submit': 'Submit',
+                "event_name": 'Test Event', 
+                "organizer_id": '0', 
+                "image": None, 
+                'description': 'Test Description', 
+                'date': '2023-01-01', 
+                'time': '12:00', 
+                'location': 'St. George', 
+                "google_map_link": "https://map.google.com", 
+                'fee': '10', 
+                'has_rsvp': '1'
         })
         return response
 
