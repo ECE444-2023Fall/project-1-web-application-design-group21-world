@@ -13,13 +13,13 @@
         <ul class="cards">
             {% for organizer in organizers %}
             <li>
-                <a href="{{ url_for('organizer_details', organizer_id=organizer.id) }}">
+                <a href="{{ url_for('organizers.organizer_details', organizer_id=organizer.id) }}">
                     <div class="event-row-component-container event-row-component-root-class-name">
-                    <a href="{{ url_for('organizer_details', organizer_id=organizer.id) }}" class="event-row-component-navlink">
+                    <a href="{{ url_for('organizers.organizer_details', organizer_id=organizer.id) }}" class="event-row-component-navlink">
                         <img alt="image_alt3" src="{{ organizer.image_link }}" class="event-row-component-image" />
                     </a>
                     <div class="event-row-component-container1">
-                        <a href="{{ url_for('organizer_details', organizer_id=organizer.id) }}" class="event-row-component-navlink1">
+                        <a href="{{ url_for('organizers.organizer_details', organizer_id=organizer.id) }}" class="event-row-component-navlink1">
                             <span>{{ organizer.organizer_name }}</span>
                         </a>
                         <span class="event-row-component-text">
