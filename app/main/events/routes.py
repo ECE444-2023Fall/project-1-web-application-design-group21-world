@@ -34,6 +34,7 @@ def events_create():
 
 @events_blueprint.route("/organizer/create/event", methods=["GET", "POST"])
 @login_required
+
 def organizer_create_event():
     form = EventForm()
     if form.validate_on_submit():
@@ -58,7 +59,6 @@ def organizer_create_event():
                 location=form.location.data,
                 google_map_link=form.google_map_link.data,
                 fee=form.fee.data,
-                #has_rsvp=form.has_rsvp.data,
                 external_registration_link=form.external_registration_link.data,
             )
             current_user.add_event(event_entry)
@@ -82,15 +82,17 @@ def eventInterests():
     form = eventInterestForm()
     form.interests.choices = [(interest.id, interest.name) for interest in Interest.query.all()]
     if request.method == 'POST' and form.validate_on_submit():
+        if not form.interests.data:
+            flash('Please select at least one interest area.', 'danger')
+            return render_template("interests_events.html", form=form, event_id = event_id)
         for id in form.interests.data:
-            #print(session)
             event = Event.query.filter_by(id=session['event_id']).first()
             interest = Interest.query.filter_by(id=id).first()
             event.add_interest(interest)
             db.session.commit()
         session.pop('event_id')
-        return redirect("/organizer/myAccount")
-    return render_template("interests_events.html", form=form)
+        return redirect("/discover")
+    return render_template("interests_events.html", form=form, event_id=event_id)
 
 @events_blueprint.route("/event_details/<int:event_id>", methods=["GET"])
 def event_details(event_id):
