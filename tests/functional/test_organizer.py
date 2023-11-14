@@ -498,3 +498,82 @@ class FunctionalTests(TestCase):
             
             
             self.assertIn(b'This field is required.', response.data)
+        
+    def test_organizer_appears_webpage(self):
+        self.signup_organizer()
+        response = self.client.get('/organizer/list')
+         
+        assert b'href="/organizer/details/' in response.data # Check if webpage updated
+        
+    def test_organizer_not_appears_webpage(self):
+        self.signup_user();
+        response = self.client.get('/organizer/list')
+        
+        assert b'href="/organizer/details/' not in response.data # Check if webpage updated (it shouldn't)
+        
+    def test_event_is_created_on_webpage(self):
+        self.signup_organizer();
+        response = self.client.get('/discover')
+        
+        assert b'event-row-component-container event-row-component-root-class-name' not in response.data # Check if no events yet
+        
+        self.create_event()
+        
+        response = self.client.get('/discover')
+        
+        assert b'event-row-component-container event-row-component-root-class-name' in response.data # Check if events added in webpage
+
+    
+    def test_registration(self):
+            event = Event(
+                event_name="Test Event",
+                organizer_id="1",
+                description="Lorem Ipsum",
+                date="01/01/1960",
+                time="00:00",
+                location="Toronto, Ontario, Canada",
+                google_map_link="https://test.com",
+                fee="1",
+                has_rsvp="Yes",
+                external_registration_link="https://test.com",
+            )
+            db.session.add(event)
+            db.session.commit()
+
+            assert event in Event.query.all()
+
+            event = Event.query.filter(Event.event_name == "Test Event").first()
+
+            self.client.post(
+                "/user/signup",
+                data={
+                    "name": "Test anotherUser",
+                    "email": "existing@utoronto.ca",
+                    "password": "testpassword",
+                    "confirm": "testpassword",
+                    "campus": "St. George",
+                    "faculty": "Commerce",
+                    "major": "Testmajor",
+                    "year_of_study": "1st",
+                    "submit": "Submit",
+                },
+            )
+            self.client.post("/logout")
+            response = self.client.post(
+                "/",
+                data={
+                    "email": "existing@utoronto.ca",
+                    "password": "testpassword",
+                    "role": "user",
+                },
+            )
+            self.assert200
+            assert response.headers["location"] == "/user/myAccount"
+
+            response = self.client.post(f"/register_for_event/{event.id}")
+            assert event in current_user.events
+            assert current_user in event.users
+
+            response = self.client.post(f"/unregister_for_event/{event.id}")
+            assert event not in current_user.events
+            assert current_user not in event.users
